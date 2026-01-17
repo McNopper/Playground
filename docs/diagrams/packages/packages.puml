@@ -1,0 +1,19 @@
+@startuml Packages
+
+package engine {}
+
+package cpu {}
+
+package gpu {}
+
+package core {}
+
+engine .d.> cpu
+
+engine .d.> gpu
+
+cpu .d.> core
+
+gpu .d.> core
+
+@enduml

@@ -1,0 +1,21 @@
+@startuml Package shader
+
+package gpu {
+
+  package shader {
+
+    package glsl {}
+
+    package slang {}
+
+    package spirv {}
+  
+  }
+
+}
+
+gpu.shader.glsl .d.> gpu.shader.spirv
+
+gpu.shader.slang .d.> gpu.shader.spirv
+
+@enduml

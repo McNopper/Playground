@@ -1,0 +1,13 @@
+{
+  "dependencies": [
+    "fastgltf",
+    "glfw3",
+    "gtest",
+    "imgui",
+    "openimageio",
+    "shaderc",
+    "spirv-reflect",
+    "spirv-tools",
+    "volk"
+  ]
+}

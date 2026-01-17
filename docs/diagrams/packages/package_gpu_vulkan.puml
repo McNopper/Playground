@@ -1,0 +1,33 @@
+@startuml Package vulkan
+
+package gpu {
+
+  package vulkan {
+
+    package presentation {}
+
+    package transfer {}
+
+    package builder {}
+
+    package spirv {}
+
+    package factory {}
+
+    package utility {}
+    
+  }
+
+}
+
+gpu.vulkan.factory .d.> gpu.vulkan.utility
+
+gpu.vulkan.spirv .d.> gpu.vulkan.factory
+
+gpu.vulkan.builder .d.> gpu.vulkan.spirv
+
+gpu.vulkan.presentation .d.> gpu.vulkan.builder
+
+gpu.vulkan.transfer .d.> gpu.vulkan.builder
+
+@enduml

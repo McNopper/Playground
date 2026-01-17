@@ -1,0 +1,29 @@
+@startuml Package engine.renderer.backend
+
+package engine {
+
+  package renderer {
+
+    package backend {
+
+      package rasterizer {}
+
+      package raytracer {}
+
+      package common {
+
+        package buffer {
+        }
+
+        package image {
+        }
+
+      }
+
+    }
+
+  }
+
+}
+
+@enduml

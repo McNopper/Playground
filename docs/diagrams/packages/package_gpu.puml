@@ -1,0 +1,13 @@
+@startuml Package gpu
+
+package gpu {
+
+  package shader {}
+
+  package vulkan {}
+
+}
+
+gpu.vulkan .d.> gpu.shader
+
+@enduml

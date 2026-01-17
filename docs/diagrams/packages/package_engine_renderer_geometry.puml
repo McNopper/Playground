@@ -1,0 +1,23 @@
+@startuml Package engine.renderer.geometry
+
+package engine {
+
+  package renderer {
+
+    package geometry {
+
+      package point {}
+
+      package curve {}
+
+      package surface {}
+
+      package volume {}
+
+    }
+
+  }
+
+}
+
+@enduml

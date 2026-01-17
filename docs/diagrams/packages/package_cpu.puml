@@ -1,0 +1,9 @@
+@startuml Package cpu
+
+package cpu {
+
+  package ai {}
+
+}
+
+@enduml

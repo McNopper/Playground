@@ -1,0 +1,33 @@
+@startuml Package core
+
+package core {
+
+  together {
+
+    package image {}
+
+    package color {}
+
+  }
+
+  together {
+
+    package io {}
+
+    package math {}
+
+    package parser {}
+
+    package templates {}
+
+    package utility {}
+
+  }
+
+}
+
+core.color .d.> core.math
+
+core.image .d.> core.color
+
+@enduml
