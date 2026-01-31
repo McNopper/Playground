@@ -108,7 +108,8 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 
 **Formatting:**
 - 4 spaces, no tabs
-- Opening brace on same line for control structures, new line for functions/classes
+- Opening brace on new line for all constructs (functions, classes, control structures)
+- Always use braces for control structures, even single statements
 - Space after keywords: `if (`, `while (`
 - No space after function names: `create()`
 

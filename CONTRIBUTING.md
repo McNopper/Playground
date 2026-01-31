@@ -65,11 +65,11 @@ This project follows strict C++20 coding standards with the following convention
 
 **Indentation:**
 - 4 spaces (no tabs)
-- Opening brace on same line for control structures
-- Opening brace on new line for functions/classes
+- Opening brace on new line for all constructs (functions, classes, control structures)
+- Always use braces for control structures, even single statements
 
 ```cpp
-// Control structures
+// Control structures - always use braces
 if (position != std::string::npos)
 {
     return source.substr(0, position);

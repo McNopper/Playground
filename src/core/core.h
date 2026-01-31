@@ -27,6 +27,8 @@
 #include "math/matrix_transform.h"
 #include "math/quaternion_transform.h"
 
+#include "math/real_spherical_harmonics.h"
+
 #include "math/matrix_camera.h"
 #include "math/interpolate.h"
 #include "math/RandomGenerator.h"

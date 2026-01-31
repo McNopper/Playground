@@ -240,3 +240,66 @@ TEST(TestMath, QuaternionRotation90Y)
     EXPECT_NEAR(p.w, 1.0f, 0.000001f);
 }
 
+TEST(TestMath, SphericalHarmonicsL0)
+{
+    rsh sh;
+    
+    // Y_0^0 is constant: sqrt(1/(4π)) ≈ 0.282095
+    // Test at various directions - should always return the same value
+    float z_axis = sh.Ylm(0, 0, 0.0f, 0.0f, 1.0f);
+    float x_axis = sh.Ylm(0, 0, 1.0f, 0.0f, 0.0f);
+    float y_axis = sh.Ylm(0, 0, 0.0f, 1.0f, 0.0f);
+    
+    EXPECT_NEAR(z_axis, 0.282095f, 0.000001f);
+    EXPECT_NEAR(x_axis, 0.282095f, 0.000001f);
+    EXPECT_NEAR(y_axis, 0.282095f, 0.000001f);
+    
+    // Test using n index as well
+    float z_axis_n = sh.Yln(0, 0, 0.0f, 0.0f, 1.0f);
+    EXPECT_NEAR(z_axis_n, 0.282095f, 0.000001f);
+}
+
+TEST(TestMath, SphericalHarmonicsL1)
+{
+    rsh sh;
+    
+    // Y_1^-1 = -sqrt(3/(4π)) * y ≈ -0.488603 * y
+    // Y_1^0  = sqrt(3/(4π)) * z ≈ 0.488603 * z
+    // Y_1^1  = -sqrt(3/(4π)) * x ≈ -0.488603 * x
+    
+    // Test along Z axis: Y_1^0 should be non-zero
+    float z_pos = sh.Ylm(1, 0, 0.0f, 0.0f, 1.0f);
+    EXPECT_NEAR(z_pos, 0.488603f, 0.000001f);
+    
+    // Test along X axis: Y_1^1 should be non-zero
+    float x_pos = sh.Ylm(1, 1, 1.0f, 0.0f, 0.0f);
+    EXPECT_NEAR(x_pos, -0.488603f, 0.000001f);
+    
+    // Test along Y axis: Y_1^-1 should be non-zero
+    float y_pos = sh.Ylm(1, -1, 0.0f, 1.0f, 0.0f);
+    EXPECT_NEAR(y_pos, -0.488603f, 0.000001f);
+    
+    // Test using n index (n = m + l, so for l=1, m=-1: n=0, m=0: n=1, m=1: n=2)
+    float y_pos_n = sh.Yln(1, 0, 0.0f, 1.0f, 0.0f);
+    EXPECT_NEAR(y_pos_n, -0.488603f, 0.000001f);
+}
+
+TEST(TestMath, SphericalHarmonicsL2)
+{
+    rsh sh;
+    
+    // Y_2^0 = (1/4)*sqrt(5/π) * (3z^2 - 1) ≈ 0.315392 * (3z^2 - 1)
+    // Along Z axis (z=1): Y_2^0 = 0.315392 * (3 - 1) = 0.630784
+    float z_axis = sh.Ylm(2, 0, 0.0f, 0.0f, 1.0f);
+    EXPECT_NEAR(z_axis, 0.630784f, 0.000001f);
+    
+    // Y_2^2 = (1/4)*sqrt(15/π) * (x^2 - y^2)
+    // Along X axis (x=1, y=0): Y_2^2 = 0.546274 * 1 = 0.546274
+    float x_axis = sh.Ylm(2, 2, 1.0f, 0.0f, 0.0f);
+    EXPECT_NEAR(x_axis, 0.546274f, 0.000001f);
+    
+    // Test using n index (for l=2, m=0: n=2, m=2: n=4)
+    float z_axis_n = sh.Yln(2, 2, 0.0f, 0.0f, 1.0f);
+    EXPECT_NEAR(z_axis_n, 0.630784f, 0.000001f);
+}
+
