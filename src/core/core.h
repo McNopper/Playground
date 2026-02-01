@@ -28,6 +28,7 @@
 #include "math/quaternion_transform.h"
 
 #include "math/real_spherical_harmonics.h"
+#include "math/rsh_rotation.h"
 
 #include "math/matrix_camera.h"
 #include "math/interpolate.h"
