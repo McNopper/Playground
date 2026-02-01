@@ -68,3 +68,118 @@ TEST(TestUtility, Interleave)
 
     EXPECT_EQ(*(const std::uint32_t*)(interleaved.data() + (1u * stride)), 2u);
 }
+
+TEST(TestUtility, Base64EncodeEmpty)
+{
+    std::vector<std::uint8_t> empty{};
+    std::string encoded = base64Encode(empty);
+    EXPECT_EQ(encoded, "");
+}
+
+TEST(TestUtility, Base64DecodeEmpty)
+{
+    std::vector<std::uint8_t> decoded = base64Decode("");
+    EXPECT_TRUE(decoded.empty());
+}
+
+TEST(TestUtility, Base64EncodeSimple)
+{
+    std::vector<std::uint8_t> data{ 'M', 'a', 'n' };
+    std::string encoded = base64Encode(data);
+    EXPECT_EQ(encoded, "TWFu");
+}
+
+TEST(TestUtility, Base64DecodeSimple)
+{
+    std::vector<std::uint8_t> decoded = base64Decode("TWFu");
+    std::vector<std::uint8_t> expected{ 'M', 'a', 'n' };
+    EXPECT_EQ(decoded, expected);
+}
+
+TEST(TestUtility, Base64EncodePadding1)
+{
+    std::vector<std::uint8_t> data{ 'M', 'a' };
+    std::string encoded = base64Encode(data);
+    EXPECT_EQ(encoded, "TWE=");
+}
+
+TEST(TestUtility, Base64DecodePadding1)
+{
+    std::vector<std::uint8_t> decoded = base64Decode("TWE=");
+    std::vector<std::uint8_t> expected{ 'M', 'a' };
+    EXPECT_EQ(decoded, expected);
+}
+
+TEST(TestUtility, Base64EncodePadding2)
+{
+    std::vector<std::uint8_t> data{ 'M' };
+    std::string encoded = base64Encode(data);
+    EXPECT_EQ(encoded, "TQ==");
+}
+
+TEST(TestUtility, Base64DecodePadding2)
+{
+    std::vector<std::uint8_t> decoded = base64Decode("TQ==");
+    std::vector<std::uint8_t> expected{ 'M' };
+    EXPECT_EQ(decoded, expected);
+}
+
+TEST(TestUtility, Base64EncodeAllCharacters)
+{
+    std::vector<std::uint8_t> data{};
+    data.reserve(64);
+    for (std::uint8_t i = 0; i < 64; ++i)
+    {
+        data.push_back(i);
+    }
+    
+    std::string encoded = base64Encode(data);
+    std::vector<std::uint8_t> decoded = base64Decode(encoded);
+    
+    EXPECT_EQ(decoded, data);
+}
+
+TEST(TestUtility, Base64RoundTripBinary)
+{
+    std::vector<std::uint8_t> data{ 0x00, 0xFF, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0 };
+    std::string encoded = base64Encode(data);
+    std::vector<std::uint8_t> decoded = base64Decode(encoded);
+    EXPECT_EQ(decoded, data);
+}
+
+TEST(TestUtility, Base64RoundTripString)
+{
+    std::string text = "Hello, World! This is a base64 encoding test.";
+    std::vector<std::uint8_t> data{ text.begin(), text.end() };
+    
+    std::string encoded = base64Encode(data);
+    std::vector<std::uint8_t> decoded = base64Decode(encoded);
+    
+    std::string result{ decoded.begin(), decoded.end() };
+    EXPECT_EQ(result, text);
+}
+
+TEST(TestUtility, Base64DecodeInvalidLength)
+{
+    std::vector<std::uint8_t> decoded = base64Decode("ABC");
+    EXPECT_TRUE(decoded.empty());
+}
+
+TEST(TestUtility, Base64DecodeInvalidCharacter)
+{
+    std::vector<std::uint8_t> decoded = base64Decode("TW@u");
+    EXPECT_TRUE(decoded.empty());
+}
+
+TEST(TestUtility, Base64EncodePointer)
+{
+    const std::uint8_t data[] = { 'T', 'e', 's', 't' };
+    std::string encoded = base64Encode(data, 4);
+    EXPECT_EQ(encoded, "VGVzdA==");
+}
+
+TEST(TestUtility, Base64EncodeNullPointer)
+{
+    std::string encoded = base64Encode(nullptr, 10);
+    EXPECT_EQ(encoded, "");
+}

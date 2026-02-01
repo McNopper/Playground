@@ -38,6 +38,8 @@
 
 // utility
 
+#include "utility/base64.h"
+
 #include "utility/convert.h"
 
 #include "utility/DeltaTime.h"
