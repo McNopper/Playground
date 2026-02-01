@@ -120,6 +120,13 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 - Always use braces for control structures, even single statements
 - Space after keywords: `if (`, `while (`
 - No space after function names: `create()`
+- Constructor initializer lists: Colon on same line as closing paren, all initializers on single line
+  ```cpp
+  ClassName::ClassName(Type param1, Type param2) :
+      m_member1{ param1 }, m_member2{ param2 }, m_member3{}
+  {
+  }
+  ```
 
 **Header Guards:**
 - Format: `<NAMESPACE>_<PATH>_<FILENAME>_H_`
