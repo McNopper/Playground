@@ -217,8 +217,9 @@ See `docs/coordinate_system.md` for complete details.
 Managed via vcpkg:
 - **Vulkan**: volk (dynamic loader), SPIRV-Tools, SPIRV-Reflect
 - **Shaders**: shaderc (GLSL), slang (Slang language)
-- **Graphics**: imgui (UI), glfw (windowing), fastgltf (model loading)
+- **Graphics**: imgui (UI), glfw (windowing)
 - **Images**: OpenImageIO (loading/saving)
+- **Data**: nlohmann/json (JSON parsing)
 - **Testing**: gtest
 
 Requires `VULKAN_SDK` environment variable.

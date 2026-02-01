@@ -1,9 +1,9 @@
 {
   "dependencies": [
-    "fastgltf",
     "glfw3",
     "gtest",
     "imgui",
+    "nlohmann-json",
     "openimageio",
     "shaderc",
     "spirv-reflect",

@@ -114,9 +114,9 @@ Verify your compiler supports C++20:
 ## Third-Party Libraries
 
 - [Dear ImGui](https://github.com/ocornut/imgui)
-- [fastgltf](https://github.com/spnda/fastgltf)
 - [GLFW](https://github.com/glfw/glfw)
 - [gtest](https://vcpkg.io/en/package/gtest)
+- [nlohmann/json](https://github.com/nlohmann/json)
 - [OpenImageIO](https://github.com/AcademySoftwareFoundation/OpenImageIO)
 - [Shaderc](https://github.com/google/shaderc)
 - [slang](https://github.com/shader-slang/slang)

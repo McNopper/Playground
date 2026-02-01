@@ -23,10 +23,10 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 
 link_directories("$ENV{VULKAN_SDK}/Lib")
 
-find_package(fastgltf CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(GTest CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 find_package(OpenImageIO CONFIG REQUIRED)
 find_package(SPIRV-Tools CONFIG REQUIRED)
 find_package(unofficial-shaderc CONFIG REQUIRED)
@@ -52,7 +52,7 @@ endfunction()
 
 collect_sources_and_headers(${CMAKE_SOURCE_DIR}/src SOURCES_SDK)
 add_library(PlaygroundSDK ${SOURCES_SDK})
-target_link_libraries(PlaygroundSDK PRIVATE volk::volk volk::volk_headers imgui::imgui glfw fastgltf::fastgltf OpenImageIO::OpenImageIO slang unofficial::spirv-reflect unofficial::shaderc::shaderc SPIRV-Tools-static)
+target_link_libraries(PlaygroundSDK PRIVATE volk::volk volk::volk_headers imgui::imgui glfw nlohmann_json::nlohmann_json OpenImageIO::OpenImageIO slang unofficial::spirv-reflect unofficial::shaderc::shaderc SPIRV-Tools-static)
 
 # Workaround for OpenImageIO/vcpkg issue on Windows
 if(WIN32)
