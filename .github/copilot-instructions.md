@@ -51,9 +51,11 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
    - `image/` - Image loading/saving via OpenImageIO
    - `io/` - File I/O utilities
    - `parser/` - String parsing helpers
-   - `utility/` - General utilities
+   - `templates/` - Template utilities (e.g., Filter)
+   - `utility/` - General utilities (base64 encoding, gzip compression)
 
 2. **cpu/** - CPU-side implementations and algorithms
+   - `ai/` - AI/ML components (activation functions, loss functions, MLP)
 
 3. **gpu/** - GPU abstraction layer
    - `shader/` - Multi-language shader compilation (GLSL, SPIR-V, Slang)
@@ -66,6 +68,7 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
      - `transfer/` - Data transfer utilities
 
 4. **engine/** - High-level rendering framework
+   - `asset/` - Asset loading and parsing (future: glTF, materials, etc.)
    - `renderer/` - Rendering abstractions
      - `geometry/` - Mesh and primitive data structures
      - `material/` - Material definitions (inspired by OpenUSD/MaterialX)
@@ -190,7 +193,7 @@ See `docs/coordinate_system.md` for complete details.
 ### Project Organization
 
 - **src/** - SDK library code
-- **example01-05/** - Standalone examples demonstrating SDK features
+- **example01-06/** - Standalone examples demonstrating SDK features
 - **test/** - Google Test unit tests
 - **resources/** - Shaders and test assets
 - **bin/** - All build outputs (executables, libraries)

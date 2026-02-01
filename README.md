@@ -27,6 +27,10 @@ See [BUILD.md](BUILD.md) for detailed instructions.
 ## Project Structure
 
 - **src/** - Reusable SDK (core, cpu, gpu, engine modules)
+  - **core/** - Foundation layer (math, color, image, I/O, utility)
+  - **cpu/** - CPU-side implementations
+  - **gpu/** - GPU abstraction layer (Vulkan, shaders)
+  - **engine/** - High-level framework (asset, renderer, runtime)
 - **example??/** - Sample applications demonstrating SDK usage
 - **test/** - Unit tests for SDK components
 - **resources/** - Shaders and test images

@@ -227,17 +227,26 @@ src/
 │   ├── image/
 │   ├── io/
 │   ├── math/
-│   └── utility/
+│   ├── parser/
+│   ├── templates/     # Template utilities
+│   └── utility/       # Base64, gzip, etc.
 ├── cpu/               # CPU-side implementations
+│   └── ai/            # AI/ML components
 ├── gpu/               # GPU abstractions
 │   ├── shader/        # Shader compilation (GLSL, SPIR-V, Slang)
 │   └── vulkan/        # Vulkan-specific code
 │       ├── builder/   # Complex object builders
 │       ├── factory/   # Object creation factories
-│       ├── utility/   # Helper functions
-│       └── ...
+│       ├── presentation/  # Window/swapchain management
+│       ├── spirv/     # SPIR-V reflection
+│       ├── transfer/  # Data transfer utilities
+│       └── utility/   # Helper functions
 └── engine/            # High-level engine code
+    ├── asset/         # Asset loading and parsing
     ├── renderer/      # Rendering abstractions
+    │   ├── geometry/  # Mesh primitives (point, curve, surface, volume)
+    │   ├── material/  # Material system (pbr, splat)
+    │   └── backend/   # Backend implementations (rasterizer, raytracer, common)
     └── runtime/       # Application framework
 ```
 
