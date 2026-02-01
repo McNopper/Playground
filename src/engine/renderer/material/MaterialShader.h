@@ -2,6 +2,7 @@
 #define ENGINE_RENDERER_MATERIAL_MATERIALSHADER_H_
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -14,11 +15,13 @@ class UniformBuffer;
 class StorageBuffer;
 class Texture;
 class Sampler;
+class DescriptorBufferSet;
 
 // Base class for material shaders
 // Takes a Slang shader file, compiles it to SPIR-V, and reflects shader resources
 // Stores both SpirvData (with execution_model) and VkShaderModule for pipeline creation
 // Manages textures, samplers, and uniform buffers attached to the material
+// Automatically creates and manages descriptor buffers for bound resources
 // Inspired by OpenUSD's UsdShadeShader and MaterialX node conventions
 class MaterialShader
 {
@@ -42,6 +45,22 @@ private:
     std::map<std::pair<uint32_t, uint32_t>, const Texture*> m_textures{};
     std::map<std::pair<uint32_t, uint32_t>, const Sampler*> m_samplers{};
 
+    // Descriptor buffers - one per descriptor set
+    std::map<uint32_t, std::unique_ptr<DescriptorBufferSet>> m_descriptor_sets{};
+
+    // Descriptor set layout info from reflection
+    struct DescriptorInfo
+    {
+        uint32_t set{ 0u };
+        uint32_t binding{ 0u };
+        VkDescriptorType type{ VK_DESCRIPTOR_TYPE_MAX_ENUM };
+    };
+    std::vector<DescriptorInfo> m_descriptor_infos{};
+
+    bool m_descriptors_built{ false };
+
+    bool buildDescriptorInfos();
+
 public:
 
     MaterialShader() = delete;
@@ -63,7 +82,11 @@ public:
     bool setTexture(const std::string& name, const Texture* texture);
     bool setSampler(const std::string& name, const Sampler* sampler);
 
-    // Binding
+    // Build descriptor buffers from attached resources
+    // Call this after setting all resources and before rendering
+    bool buildDescriptors();
+
+    // Bind descriptor buffers for rendering
     void bind(VkCommandBuffer command_buffer) const;
 
     const std::vector<SpirvData>& getSpirvShaders() const;

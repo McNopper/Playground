@@ -91,6 +91,10 @@ collect_sources_and_headers(${CMAKE_SOURCE_DIR}/example05 SOURCES_EXAMPLE05)
 add_executable(Example05 ${SOURCES_EXAMPLE05})
 target_link_libraries(Example05 PRIVATE PlaygroundSDK volk::volk_headers unofficial::spirv-reflect)
 
+collect_sources_and_headers(${CMAKE_SOURCE_DIR}/example06 SOURCES_EXAMPLE06)
+add_executable(Example06 ${SOURCES_EXAMPLE06})
+target_link_libraries(Example06 PRIVATE PlaygroundSDK volk::volk_headers unofficial::spirv-reflect)
+
 #
 # SDK tests
 #
