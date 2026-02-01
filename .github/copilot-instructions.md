@@ -107,12 +107,40 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 - Always explicit `std::` for all standard library items - never `using namespace std`
   - Types: `std::vector`, `std::string`, `std::uint32_t`
   - Functions: `std::sqrt()`, `std::sin()`, `std::cos()`, `std::pow()`
-- Brace initialization `{}` for members and constructors
+- Brace initialization `{}` for member variables and local constants
 - `= default` and `= delete` for special members
 - `const&` for read-only parameters
 - `nullptr` not `NULL`
 - `auto` when type is obvious
 - `enum class` for type safety
+
+**Initialization style:**
+- **Member variables**: Always use `{}` brace initialization
+  ```cpp
+  VkDevice m_device{ VK_NULL_HANDLE };
+  bool m_enabled{ false };
+  std::string m_name{};
+  ```
+- **Local variables with constants/literals**: Use `{}` brace initialization
+  ```cpp
+  uint32_t count{ 0u };
+  bool result{ false };
+  VkDescriptorSetLayout layout{ VK_NULL_HANDLE };
+  ```
+- **Local variables from function calls**: Use `=` assignment
+  ```cpp
+  auto physical_devices = gatherPhysicalDevices(instance);
+  VkDevice device = factory.create();
+  ```
+- **Default function parameters**: Use `=` (standard C++ syntax)
+  ```cpp
+  void function(uint32_t offset = 0u, bool enabled = true);
+  ```
+- **Assignment statements**: Use `=`
+  ```cpp
+  attr.buffer = buffer;
+  m_count = getCount();
+  ```
 
 **Formatting:**
 - 4 spaces, no tabs

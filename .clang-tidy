@@ -2,5 +2,5 @@ Checks: '-*,
 	bugprone-*,-bugprone-easily-swappable-parameters,-bugprone-reserved-identifier,-bugprone-narrowing-conversions,-bugprone-implicit-widening-of-multiplication-result,
 	performance-*,
 	portability-*,
-	readability-*,-readability-function-cognitive-complexity,-readability-identifier-length,-readability-implicit-bool-conversion,-readability-magic-numbers,-readability-math-missing-parentheses,-readability-simplify-boolean-expr,-readability-use-std-min-max,-readability-uppercase-literal-suffix
+	readability-*,-readability-function-cognitive-complexity,-readability-identifier-length,-readability-implicit-bool-conversion,-readability-magic-numbers,-readability-math-missing-parentheses,-readability-simplify-boolean-expr,-readability-use-std-min-max,-readability-uppercase-literal-suffix,-readability-redundant-member-init
 '

@@ -85,8 +85,8 @@ class TestTriangleMesh : public ::testing::Test
 
 protected:
 
-	VulkanSetup m_vulkan_setup;
-	VulkanHandles m_vulkan;
+	VulkanSetup m_vulkan_setup{};
+	VulkanHandles m_vulkan{};
 
 	void SetUp() override
 	{
