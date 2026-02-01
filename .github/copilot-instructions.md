@@ -98,7 +98,9 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 ### Code Style
 
 **Modern C++:**
-- Always explicit `std::` - never `using namespace std`
+- Always explicit `std::` for all standard library items - never `using namespace std`
+  - Types: `std::vector`, `std::string`, `std::uint32_t`
+  - Functions: `std::sqrt()`, `std::sin()`, `std::cos()`, `std::pow()`
 - Brace initialization `{}` for members and constructors
 - `= default` and `= delete` for special members
 - `const&` for read-only parameters

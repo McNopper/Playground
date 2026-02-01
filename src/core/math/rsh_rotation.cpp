@@ -20,34 +20,34 @@
 //
 
 // Helper constants for rotation matrix construction
-static const float kSqrt01_02  = sqrtf( 1.0f /  2.0f);
-static const float kSqrt03_02  = sqrtf( 3.0f /  2.0f);
-static const float kSqrt01_03  = sqrtf( 1.0f /  3.0f);
-static const float kSqrt02_03  = sqrtf( 2.0f /  3.0f);
-static const float kSqrt04_03  = sqrtf( 4.0f /  3.0f);
-static const float kSqrt01_04  = sqrtf( 1.0f /  4.0f);
-static const float kSqrt03_04  = sqrtf( 3.0f /  4.0f);
-static const float kSqrt01_05  = sqrtf( 1.0f /  5.0f);
-static const float kSqrt02_05  = sqrtf( 2.0f /  5.0f);
-static const float kSqrt03_05  = sqrtf( 3.0f /  5.0f);
-static const float kSqrt06_05  = sqrtf( 6.0f /  5.0f);
-static const float kSqrt08_05  = sqrtf( 8.0f /  5.0f);
-static const float kSqrt09_05  = sqrtf( 9.0f /  5.0f);
-static const float kSqrt01_06  = sqrtf( 1.0f /  6.0f);
-static const float kSqrt05_06  = sqrtf( 5.0f /  6.0f);
-static const float kSqrt05_08  = sqrtf( 5.0f /  8.0f);
-static const float kSqrt09_08  = sqrtf( 9.0f /  8.0f);
-static const float kSqrt05_09  = sqrtf( 5.0f /  9.0f);
-static const float kSqrt08_09  = sqrtf( 8.0f /  9.0f);
-static const float kSqrt01_10  = sqrtf( 1.0f / 10.0f);
-static const float kSqrt03_10  = sqrtf( 3.0f / 10.0f);
-static const float kSqrt01_12  = sqrtf( 1.0f / 12.0f);
-static const float kSqrt04_15  = sqrtf( 4.0f / 15.0f);
-static const float kSqrt01_16  = sqrtf( 1.0f / 16.0f);
-static const float kSqrt15_16  = sqrtf(15.0f / 16.0f);
-static const float kSqrt01_18  = sqrtf( 1.0f / 18.0f);
-static const float kSqrt01_60  = sqrtf( 1.0f / 60.0f);
-static const float kSqrt03_08  = sqrtf( 3.0f /  8.0f);
+static const float kSqrt01_02  = std::sqrtf( 1.0f /  2.0f);
+static const float kSqrt03_02  = std::sqrtf( 3.0f /  2.0f);
+static const float kSqrt01_03  = std::sqrtf( 1.0f /  3.0f);
+static const float kSqrt02_03  = std::sqrtf( 2.0f /  3.0f);
+static const float kSqrt04_03  = std::sqrtf( 4.0f /  3.0f);
+static const float kSqrt01_04  = std::sqrtf( 1.0f /  4.0f);
+static const float kSqrt03_04  = std::sqrtf( 3.0f /  4.0f);
+static const float kSqrt01_05  = std::sqrtf( 1.0f /  5.0f);
+static const float kSqrt02_05  = std::sqrtf( 2.0f /  5.0f);
+static const float kSqrt03_05  = std::sqrtf( 3.0f /  5.0f);
+static const float kSqrt06_05  = std::sqrtf( 6.0f /  5.0f);
+static const float kSqrt08_05  = std::sqrtf( 8.0f /  5.0f);
+static const float kSqrt09_05  = std::sqrtf( 9.0f /  5.0f);
+static const float kSqrt01_06  = std::sqrtf( 1.0f /  6.0f);
+static const float kSqrt05_06  = std::sqrtf( 5.0f /  6.0f);
+static const float kSqrt05_08  = std::sqrtf( 5.0f /  8.0f);
+static const float kSqrt09_08  = std::sqrtf( 9.0f /  8.0f);
+static const float kSqrt05_09  = std::sqrtf( 5.0f /  9.0f);
+static const float kSqrt08_09  = std::sqrtf( 8.0f /  9.0f);
+static const float kSqrt01_10  = std::sqrtf( 1.0f / 10.0f);
+static const float kSqrt03_10  = std::sqrtf( 3.0f / 10.0f);
+static const float kSqrt01_12  = std::sqrtf( 1.0f / 12.0f);
+static const float kSqrt04_15  = std::sqrtf( 4.0f / 15.0f);
+static const float kSqrt01_16  = std::sqrtf( 1.0f / 16.0f);
+static const float kSqrt15_16  = std::sqrtf(15.0f / 16.0f);
+static const float kSqrt01_18  = std::sqrtf( 1.0f / 18.0f);
+static const float kSqrt01_60  = std::sqrtf( 1.0f / 60.0f);
+static const float kSqrt03_08  = std::sqrtf( 3.0f /  8.0f);
 
 float rotateBand0(float coefficient_in)
 {

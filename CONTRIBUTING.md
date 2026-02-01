@@ -109,7 +109,9 @@ void myFunction()
 
 ### Modern C++ Best Practices
 
-- **Always use explicit `std::`** - never `using namespace std`
+- **Always use explicit `std::`** for all standard library items - never `using namespace std`
+  - Types: `std::vector`, `std::string`, `std::uint32_t`
+  - Functions: `std::sqrt()`, `std::sin()`, `std::cos()`, `std::pow()`
 - **Initialization**: Use brace initialization `{ }` for members and constructors
 - **Constructors**: Use `= default` and `= delete` appropriately
 - **Parameters**: Use `const&` for read-only parameters

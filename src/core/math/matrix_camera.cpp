@@ -105,7 +105,7 @@ float4x4 orthographic(float left, float right, float bottom, float top, float ne
 
 float4x4 perspective(float fov_y, float aspect, float near_val, float far_val)
 {
-    float y_max = near_val * tanf(degreeToRadians(fov_y * 0.5f));
+    float y_max = near_val * std::tanf(degreeToRadians(fov_y * 0.5f));
     float y_min = -y_max;
     float x_min = y_min * aspect;
     float x_max = y_max * aspect;
