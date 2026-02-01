@@ -183,3 +183,128 @@ TEST(TestUtility, Base64EncodeNullPointer)
     std::string encoded = base64Encode(nullptr, 10);
     EXPECT_EQ(encoded, "");
 }
+
+TEST(TestUtility, GzipCompressEmpty)
+{
+    std::vector<std::uint8_t> empty{};
+    std::vector<std::uint8_t> compressed = gzipCompress(empty);
+    EXPECT_TRUE(compressed.empty());
+}
+
+TEST(TestUtility, GzipDecompressEmpty)
+{
+    std::vector<std::uint8_t> decompressed = gzipDecompress(std::vector<std::uint8_t>{});
+    EXPECT_TRUE(decompressed.empty());
+}
+
+TEST(TestUtility, GzipCompressSimple)
+{
+    std::string text = "Hello, World!";
+    std::vector<std::uint8_t> data{ text.begin(), text.end() };
+    
+    std::vector<std::uint8_t> compressed = gzipCompress(data);
+    EXPECT_FALSE(compressed.empty());
+    EXPECT_LT(compressed.size(), 100u);
+}
+
+TEST(TestUtility, GzipRoundTripSimple)
+{
+    std::string text = "Hello, World!";
+    std::vector<std::uint8_t> original{ text.begin(), text.end() };
+    
+    std::vector<std::uint8_t> compressed = gzipCompress(original);
+    std::vector<std::uint8_t> decompressed = gzipDecompress(compressed);
+    
+    EXPECT_EQ(decompressed, original);
+}
+
+TEST(TestUtility, GzipRoundTripLarge)
+{
+    std::vector<std::uint8_t> original{};
+    original.reserve(10000);
+    for (std::uint32_t i = 0; i < 10000; ++i)
+    {
+        original.push_back(static_cast<std::uint8_t>(i % 256));
+    }
+    
+    std::vector<std::uint8_t> compressed = gzipCompress(original);
+    std::vector<std::uint8_t> decompressed = gzipDecompress(compressed);
+    
+    EXPECT_EQ(decompressed.size(), original.size());
+    EXPECT_EQ(decompressed, original);
+}
+
+TEST(TestUtility, GzipRoundTripBinary)
+{
+    std::vector<std::uint8_t> original{ 0x00, 0xFF, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0 };
+    
+    std::vector<std::uint8_t> compressed = gzipCompress(original);
+    std::vector<std::uint8_t> decompressed = gzipDecompress(compressed);
+    
+    EXPECT_EQ(decompressed, original);
+}
+
+TEST(TestUtility, GzipCompressionLevels)
+{
+    std::string text = "The quick brown fox jumps over the lazy dog. ";
+    std::string repeated{};
+    for (int i = 0; i < 100; ++i)
+    {
+        repeated += text;
+    }
+    std::vector<std::uint8_t> data{ repeated.begin(), repeated.end() };
+    
+    std::vector<std::uint8_t> fast = gzipCompress(data, 1);
+    std::vector<std::uint8_t> best = gzipCompress(data, 9);
+    
+    EXPECT_FALSE(fast.empty());
+    EXPECT_FALSE(best.empty());
+    EXPECT_LE(best.size(), fast.size());
+    
+    std::vector<std::uint8_t> decompressed_fast = gzipDecompress(fast);
+    std::vector<std::uint8_t> decompressed_best = gzipDecompress(best);
+    
+    EXPECT_EQ(decompressed_fast, data);
+    EXPECT_EQ(decompressed_best, data);
+}
+
+TEST(TestUtility, GzipCompressPointer)
+{
+    const std::uint8_t data[] = { 'T', 'e', 's', 't' };
+    std::vector<std::uint8_t> compressed = gzipCompress(data, 4);
+    EXPECT_FALSE(compressed.empty());
+    
+    std::vector<std::uint8_t> decompressed = gzipDecompress(compressed);
+    std::vector<std::uint8_t> expected{ 'T', 'e', 's', 't' };
+    EXPECT_EQ(decompressed, expected);
+}
+
+TEST(TestUtility, GzipCompressNullPointer)
+{
+    std::vector<std::uint8_t> compressed = gzipCompress(nullptr, 10);
+    EXPECT_TRUE(compressed.empty());
+}
+
+TEST(TestUtility, GzipDecompressInvalid)
+{
+    std::vector<std::uint8_t> invalid{ 0x00, 0x01, 0x02, 0x03 };
+    std::vector<std::uint8_t> decompressed = gzipDecompress(invalid);
+    EXPECT_TRUE(decompressed.empty());
+}
+
+TEST(TestUtility, GzipCompressHighlyCompressible)
+{
+    std::vector<std::uint8_t> repetitive{};
+    repetitive.reserve(1000);
+    for (int i = 0; i < 1000; ++i)
+    {
+        repetitive.push_back('A');
+    }
+    
+    std::vector<std::uint8_t> compressed = gzipCompress(repetitive);
+    
+    EXPECT_LT(compressed.size(), repetitive.size() / 10);
+    
+    std::vector<std::uint8_t> decompressed = gzipDecompress(compressed);
+    EXPECT_EQ(decompressed, repetitive);
+}

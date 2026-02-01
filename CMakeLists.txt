@@ -32,6 +32,7 @@ find_package(SPIRV-Tools CONFIG REQUIRED)
 find_package(unofficial-shaderc CONFIG REQUIRED)
 find_package(unofficial-spirv-reflect CONFIG REQUIRED)
 find_package(volk CONFIG REQUIRED)
+find_package(ZLIB REQUIRED)
 
 # Function to collect all relevant files in a directory and create source groups
 function(collect_sources_and_headers base_dir)
@@ -52,7 +53,7 @@ endfunction()
 
 collect_sources_and_headers(${CMAKE_SOURCE_DIR}/src SOURCES_SDK)
 add_library(PlaygroundSDK ${SOURCES_SDK})
-target_link_libraries(PlaygroundSDK PRIVATE volk::volk volk::volk_headers imgui::imgui glfw nlohmann_json::nlohmann_json OpenImageIO::OpenImageIO slang unofficial::spirv-reflect unofficial::shaderc::shaderc SPIRV-Tools-static)
+target_link_libraries(PlaygroundSDK PRIVATE volk::volk volk::volk_headers imgui::imgui glfw nlohmann_json::nlohmann_json OpenImageIO::OpenImageIO slang unofficial::spirv-reflect unofficial::shaderc::shaderc SPIRV-Tools-static ZLIB::ZLIB)
 
 # Workaround for OpenImageIO/vcpkg issue on Windows
 if(WIN32)

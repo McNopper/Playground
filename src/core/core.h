@@ -46,6 +46,8 @@
 
 #include "utility/generator.h"
 
+#include "utility/gzip.h"
+
 #include "utility/strings.h"
 
 // Layer

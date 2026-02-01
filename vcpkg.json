@@ -8,6 +8,7 @@
     "shaderc",
     "spirv-reflect",
     "spirv-tools",
-    "volk"
+    "volk",
+    "zlib"
   ]
 }

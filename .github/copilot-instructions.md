@@ -219,7 +219,7 @@ Managed via vcpkg:
 - **Shaders**: shaderc (GLSL), slang (Slang language)
 - **Graphics**: imgui (UI), glfw (windowing)
 - **Images**: OpenImageIO (loading/saving)
-- **Data**: nlohmann/json (JSON parsing)
+- **Data**: nlohmann/json (JSON parsing), zlib (gzip compression)
 - **Testing**: gtest
 
 Requires `VULKAN_SDK` environment variable.

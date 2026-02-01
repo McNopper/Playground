@@ -123,3 +123,4 @@ Verify your compiler supports C++20:
 - [SPIRV-Reflect](https://github.com/KhronosGroup/SPIRV-Reflect)
 - [SPIRV-Tools](https://github.com/KhronosGroup/SPIRV-Tools)
 - [volk](https://github.com/zeux/volk)
+- [zlib](https://github.com/madler/zlib)

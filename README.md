@@ -45,4 +45,6 @@ Contributions are welcome! Please read the [Contributing Guide](CONTRIBUTING.md)
 
 ## License
 
-See [LICENSE](LICENSE) for details.
+This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
+
+Third-party dependencies are documented in [THIRD-PARTY-LICENSES.md](THIRD-PARTY-LICENSES.md).
