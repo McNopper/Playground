@@ -67,6 +67,12 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 
 4. **engine/** - High-level rendering framework
    - `renderer/` - Rendering abstractions
+     - `geometry/` - Mesh and primitive data structures
+     - `material/` - Material definitions (inspired by OpenUSD/MaterialX)
+       - `Shader` - Base class for shader materials (can be instantiated)
+       - `pbr/` - PBR material implementations
+       - `splat/` - Splatting shader implementations (Gaussian, EWA)
+     - `backend/` - Backend-specific implementations
    - `runtime/` - Application framework and main loop
 
 **Umbrella Headers:** Each module has a master header (`core/core.h`, `gpu/gpu.h`, `engine/engine.h`) that includes all public headers for that module.

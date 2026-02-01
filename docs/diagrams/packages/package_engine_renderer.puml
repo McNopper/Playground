@@ -6,6 +6,11 @@ package engine {
 
     package geometry {}
 
+    package material {
+      package pbr {}
+      package splat {}
+    }
+
     package backend {}
 
   }

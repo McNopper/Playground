@@ -19,6 +19,12 @@
 
 // Layer
 
+// material
+
+#include "engine/renderer/material/MaterialShader.h"
+
+// Layer
+
 // backend/common
 
 #include "engine/renderer/backend/common/buffer/GpuBuffer.h"
