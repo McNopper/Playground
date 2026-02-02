@@ -47,6 +47,8 @@
 
 #include "gpu/vulkan/spirv/VulkanSpirvQuery.h"
 
+#include "gpu/vulkan/spirv/UniformBlock.h"
+
 // Layer
 
 // builder
