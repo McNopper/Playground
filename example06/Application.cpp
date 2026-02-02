@@ -5,13 +5,7 @@
 #include "core/core.h"
 
 Application::Application(VkPhysicalDevice physical_device, VkDevice device, uint32_t queue_family_index, IVulkanWindow& vulkan_window) :
-	m_physical_device{ physical_device }, m_device{ device }, m_queue_family_index{ queue_family_index }, m_vulkan_window{ vulkan_window },
-	m_vertex_buffer(physical_device, device),
-	m_index_buffer(physical_device, device),
-	m_uniform_view_buffer(physical_device, device),
-	m_uniform_model_buffer(physical_device, device),
-	m_texture(physical_device, device),
-	m_sampler(device)
+	m_physical_device{ physical_device }, m_device{ device }, m_queue_family_index{ queue_family_index }, m_vulkan_window{ vulkan_window }
 {
 }
 
@@ -73,26 +67,28 @@ bool Application::init()
 		20, 21, 22,  20, 22, 23  // Bottom
 	};
 
-	if (!m_vertex_buffer.create(vertex_buffer_data))
+	// Create vertex buffer
+	m_vertex_buffer = std::make_shared<VertexBuffer>(m_physical_device, m_device);
+	if (!m_vertex_buffer->create(vertex_buffer_data))
 	{
 		return false;
 	}
 
-	if (!m_index_buffer.create(index_buffer_data))
+	// Create index buffer
+	m_index_buffer = std::make_shared<IndexBuffer>(m_physical_device, m_device);
+	if (!m_index_buffer->create(index_buffer_data))
 	{
 		return false;
 	}
 
-	if (!m_uniform_view_buffer.create(sizeof(UniformViewData)))
+	// Create view uniform buffer (camera matrices - shared across all renderables)
+	m_uniform_view_buffer = std::make_shared<UniformBuffer>(m_physical_device, m_device);
+	if (!m_uniform_view_buffer->create(sizeof(UniformViewData)))
 	{
 		return false;
 	}
 
-	if (!m_uniform_model_buffer.create(sizeof(UniformModelData)))
-	{
-		return false;
-	}
-
+	// Load and upload texture
 	auto image_data_opt = loadImageData("../resources/images/color_grid.png");
 	if (!image_data_opt.has_value())
 	{
@@ -105,12 +101,13 @@ bool Application::init()
 		return false;
 	}
 
-	m_texture.setExtent(image_data->width, image_data->height);
-	m_texture.setFormat(VK_FORMAT_R8G8B8A8_SRGB);
-	m_texture.setUsage(VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
-	m_texture.setMipLevels(1);
+	auto texture = std::make_shared<Texture2D>(m_physical_device, m_device);
+	texture->setExtent(image_data->width, image_data->height);
+	texture->setFormat(VK_FORMAT_R8G8B8A8_SRGB);
+	texture->setUsage(VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
+	texture->setMipLevels(1);
 
-	if (!m_texture.create())
+	if (!texture->create())
 	{
 		return false;
 	}
@@ -125,7 +122,7 @@ bool Application::init()
 	VkQueue queue = VK_NULL_HANDLE;
 	vkGetDeviceQueue(m_device, m_queue_family_index, 0, &queue);
 
-	if (!m_texture.upload(command_pool, queue, image_data.value()))
+	if (!texture->upload(command_pool, queue, image_data.value()))
 	{
 		vkDestroyCommandPool(m_device, command_pool, nullptr);
 		return false;
@@ -133,37 +130,37 @@ bool Application::init()
 
 	vkDestroyCommandPool(m_device, command_pool, nullptr);
 
-	m_sampler.setMagFilter(VK_FILTER_LINEAR);
-	m_sampler.setMinFilter(VK_FILTER_LINEAR);
-	m_sampler.setAddressMode(VK_SAMPLER_ADDRESS_MODE_REPEAT);
+	// Store texture and sampler as shared resources
+	m_texture = texture;
 
-	if (!m_sampler.create())
+	// Create sampler with linear filtering
+	m_sampler = std::make_shared<Sampler>(m_device);
+	m_sampler->setMagFilter(VK_FILTER_LINEAR);
+	m_sampler->setMinFilter(VK_FILTER_LINEAR);
+	m_sampler->setAddressMode(VK_SAMPLER_ADDRESS_MODE_REPEAT);
+	
+	if (!m_sampler->create())
 	{
 		return false;
 	}
+
+	// Create Texture2DSampler pairing (holds references only, but wrapper itself is shareable)
+	m_texture_sampler = std::make_shared<Texture2DSampler>(m_texture.get(), m_sampler.get());
 
 	// Create MaterialShader - handles shader compilation and descriptor management
-	m_material = std::make_unique<MaterialShader>(m_physical_device, m_device, "textured_quad.slang", "../resources/shaders/");
+	auto material = std::make_shared<MaterialShader>(m_physical_device, m_device, "textured_quad.slang", "../resources/shaders/");
 	
-	if (!m_material->build())
+	if (!material->build())
 	{
 		return false;
 	}
 
-	// Attach resources to material by shader variable names
-	m_material->setUniformBuffer("UniformViewData", &m_uniform_view_buffer);
-	m_material->setUniformBuffer("UniformModelData", &m_uniform_model_buffer);
-	m_material->setTexture("u_texture", &m_texture);
-	m_material->setSampler("u_sampler", &m_sampler);
-
-	// Build descriptor buffers from attached resources
-	if (!m_material->buildDescriptors())
-	{
-		return false;
-	}
+	// Attach view uniform buffer to material (shared camera data)
+	material->setUniformBuffer("UniformViewData", m_uniform_view_buffer.get());
+	material->setTexture2DSampler("u_texture", "u_sampler", m_texture_sampler.get());
 
 	// Create graphics pipeline using material's layout
-	VulkanGraphicsPipelineBuilder graphics_pipeline_builder{ m_device, VK_PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT, m_material->getPipelineLayout() };
+	VulkanGraphicsPipelineBuilder graphics_pipeline_builder{ m_device, VK_PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT, material->getPipelineLayout() };
 
 	VkPipelineColorBlendAttachmentState pipeline_color_blend_attachment_state{};
 	pipeline_color_blend_attachment_state.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
@@ -178,23 +175,39 @@ bool Application::init()
 	graphics_pipeline_builder.addDynamicState(VK_DYNAMIC_STATE_VIEWPORT);
 	graphics_pipeline_builder.addDynamicState(VK_DYNAMIC_STATE_SCISSOR);
 
-	m_pipeline = graphics_pipeline_builder.create(m_material->getSpirvShaders());
+	m_pipeline = graphics_pipeline_builder.create(material->getSpirvShaders());
 	if (m_pipeline == VK_NULL_HANDLE)
 	{
 		return false;
 	}
 
 	// Create TriangleMesh geometry - handles vertex/index binding
-	m_mesh = std::make_unique<TriangleMesh>(m_physical_device, m_device);
+	auto mesh = std::make_shared<TriangleMesh>(m_physical_device, m_device);
 
 	// Set vertex attributes matching shader input names
-	m_mesh->setVertexAttribute("i_position", &m_vertex_buffer, 0, VK_FORMAT_R32G32B32_SFLOAT, 0, sizeof(VertexInputData));
-	m_mesh->setVertexAttribute("i_texcoord", &m_vertex_buffer, 0, VK_FORMAT_R32G32_SFLOAT, sizeof(float3), sizeof(VertexInputData));
+	mesh->setVertexAttribute("i_position", m_vertex_buffer.get(), 0, VK_FORMAT_R32G32B32_SFLOAT, 0, sizeof(VertexInputData));
+	mesh->setVertexAttribute("i_texcoord", m_vertex_buffer.get(), 0, VK_FORMAT_R32G32_SFLOAT, sizeof(float3), sizeof(VertexInputData));
 
 	// Set index buffer
-	m_mesh->setIndexBuffer(&m_index_buffer, VK_INDEX_TYPE_UINT16, 36);
+	mesh->setIndexBuffer(m_index_buffer.get(), VK_INDEX_TYPE_UINT16, 36);
 
-	if (!m_mesh->isValid())
+	if (!mesh->isValid())
+	{
+		return false;
+	}
+
+	// Create Renderable - combines geometry, material, and transform
+	// Renderable owns and manages its own UniformModelData buffer
+	m_renderable = std::make_shared<Renderable>(m_physical_device, m_device, mesh, material, float4x4(1.0f));
+	
+	// Initialize renderable (creates uniform buffer and binds to material)
+	if (!m_renderable->init())
+	{
+		return false;
+	}
+
+	// Build descriptor buffers from all attached resources
+	if (!material->buildDescriptors())
 	{
 		return false;
 	}
@@ -208,24 +221,26 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 {
 	m_rotation_angle += delta_time * 45.0;
 
+	// Update view matrices (camera - shared across all renderables)
 	UniformViewData uniform_view_data{};
 	
 	float aspect = (float)m_vulkan_window.getCurrentExtent().width / (float)m_vulkan_window.getCurrentExtent().height;
-	uniform_view_data.u_projectionMatrix = perspective(45.0f, aspect, 0.1f, 100.0f);
-	uniform_view_data.u_viewMatrix = lookAt(float3{ 0.0f, 1.0f, 3.0f }, float3{ 0.0f, 0.0f, 0.0f }, float3{ 0.0f, 1.0f, 0.0f });
+	uniform_view_data.u_projection_matrix = perspective(45.0f, aspect, 0.1f, 100.0f);
+	uniform_view_data.u_view_matrix = lookAt(float3{ 0.0f, 1.0f, 3.0f }, float3{ 0.0f, 0.0f, 0.0f }, float3{ 0.0f, 1.0f, 0.0f });
 
-	if (!m_uniform_view_buffer.update(0u, uniform_view_data))
+	if (!m_uniform_view_buffer->update(0u, uniform_view_data))
 	{
 		return false;
 	}
 
-	UniformModelData uniform_model_data{};
-	
+	// Update model matrix (world transform - per renderable)
 	quaternion rot_y = rotateRyQuaternion((float)m_rotation_angle);
-	
-	uniform_model_data.u_worldMatrix = rot_y;
+	m_renderable->setTransform(rot_y);
 
-	if (!m_uniform_model_buffer.update(0u, uniform_model_data))
+	UniformModelData uniform_model_data{};
+	uniform_model_data.u_world_matrix = m_renderable->getTransform();
+
+	if (!m_renderable->getUniformModelBuffer()->update(0u, uniform_model_data))
 	{
 		return false;
 	}
@@ -235,7 +250,7 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 	vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline);
 
 	// Material handles all descriptor binding
-	m_material->bind(command_buffer);
+	m_renderable->getMaterial()->bind(command_buffer);
 
 	VkViewport viewport{};
 	viewport.x = 0.0f;
@@ -252,9 +267,13 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 	scissor.extent = m_vulkan_window.getCurrentExtent();
 	vkCmdSetScissor(command_buffer, 0u, 1u, &scissor);
 
-	// Mesh handles vertex/index binding and draw call
-	m_mesh->bind(command_buffer);
-	m_mesh->draw(command_buffer);
+	// Geometry handles vertex/index binding and draw call
+	auto mesh = std::dynamic_pointer_cast<TriangleMesh>(m_renderable->getGeometry());
+	if (mesh)
+	{
+		mesh->bind(command_buffer);
+		mesh->draw(command_buffer);
+	}
 
 	m_vulkan_window.endRendering();
 
@@ -271,13 +290,33 @@ void Application::terminate()
 		m_pipeline = VK_NULL_HANDLE;
 	}
 
-	m_mesh.reset();
-	m_material.reset();
+	// Clean up scene object and shared resources
+	m_renderable.reset();
+	m_texture_sampler.reset();
 	
-	m_vertex_buffer.destroy();
-	m_index_buffer.destroy();
-	m_uniform_view_buffer.destroy();
-	m_uniform_model_buffer.destroy();
-	m_texture.destroy();
-	m_sampler.destroy();
+	if (m_sampler)
+	{
+		m_sampler->destroy();
+	}
+	
+	if (m_texture)
+	{
+		m_texture->destroy();
+	}
+	
+	if (m_uniform_view_buffer)
+	{
+		m_uniform_view_buffer->destroy();
+	}
+	
+	if (m_index_buffer)
+	{
+		m_index_buffer->destroy();
+	}
+	
+	if (m_vertex_buffer)
+	{
+		m_vertex_buffer->destroy();
+	}
 }
+

@@ -22,6 +22,13 @@
 // material
 
 #include "engine/renderer/material/MaterialShader.h"
+#include "engine/renderer/material/Texture2DSampler.h"
+
+// Layer
+
+// scene
+
+#include "engine/renderer/scene/Renderable.h"
 
 // Layer
 

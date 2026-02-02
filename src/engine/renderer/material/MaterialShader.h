@@ -15,6 +15,7 @@ class UniformBuffer;
 class StorageBuffer;
 class Texture;
 class Sampler;
+class Texture2DSampler;
 class DescriptorBufferSet;
 
 // Base class for material shaders
@@ -81,6 +82,9 @@ public:
     bool setStorageBuffer(const std::string& name, const StorageBuffer* buffer);
     bool setTexture(const std::string& name, const Texture* texture);
     bool setSampler(const std::string& name, const Sampler* sampler);
+
+    // Convenience method for combined texture+sampler
+    bool setTexture2DSampler(const std::string& texture_name, const std::string& sampler_name, const Texture2DSampler* texture_sampler);
 
     // Build descriptor buffers from attached resources
     // Call this after setting all resources and before rendering

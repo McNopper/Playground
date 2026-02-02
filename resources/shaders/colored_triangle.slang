@@ -6,14 +6,14 @@ import math;
 [[vk::binding(0, 0)]]
 cbuffer UniformViewData
 {
-    float4x4 u_projectionMatrix;
-    float4x4 u_viewMatrix;
+    float4x4 u_projection_matrix;
+    float4x4 u_view_matrix;
 }
 
 [[vk::binding(1, 0)]]
 cbuffer UniformModelData
 {
-    float4x4 u_worldMatrix;
+    float4x4 u_world_matrix;
 }
 
 struct VertexInputData
@@ -34,7 +34,7 @@ VertexVaryingData vertexMain(VertexInputData input)
     VertexVaryingData output;
 
     output.color_0 = input.i_color_0;
-    output.position = u_projectionMatrix * u_viewMatrix * u_worldMatrix * float4(input.i_position, 1.0);
+    output.position = u_projection_matrix * u_view_matrix * u_world_matrix * float4(input.i_position, 1.0);
 
     return output;
 }

@@ -10,13 +10,13 @@
 
 struct UniformViewData
 {
-	float4x4 u_projectionMatrix{ 1.0f };
-	float4x4 u_viewMatrix{ 1.0f };
+	float4x4 u_projection_matrix{ 1.0f };
+	float4x4 u_view_matrix{ 1.0f };
 };
 
 struct UniformModelData
 {
-	float4x4 u_worldMatrix{ 1.0f };
+	float4x4 u_world_matrix{ 1.0f };
 };
 
 class Application : public IApplication
@@ -30,17 +30,16 @@ private:
 
 	IVulkanWindow& m_vulkan_window;
 
-	// Geometry and material - using new classes
-	std::unique_ptr<TriangleMesh> m_mesh;
-	std::unique_ptr<MaterialShader> m_material;
+	// Scene object - combines geometry, material, and transform
+	std::shared_ptr<Renderable> m_renderable;
 
-	// Resources
-	VertexBuffer m_vertex_buffer;
-	IndexBuffer m_index_buffer;
-	UniformBuffer m_uniform_view_buffer;
-	UniformBuffer m_uniform_model_buffer;
-	Texture2D m_texture;
-	Sampler m_sampler;
+	// Shared resources (potentially reusable across multiple renderables)
+	std::shared_ptr<VertexBuffer> m_vertex_buffer;
+	std::shared_ptr<IndexBuffer> m_index_buffer;
+	std::shared_ptr<UniformBuffer> m_uniform_view_buffer;
+	std::shared_ptr<Texture2D> m_texture;
+	std::shared_ptr<Sampler> m_sampler;
+	std::shared_ptr<Texture2DSampler> m_texture_sampler;
 
 	VkPipeline m_pipeline{ VK_NULL_HANDLE };
 

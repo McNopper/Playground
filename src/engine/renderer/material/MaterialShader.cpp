@@ -13,7 +13,9 @@
 #include "engine/renderer/backend/common/buffer/StorageBuffer.h"
 #include "engine/renderer/backend/common/buffer/DescriptorBufferSet.h"
 #include "engine/renderer/backend/common/image/Texture.h"
+#include "engine/renderer/backend/common/image/Texture2D.h"
 #include "engine/renderer/backend/common/image/Sampler.h"
+#include "engine/renderer/material/Texture2DSampler.h"
 
 MaterialShader::MaterialShader(VkPhysicalDevice physical_device, VkDevice device, const std::string& shader_filename, const std::string& include_path) :
     m_physical_device{ physical_device }, m_device{ device }, m_shader_filename{ shader_filename }, m_include_path{ include_path }
@@ -452,6 +454,27 @@ bool MaterialShader::setSampler(const std::string& name, const Sampler* sampler)
     }
 
     return false;
+}
+
+bool MaterialShader::setTexture2DSampler(const std::string& texture_name, const std::string& sampler_name, const Texture2DSampler* texture_sampler)
+{
+    if (!texture_sampler)
+    {
+        return false;
+    }
+
+    const Texture2D* texture = texture_sampler->getTexture();
+    const Sampler* sampler = texture_sampler->getSampler();
+
+    if (!texture || !sampler)
+    {
+        return false;
+    }
+
+    bool texture_set = setTexture(texture_name, texture);
+    bool sampler_set = setSampler(sampler_name, sampler);
+
+    return texture_set && sampler_set;
 }
 
 void MaterialShader::bind(VkCommandBuffer command_buffer) const

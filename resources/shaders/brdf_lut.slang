@@ -10,7 +10,7 @@
 
 import math;
 
-RWTexture2D<float4> outputTexture;
+RWTexture2D<float4> output_texture;
 
 // Hammersley sequence for low-discrepancy sampling
 float radicalInverse_VdC(uint bits)
@@ -121,7 +121,7 @@ float2 integrateBRDF(float NdotV, float roughness)
 void computeMain(uint3 threadId : SV_DispatchThreadID)
 {
     uint2 dimensions;
-    outputTexture.GetDimensions(dimensions.x, dimensions.y);
+    output_texture.GetDimensions(dimensions.x, dimensions.y);
     
     if (threadId.x >= dimensions.x || threadId.y >= dimensions.y)
         return;
@@ -137,5 +137,5 @@ void computeMain(uint3 threadId : SV_DispatchThreadID)
     
     float2 result = integrateBRDF(NdotV, roughness);
     
-    outputTexture[threadId.xy] = float4(result.x, result.y, 0.0, 1.0);
+    output_texture[threadId.xy] = float4(result.x, result.y, 0.0, 1.0);
 }

@@ -313,8 +313,8 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 	UniformViewData uniform_view_data{};
 	
 	float aspect = (float)m_vulkan_window.getCurrentExtent().width / (float)m_vulkan_window.getCurrentExtent().height;
-	uniform_view_data.u_projectionMatrix = perspective(45.0f, aspect, 0.1f, 100.0f);
-	uniform_view_data.u_viewMatrix = lookAt(float3{ 0.0f, 1.0f, 3.0f }, float3{ 0.0f, 0.0f, 0.0f }, float3{ 0.0f, 1.0f, 0.0f });
+	uniform_view_data.u_projection_matrix = perspective(45.0f, aspect, 0.1f, 100.0f);
+	uniform_view_data.u_view_matrix = lookAt(float3{ 0.0f, 1.0f, 3.0f }, float3{ 0.0f, 0.0f, 0.0f }, float3{ 0.0f, 1.0f, 0.0f });
 
 	if (!m_uniform_view_buffer.update(0u, uniform_view_data))
 	{
@@ -325,7 +325,7 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 	
 	quaternion rot_y = rotateRyQuaternion((float)m_rotation_angle);
 	
-	uniform_model_data.u_worldMatrix = rot_y;
+	uniform_model_data.u_world_matrix = rot_y;
 
 	if (!m_uniform_model_buffer.update(0u, uniform_model_data))
 	{
