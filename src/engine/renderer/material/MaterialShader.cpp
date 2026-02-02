@@ -209,7 +209,7 @@ VkPipelineLayout MaterialShader::getPipelineLayout() const
     return m_pipeline_layout;
 }
 
-bool MaterialShader::setUniformBuffer(const std::string& name, const UniformBuffer* buffer)
+bool MaterialShader::setUniformBuffer(const std::string& name, const std::shared_ptr<const UniformBuffer>& buffer)
 {
     if (!buffer || !buffer->isValid())
     {
@@ -270,7 +270,7 @@ bool MaterialShader::setUniformBuffer(const std::string& name, const UniformBuff
     return false;
 }
 
-bool MaterialShader::setStorageBuffer(const std::string& name, const StorageBuffer* buffer)
+bool MaterialShader::setStorageBuffer(const std::string& name, const std::shared_ptr<const StorageBuffer>& buffer)
 {
     if (!buffer || !buffer->isValid())
     {
@@ -331,7 +331,7 @@ bool MaterialShader::setStorageBuffer(const std::string& name, const StorageBuff
     return false;
 }
 
-bool MaterialShader::setTexture(const std::string& name, const Texture* texture)
+bool MaterialShader::setTexture(const std::string& name, const std::shared_ptr<const Texture>& texture)
 {
     if (!texture || !texture->isValid())
     {
@@ -394,7 +394,7 @@ bool MaterialShader::setTexture(const std::string& name, const Texture* texture)
     return false;
 }
 
-bool MaterialShader::setSampler(const std::string& name, const Sampler* sampler)
+bool MaterialShader::setSampler(const std::string& name, const std::shared_ptr<const Sampler>& sampler)
 {
     if (!sampler || !sampler->isValid())
     {
@@ -456,15 +456,15 @@ bool MaterialShader::setSampler(const std::string& name, const Sampler* sampler)
     return false;
 }
 
-bool MaterialShader::setTexture2DSampler(const std::string& texture_name, const std::string& sampler_name, const Texture2DSampler* texture_sampler)
+bool MaterialShader::setTexture2DSampler(const std::string& texture_name, const std::string& sampler_name, const std::shared_ptr<const Texture2DSampler>& texture_sampler)
 {
     if (!texture_sampler)
     {
         return false;
     }
 
-    const Texture2D* texture = texture_sampler->getTexture();
-    const Sampler* sampler = texture_sampler->getSampler();
+    auto texture = texture_sampler->getTexture();
+    auto sampler = texture_sampler->getSampler();
 
     if (!texture || !sampler)
     {

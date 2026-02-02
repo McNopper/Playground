@@ -28,7 +28,7 @@ private:
 
     std::shared_ptr<AGeometry> m_geometry{};
     std::shared_ptr<MaterialShader> m_material{};
-    std::unique_ptr<UniformBuffer> m_uniform_model_buffer{};
+    std::shared_ptr<UniformBuffer> m_uniform_model_buffer{};
     std::shared_ptr<UniformBlock> m_uniform_model_block{};
     float4x4 m_world_matrix{};
 

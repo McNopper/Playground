@@ -31,7 +31,7 @@ Renderable::~Renderable()
 bool Renderable::init()
 {
     // Create uniform buffer for world transform
-    m_uniform_model_buffer = std::make_unique<UniformBuffer>(m_physical_device, m_device);
+    m_uniform_model_buffer = std::make_shared<UniformBuffer>(m_physical_device, m_device);
     
     // Create UniformBlock from material's shader
     if (m_material)
@@ -53,7 +53,7 @@ bool Renderable::init()
         }
 
         // Bind uniform buffer to material
-        if (!m_material->setUniformBuffer("UniformModelData", m_uniform_model_buffer.get()))
+        if (!m_material->setUniformBuffer("UniformModelData", m_uniform_model_buffer))
         {
             return false;
         }

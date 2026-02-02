@@ -137,8 +137,8 @@ bool Application::init()
 		return false;
 	}
 
-	// Create Texture2DSampler pairing (holds references only, but wrapper itself is shareable)
-	m_texture_sampler = std::make_shared<Texture2DSampler>(m_texture.get(), m_sampler.get());
+	// Create Texture2DSampler pairing
+	m_texture_sampler = std::make_shared<Texture2DSampler>(m_texture, m_sampler);
 
 	// Create MaterialShader - handles shader compilation and descriptor management
 	auto material = std::make_shared<MaterialShader>(m_physical_device, m_device, "textured_quad.slang", "../resources/shaders/");
@@ -168,8 +168,8 @@ bool Application::init()
 	}
 
 	// Attach view uniform buffer to material (shared camera data)
-	material->setUniformBuffer("UniformViewData", m_uniform_view_buffer.get());
-	material->setTexture2DSampler("u_texture", "u_sampler", m_texture_sampler.get());
+	material->setUniformBuffer("UniformViewData", m_uniform_view_buffer);
+	material->setTexture2DSampler("u_texture", "u_sampler", m_texture_sampler);
 
 	// Create graphics pipeline using material's layout
 	VulkanGraphicsPipelineBuilder graphics_pipeline_builder{ m_device, VK_PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT, material->getPipelineLayout() };
@@ -197,11 +197,11 @@ bool Application::init()
 	auto mesh = std::make_shared<TriangleMesh>(m_physical_device, m_device);
 
 	// Set vertex attributes matching shader input names
-	mesh->setVertexAttribute("i_position", m_vertex_buffer.get(), 0, VK_FORMAT_R32G32B32_SFLOAT, 0, sizeof(VertexInputData));
-	mesh->setVertexAttribute("i_texcoord", m_vertex_buffer.get(), 0, VK_FORMAT_R32G32_SFLOAT, sizeof(float3), sizeof(VertexInputData));
+	mesh->setVertexAttribute("i_position", m_vertex_buffer, 0, VK_FORMAT_R32G32B32_SFLOAT, 0, sizeof(VertexInputData));
+	mesh->setVertexAttribute("i_texcoord", m_vertex_buffer, 0, VK_FORMAT_R32G32_SFLOAT, sizeof(float3), sizeof(VertexInputData));
 
 	// Set index buffer
-	mesh->setIndexBuffer(m_index_buffer.get(), VK_INDEX_TYPE_UINT16, 36);
+	mesh->setIndexBuffer(m_index_buffer, VK_INDEX_TYPE_UINT16, 36);
 
 	if (!mesh->isValid())
 	{

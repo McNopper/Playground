@@ -15,7 +15,7 @@ TriangleMesh::~TriangleMesh()
 
 void TriangleMesh::setVertexAttribute(
     const std::string& name,
-    VertexBuffer* buffer,
+    const std::shared_ptr<VertexBuffer>& buffer,
     uint32_t binding,
     VkFormat format,
     uint32_t offset,
@@ -31,7 +31,7 @@ void TriangleMesh::setVertexAttribute(
     m_vertex_attributes[name] = attr;
 }
 
-void TriangleMesh::setIndexBuffer(IndexBuffer* buffer, VkIndexType index_type, uint32_t count)
+void TriangleMesh::setIndexBuffer(const std::shared_ptr<IndexBuffer>& buffer, VkIndexType index_type, uint32_t count)
 {
     m_index_buffer = buffer;
     m_index_type = index_type;
@@ -58,7 +58,7 @@ const TriangleMesh::VertexAttribute* TriangleMesh::getAttribute(const std::strin
     return nullptr;
 }
 
-IndexBuffer* TriangleMesh::getIndexBuffer() const
+std::shared_ptr<IndexBuffer> TriangleMesh::getIndexBuffer() const
 {
     return m_index_buffer;
 }

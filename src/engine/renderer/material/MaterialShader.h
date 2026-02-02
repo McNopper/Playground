@@ -41,10 +41,10 @@ private:
     VkPipelineLayout m_pipeline_layout{ VK_NULL_HANDLE };
 
     // Resource storage - indexed by (set, binding) pair
-    std::map<std::pair<uint32_t, uint32_t>, const UniformBuffer*> m_uniform_buffers{};
-    std::map<std::pair<uint32_t, uint32_t>, const StorageBuffer*> m_storage_buffers{};
-    std::map<std::pair<uint32_t, uint32_t>, const Texture*> m_textures{};
-    std::map<std::pair<uint32_t, uint32_t>, const Sampler*> m_samplers{};
+    std::map<std::pair<uint32_t, uint32_t>, std::shared_ptr<const UniformBuffer>> m_uniform_buffers{};
+    std::map<std::pair<uint32_t, uint32_t>, std::shared_ptr<const StorageBuffer>> m_storage_buffers{};
+    std::map<std::pair<uint32_t, uint32_t>, std::shared_ptr<const Texture>> m_textures{};
+    std::map<std::pair<uint32_t, uint32_t>, std::shared_ptr<const Sampler>> m_samplers{};
 
     // Descriptor buffers - one per descriptor set
     std::map<uint32_t, std::unique_ptr<DescriptorBufferSet>> m_descriptor_sets{};
@@ -77,14 +77,14 @@ public:
 
     // Resource attachment by shader variable name
     // Returns true if resource exists in shader, false otherwise
-    // Note: MaterialShader does not own these resources - caller must ensure lifetime
-    bool setUniformBuffer(const std::string& name, const UniformBuffer* buffer);
-    bool setStorageBuffer(const std::string& name, const StorageBuffer* buffer);
-    bool setTexture(const std::string& name, const Texture* texture);
-    bool setSampler(const std::string& name, const Sampler* sampler);
+    // Note: MaterialShader stores weak references - does not extend resource lifetime
+    bool setUniformBuffer(const std::string& name, const std::shared_ptr<const UniformBuffer>& buffer);
+    bool setStorageBuffer(const std::string& name, const std::shared_ptr<const StorageBuffer>& buffer);
+    bool setTexture(const std::string& name, const std::shared_ptr<const Texture>& texture);
+    bool setSampler(const std::string& name, const std::shared_ptr<const Sampler>& sampler);
 
     // Convenience method for combined texture+sampler
-    bool setTexture2DSampler(const std::string& texture_name, const std::string& sampler_name, const Texture2DSampler* texture_sampler);
+    bool setTexture2DSampler(const std::string& texture_name, const std::string& sampler_name, const std::shared_ptr<const Texture2DSampler>& texture_sampler);
 
     // Build descriptor buffers from attached resources
     // Call this after setting all resources and before rendering

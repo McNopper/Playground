@@ -123,20 +123,20 @@ TEST_F(TestTriangleMesh, CreateWithSeparateBuffers)
 		float2{0.5f, 1.0f}
 	};
 
-	VertexBuffer position_buffer{ m_vulkan.physical_device, m_vulkan.device };
-	ASSERT_TRUE(position_buffer.create(positions));
+	auto position_buffer = std::make_shared<VertexBuffer>(m_vulkan.physical_device, m_vulkan.device);
+	ASSERT_TRUE(position_buffer->create(positions));
 
-	VertexBuffer normal_buffer{ m_vulkan.physical_device, m_vulkan.device };
-	ASSERT_TRUE(normal_buffer.create(normals));
+	auto normal_buffer = std::make_shared<VertexBuffer>(m_vulkan.physical_device, m_vulkan.device);
+	ASSERT_TRUE(normal_buffer->create(normals));
 
-	VertexBuffer uv_buffer{ m_vulkan.physical_device, m_vulkan.device };
-	ASSERT_TRUE(uv_buffer.create(uvs));
+	auto uv_buffer = std::make_shared<VertexBuffer>(m_vulkan.physical_device, m_vulkan.device);
+	ASSERT_TRUE(uv_buffer->create(uvs));
 
 	// Create mesh and set attributes by name
 	TriangleMesh mesh{ m_vulkan.physical_device, m_vulkan.device };
-	mesh.setVertexAttribute("inPosition", &position_buffer, 0, VK_FORMAT_R32G32B32_SFLOAT);
-	mesh.setVertexAttribute("inNormal", &normal_buffer, 1, VK_FORMAT_R32G32B32_SFLOAT);
-	mesh.setVertexAttribute("inTexCoord", &uv_buffer, 2, VK_FORMAT_R32G32_SFLOAT);
+	mesh.setVertexAttribute("inPosition", position_buffer, 0, VK_FORMAT_R32G32B32_SFLOAT);
+	mesh.setVertexAttribute("inNormal", normal_buffer, 1, VK_FORMAT_R32G32B32_SFLOAT);
+	mesh.setVertexAttribute("inTexCoord", uv_buffer, 2, VK_FORMAT_R32G32_SFLOAT);
 	mesh.setVertexCount(3);
 
 	// Verify attributes
@@ -173,20 +173,20 @@ TEST_F(TestTriangleMesh, CreateWithIndexBuffer)
 		2, 3, 0
 	};
 
-	VertexBuffer position_buffer{ m_vulkan.physical_device, m_vulkan.device };
-	ASSERT_TRUE(position_buffer.create(positions));
+	auto position_buffer = std::make_shared<VertexBuffer>(m_vulkan.physical_device, m_vulkan.device);
+	ASSERT_TRUE(position_buffer->create(positions));
 
-	IndexBuffer index_buffer{ m_vulkan.physical_device, m_vulkan.device };
-	ASSERT_TRUE(index_buffer.create(indices));
+	auto index_buffer = std::make_shared<IndexBuffer>(m_vulkan.physical_device, m_vulkan.device);
+	ASSERT_TRUE(index_buffer->create(indices));
 
 	// Create mesh with index buffer
 	TriangleMesh mesh{ m_vulkan.physical_device, m_vulkan.device };
-	mesh.setVertexAttribute("inPosition", &position_buffer, 0, VK_FORMAT_R32G32B32_SFLOAT);
-	mesh.setIndexBuffer(&index_buffer, VK_INDEX_TYPE_UINT32, static_cast<uint32_t>(indices.size()));
+	mesh.setVertexAttribute("inPosition", position_buffer, 0, VK_FORMAT_R32G32B32_SFLOAT);
+	mesh.setIndexBuffer(index_buffer, VK_INDEX_TYPE_UINT32, static_cast<uint32_t>(indices.size()));
 
 	// Verify
 	EXPECT_TRUE(mesh.isValid());
-	EXPECT_EQ(mesh.getIndexBuffer(), &index_buffer);
+	EXPECT_EQ(mesh.getIndexBuffer(), index_buffer);
 	EXPECT_EQ(mesh.getIndexType(), VK_INDEX_TYPE_UINT32);
 	EXPECT_EQ(mesh.getIndexCount(), 6u);
 }
@@ -206,13 +206,13 @@ TEST_F(TestTriangleMesh, CreateWithInterleavedData)
 		{float3{ 0.0f,  1.0f, 0.0f}, float2{0.5f, 1.0f}}
 	};
 
-	VertexBuffer interleaved_buffer{ m_vulkan.physical_device, m_vulkan.device };
-	ASSERT_TRUE(interleaved_buffer.create(vertices));
+	auto interleaved_buffer = std::make_shared<VertexBuffer>(m_vulkan.physical_device, m_vulkan.device);
+	ASSERT_TRUE(interleaved_buffer->create(vertices));
 
 	// Create mesh with interleaved attributes
 	TriangleMesh mesh{ m_vulkan.physical_device, m_vulkan.device };
-	mesh.setVertexAttribute("inPosition", &interleaved_buffer, 0, VK_FORMAT_R32G32B32_SFLOAT, 0, 20);
-	mesh.setVertexAttribute("inTexCoord", &interleaved_buffer, 0, VK_FORMAT_R32G32_SFLOAT, 12, 20);
+	mesh.setVertexAttribute("inPosition", interleaved_buffer, 0, VK_FORMAT_R32G32B32_SFLOAT, 0, 20);
+	mesh.setVertexAttribute("inTexCoord", interleaved_buffer, 0, VK_FORMAT_R32G32_SFLOAT, 12, 20);
 	mesh.setVertexCount(3);
 
 	// Verify both attributes point to same buffer
@@ -239,11 +239,11 @@ TEST_F(TestTriangleMesh, InvalidMesh)
 	EXPECT_FALSE(mesh.isValid());
 
 	// Mesh with attribute but no vertex/index count
-	VertexBuffer buffer{ m_vulkan.physical_device, m_vulkan.device };
+	auto buffer = std::make_shared<VertexBuffer>(m_vulkan.physical_device, m_vulkan.device);
 	std::vector<float3> positions = {float3{0.0f, 0.0f, 0.0f}};
-	ASSERT_TRUE(buffer.create(positions));
+	ASSERT_TRUE(buffer->create(positions));
 
-	mesh.setVertexAttribute("inPosition", &buffer, 0, VK_FORMAT_R32G32B32_SFLOAT);
+	mesh.setVertexAttribute("inPosition", buffer, 0, VK_FORMAT_R32G32B32_SFLOAT);
 	EXPECT_FALSE(mesh.isValid()); // No vertex count set
 
 	mesh.setVertexCount(1);

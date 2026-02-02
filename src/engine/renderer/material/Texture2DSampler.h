@@ -1,6 +1,8 @@
 #ifndef ENGINE_RENDERER_MATERIAL_TEXTURE2DSAMPLER_H_
 #define ENGINE_RENDERER_MATERIAL_TEXTURE2DSAMPLER_H_
 
+#include <memory>
+
 #include <volk.h>
 
 // Forward declarations
@@ -16,33 +18,33 @@ class Texture2DSampler
 
 private:
 
-    const Texture2D* m_texture{ nullptr };
-    const Sampler* m_sampler{ nullptr };
+    std::shared_ptr<const Texture2D> m_texture{};
+    std::shared_ptr<const Sampler> m_sampler{};
 
 public:
 
     Texture2DSampler() = default;
 
     Texture2DSampler(
-        const Texture2D* texture,
-        const Sampler* sampler
+        const std::shared_ptr<const Texture2D>& texture,
+        const std::shared_ptr<const Sampler>& sampler
     );
 
     ~Texture2DSampler() = default;
 
     // Getters
-    const Texture2D* getTexture() const;
-    const Sampler* getSampler() const;
+    std::shared_ptr<const Texture2D> getTexture() const;
+    std::shared_ptr<const Sampler> getSampler() const;
 
     // Setters
-    void setTexture(const Texture2D* texture);
-    void setSampler(const Sampler* sampler);
+    void setTexture(const std::shared_ptr<const Texture2D>& texture);
+    void setSampler(const std::shared_ptr<const Sampler>& sampler);
 
     // Convenience factory methods with common sampler configurations
-    // Note: Caller must manage lifetime of returned sampler
-    static Sampler* createLinearSampler(VkDevice device);
-    static Sampler* createNearestSampler(VkDevice device);
-    static Sampler* createLinearClampSampler(VkDevice device);
+    // Returns unique_ptr for automatic lifetime management
+    static std::unique_ptr<Sampler> createLinearSampler(VkDevice device);
+    static std::unique_ptr<Sampler> createNearestSampler(VkDevice device);
+    static std::unique_ptr<Sampler> createLinearClampSampler(VkDevice device);
 
 };
 
