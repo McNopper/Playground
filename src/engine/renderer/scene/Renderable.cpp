@@ -1,14 +1,9 @@
 #include "Renderable.h"
+#include "UniformData.h"
 
 #include "engine/renderer/geometry/AGeometry.h"
 #include "engine/renderer/material/MaterialShader.h"
 #include "engine/renderer/backend/common/buffer/UniformBuffer.h"
-
-// UniformModelData structure must match shader
-struct UniformModelData
-{
-    float4x4 u_world_matrix;
-};
 
 Renderable::Renderable(
     VkPhysicalDevice physical_device,

@@ -29,6 +29,7 @@
 // scene
 
 #include "engine/renderer/scene/Renderable.h"
+#include "engine/renderer/scene/UniformData.h"
 
 // Layer
 

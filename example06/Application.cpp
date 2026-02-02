@@ -225,8 +225,8 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 	UniformViewData uniform_view_data{};
 	
 	float aspect = (float)m_vulkan_window.getCurrentExtent().width / (float)m_vulkan_window.getCurrentExtent().height;
-	uniform_view_data.u_projection_matrix = perspective(45.0f, aspect, 0.1f, 100.0f);
-	uniform_view_data.u_view_matrix = lookAt(float3{ 0.0f, 1.0f, 3.0f }, float3{ 0.0f, 0.0f, 0.0f }, float3{ 0.0f, 1.0f, 0.0f });
+	uniform_view_data.u_projectionMatrix = perspective(45.0f, aspect, 0.1f, 100.0f);
+	uniform_view_data.u_viewMatrix = lookAt(float3{ 0.0f, 1.0f, 3.0f }, float3{ 0.0f, 0.0f, 0.0f }, float3{ 0.0f, 1.0f, 0.0f });
 
 	if (!m_uniform_view_buffer->update(0u, uniform_view_data))
 	{
@@ -238,7 +238,7 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 	m_renderable->setTransform(rot_y);
 
 	UniformModelData uniform_model_data{};
-	uniform_model_data.u_world_matrix = m_renderable->getTransform();
+	uniform_model_data.u_worldMatrix = m_renderable->getTransform();
 
 	if (!m_renderable->getUniformModelBuffer()->update(0u, uniform_model_data))
 	{

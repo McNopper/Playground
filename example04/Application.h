@@ -19,17 +19,6 @@
  *   - Graphics pipeline with vertex and fragment shaders
  */
 
-struct UniformViewData
-{
-	float4x4 u_projection_matrix{ 1.0f };
-	float4x4 u_view_matrix{ 1.0f };
-};
-
-struct UniformModelData
-{
-	float4x4 u_world_matrix{ 1.0f };
-};
-
 class Application : public IApplication
 {
 
