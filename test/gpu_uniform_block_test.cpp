@@ -123,3 +123,42 @@ TEST(TestUniformBlock, GetDataAccess)
 	EXPECT_EQ(data.size(), uniform_block.size());
 	EXPECT_GT(data.size(), 0u);
 }
+
+TEST(TestUniformBlock, GetMemberNames)
+{
+	std::map<std::string, std::string> macros{};
+	auto shaders = buildSlang("textured_quad.slang", macros, "../resources/shaders/");
+
+	ASSERT_GE(shaders.size(), 1u);
+
+	VulkanSpirvQuery query(shaders);
+
+	auto block_names = query.gatherDescriptorSetBlockNames();
+	ASSERT_GT(block_names.size(), 0u);
+
+	UniformBlock uniform_block(query, block_names[0]);
+
+	// Test that getMemberNames() returns non-empty list
+	auto member_names = uniform_block.getMemberNames();
+	EXPECT_GT(member_names.size(), 0u);
+
+	// Verify the names are valid strings
+	for (const auto& name : member_names)
+	{
+		EXPECT_FALSE(name.empty());
+	}
+
+	// Test that we can actually set members using the returned names
+	float4x4 test_matrix{};
+	test_matrix.columns[0] = float4{ 1.0f, 0.0f, 0.0f, 0.0f };
+	test_matrix.columns[1] = float4{ 0.0f, 1.0f, 0.0f, 0.0f };
+	test_matrix.columns[2] = float4{ 0.0f, 0.0f, 1.0f, 0.0f };
+	test_matrix.columns[3] = float4{ 0.0f, 0.0f, 0.0f, 1.0f };
+
+	// Try to set at least one member (if names exist)
+	if (!member_names.empty())
+	{
+		bool result = uniform_block.setMember(member_names[0], test_matrix);
+		EXPECT_TRUE(result);
+	}
+}

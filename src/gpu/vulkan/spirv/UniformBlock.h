@@ -33,6 +33,8 @@ public:
 
 	const std::vector<std::uint8_t>& getData() const;
 
+	std::vector<std::string> getMemberNames() const;
+
 	template<typename T>
 	bool setMember(const std::string& name, const T& value);
 

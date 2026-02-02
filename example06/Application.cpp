@@ -250,6 +250,19 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 	quaternion rot_y = rotateRyQuaternion((float)m_rotation_angle);
 	m_renderable->setWorldMatrix(rot_y);
 
+	// Note: For shaders with additional uniforms beyond u_worldMatrix,
+	// you can access the UniformBlock directly for introspection and updates:
+	//   auto uniform_block = m_renderable->getUniformBlock();
+	//   
+	//   // List all available uniform members
+	//   auto member_names = uniform_block->getMemberNames();
+	//   
+	//   // Set custom members
+	//   uniform_block->setMember("u_customData", custom_value);
+	//   uniform_block->setMember("u_lightPosition", light_pos);
+	//
+	// Then call updateUniforms() to upload all changes to GPU
+
 	if (!m_renderable->updateUniforms())
 	{
 		return false;

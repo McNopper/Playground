@@ -107,6 +107,11 @@ const float4x4& Renderable::getWorldMatrix() const
     return m_world_matrix;
 }
 
+std::shared_ptr<UniformBlock> Renderable::getUniformBlock() const
+{
+    return m_uniform_model_block;
+}
+
 void Renderable::setWorldMatrix(const float4x4& world_matrix)
 {
     m_world_matrix = world_matrix;

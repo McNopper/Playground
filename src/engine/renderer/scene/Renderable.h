@@ -15,7 +15,8 @@ class UniformBlock;
 
 // Renderable combines geometry, material, and world transform
 // Represents a single object that can be rendered in the scene
-// Owns and manages per-object uniform buffer for world transform matrix
+// Owns and manages per-object uniform buffer (typically for world transform + custom data)
+// Exposes UniformBlock for external updates before calling updateUniforms()
 // Inspired by ANARI's Surface+Instance concept and OpenUSD's Gprim+Material binding
 class Renderable
 {
@@ -56,6 +57,7 @@ public:
 
     // Getters
     const float4x4& getWorldMatrix() const;
+    std::shared_ptr<UniformBlock> getUniformBlock() const;
 
     // Setter for world matrix (can be updated per frame)
     void setWorldMatrix(const float4x4& world_matrix);
