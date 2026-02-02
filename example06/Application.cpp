@@ -81,13 +81,6 @@ bool Application::init()
 		return false;
 	}
 
-	// Create view uniform buffer (camera matrices - shared across all renderables)
-	m_uniform_view_buffer = std::make_shared<UniformBuffer>(m_physical_device, m_device);
-	if (!m_uniform_view_buffer->create(sizeof(UniformViewData)))
-	{
-		return false;
-	}
-
 	// Load and upload texture
 	auto image_data_opt = loadImageData("../resources/images/color_grid.png");
 	if (!image_data_opt.has_value())
@@ -151,6 +144,25 @@ bool Application::init()
 	auto material = std::make_shared<MaterialShader>(m_physical_device, m_device, "textured_quad.slang", "../resources/shaders/");
 	
 	if (!material->build())
+	{
+		return false;
+	}
+
+	// Create UniformBlock from material's shader
+	const auto& spirv_shaders = material->getSpirvShaders();
+	if (!spirv_shaders.empty())
+	{
+		VulkanSpirvQuery spirv_query{ spirv_shaders };
+		m_uniform_view_block = std::make_shared<UniformBlock>(spirv_query, "UniformViewData");
+	}
+	else
+	{
+		return false;
+	}
+
+	// Create view uniform buffer (camera matrices - shared across all renderables)
+	m_uniform_view_buffer = std::make_shared<UniformBuffer>(m_physical_device, m_device);
+	if (!m_uniform_view_buffer->create(m_uniform_view_block->size()))
 	{
 		return false;
 	}
@@ -222,25 +234,23 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 	m_rotation_angle += delta_time * 45.0;
 
 	// Update view matrices (camera - shared across all renderables)
-	UniformViewData uniform_view_data{};
-	
 	float aspect = (float)m_vulkan_window.getCurrentExtent().width / (float)m_vulkan_window.getCurrentExtent().height;
-	uniform_view_data.u_projectionMatrix = perspective(45.0f, aspect, 0.1f, 100.0f);
-	uniform_view_data.u_viewMatrix = lookAt(float3{ 0.0f, 1.0f, 3.0f }, float3{ 0.0f, 0.0f, 0.0f }, float3{ 0.0f, 1.0f, 0.0f });
+	float4x4 projection_matrix = perspective(45.0f, aspect, 0.1f, 100.0f);
+	float4x4 view_matrix = lookAt(float3{ 0.0f, 1.0f, 3.0f }, float3{ 0.0f, 0.0f, 0.0f }, float3{ 0.0f, 1.0f, 0.0f });
+	
+	m_uniform_view_block->setMember("u_projectionMatrix", projection_matrix);
+	m_uniform_view_block->setMember("u_viewMatrix", view_matrix);
 
-	if (!m_uniform_view_buffer->update(0u, uniform_view_data))
+	if (!m_uniform_view_buffer->update(0u, m_uniform_view_block->getData()))
 	{
 		return false;
 	}
 
 	// Update model matrix (world transform - per renderable)
 	quaternion rot_y = rotateRyQuaternion((float)m_rotation_angle);
-	m_renderable->setTransform(rot_y);
+	m_renderable->setWorldMatrix(rot_y);
 
-	UniformModelData uniform_model_data{};
-	uniform_model_data.u_worldMatrix = m_renderable->getTransform();
-
-	if (!m_renderable->getUniformModelBuffer()->update(0u, uniform_model_data))
+	if (!m_renderable->updateUniforms())
 	{
 		return false;
 	}
@@ -248,9 +258,6 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 	m_vulkan_window.beginRendering();
 
 	vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline);
-
-	// Material handles all descriptor binding
-	m_renderable->getMaterial()->bind(command_buffer);
 
 	VkViewport viewport{};
 	viewport.x = 0.0f;
@@ -267,13 +274,8 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 	scissor.extent = m_vulkan_window.getCurrentExtent();
 	vkCmdSetScissor(command_buffer, 0u, 1u, &scissor);
 
-	// Geometry handles vertex/index binding and draw call
-	auto mesh = std::dynamic_pointer_cast<TriangleMesh>(m_renderable->getGeometry());
-	if (mesh)
-	{
-		mesh->bind(command_buffer);
-		mesh->draw(command_buffer);
-	}
+	// Render the object
+	m_renderable->render(command_buffer);
 
 	m_vulkan_window.endRendering();
 

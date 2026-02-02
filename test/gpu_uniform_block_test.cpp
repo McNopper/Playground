@@ -103,3 +103,23 @@ TEST(TestUniformBlock, MemberInfoCorrectness)
 	// Test that uniform block was created successfully
 	EXPECT_GT(uniform_block.size(), 0u);
 }
+
+TEST(TestUniformBlock, GetDataAccess)
+{
+	std::map<std::string, std::string> macros{};
+	auto shaders = buildSlang("textured_quad.slang", macros, "../resources/shaders/");
+
+	ASSERT_GE(shaders.size(), 1u);
+
+	VulkanSpirvQuery query(shaders);
+
+	auto block_names = query.gatherDescriptorSetBlockNames();
+	ASSERT_GT(block_names.size(), 0u);
+
+	UniformBlock uniform_block(query, block_names[0]);
+
+	// Test that getData() returns valid vector reference
+	const std::vector<std::uint8_t>& data = uniform_block.getData();
+	EXPECT_EQ(data.size(), uniform_block.size());
+	EXPECT_GT(data.size(), 0u);
+}

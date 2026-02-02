@@ -31,6 +31,8 @@ public:
 
 	VkDeviceSize size() const;
 
+	const std::vector<std::uint8_t>& getData() const;
+
 	template<typename T>
 	bool setMember(const std::string& name, const T& value);
 

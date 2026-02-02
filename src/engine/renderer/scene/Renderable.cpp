@@ -1,22 +1,22 @@
 #include "Renderable.h"
-#include "UniformData.h"
 
 #include "engine/renderer/geometry/AGeometry.h"
 #include "engine/renderer/material/MaterialShader.h"
 #include "engine/renderer/backend/common/buffer/UniformBuffer.h"
+#include "gpu/gpu.h"
 
 Renderable::Renderable(
     VkPhysicalDevice physical_device,
     VkDevice device,
     std::shared_ptr<AGeometry> geometry,
     std::shared_ptr<MaterialShader> material,
-    const float4x4& transform
+    const float4x4& world_matrix
 ) :
     m_physical_device{ physical_device },
     m_device{ device },
     m_geometry{ std::move(geometry) },
     m_material{ std::move(material) },
-    m_transform{ transform }
+    m_world_matrix{ world_matrix }
 {
 }
 
@@ -33,54 +33,81 @@ bool Renderable::init()
     // Create uniform buffer for world transform
     m_uniform_model_buffer = std::make_unique<UniformBuffer>(m_physical_device, m_device);
     
-    if (!m_uniform_model_buffer->create(sizeof(UniformModelData)))
-    {
-        return false;
-    }
-
-    // Bind uniform buffer to material
+    // Create UniformBlock from material's shader
     if (m_material)
     {
+        const auto& spirv_shaders = m_material->getSpirvShaders();
+        if (!spirv_shaders.empty())
+        {
+            VulkanSpirvQuery spirv_query{ spirv_shaders };
+            m_uniform_model_block = std::make_shared<UniformBlock>(spirv_query, "UniformModelData");
+            
+            if (!m_uniform_model_buffer->create(m_uniform_model_block->size()))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+
+        // Bind uniform buffer to material
         if (!m_material->setUniformBuffer("UniformModelData", m_uniform_model_buffer.get()))
         {
             return false;
         }
     }
+    else
+    {
+        return false;
+    }
 
     return true;
 }
 
-const std::shared_ptr<AGeometry>& Renderable::getGeometry() const
+bool Renderable::updateUniforms()
 {
-    return m_geometry;
+    if (!m_uniform_model_block || !m_uniform_model_buffer)
+    {
+        return false;
+    }
+
+    if (!m_uniform_model_block->setMember("u_worldMatrix", m_world_matrix))
+    {
+        return false;
+    }
+
+    if (!m_uniform_model_buffer->update(0u, m_uniform_model_block->getData()))
+    {
+        return false;
+    }
+
+    return true;
 }
 
-const std::shared_ptr<MaterialShader>& Renderable::getMaterial() const
+void Renderable::render(VkCommandBuffer command_buffer) const
 {
-    return m_material;
+    // Bind material descriptors
+    if (m_material)
+    {
+        m_material->bind(command_buffer);
+    }
+
+    // Bind and draw geometry
+    if (m_geometry)
+    {
+        m_geometry->bind(command_buffer);
+        m_geometry->draw(command_buffer);
+    }
 }
 
-UniformBuffer* Renderable::getUniformModelBuffer() const
+const float4x4& Renderable::getWorldMatrix() const
 {
-    return m_uniform_model_buffer.get();
+    return m_world_matrix;
 }
 
-const float4x4& Renderable::getTransform() const
+void Renderable::setWorldMatrix(const float4x4& world_matrix)
 {
-    return m_transform;
-}
-
-void Renderable::setGeometry(std::shared_ptr<AGeometry> geometry)
-{
-    m_geometry = std::move(geometry);
-}
-
-void Renderable::setMaterial(std::shared_ptr<MaterialShader> material)
-{
-    m_material = std::move(material);
-}
-
-void Renderable::setTransform(const float4x4& transform)
-{
-    m_transform = transform;
+    m_world_matrix = world_matrix;
 }

@@ -27,6 +27,8 @@ private:
 
 	UniformBuffer m_uniform_view_buffer;
 	UniformBuffer m_uniform_model_buffer;
+	std::shared_ptr<UniformBlock> m_uniform_view_block;
+	std::shared_ptr<UniformBlock> m_uniform_model_block;
 	Texture2D m_texture;
 	Sampler m_sampler;
 	DescriptorBufferSet m_descriptor_set0;

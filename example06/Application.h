@@ -26,6 +26,7 @@ private:
 	std::shared_ptr<VertexBuffer> m_vertex_buffer;
 	std::shared_ptr<IndexBuffer> m_index_buffer;
 	std::shared_ptr<UniformBuffer> m_uniform_view_buffer;
+	std::shared_ptr<UniformBlock> m_uniform_view_block;
 	std::shared_ptr<Texture2D> m_texture;
 	std::shared_ptr<Sampler> m_sampler;
 	std::shared_ptr<Texture2DSampler> m_texture_sampler;

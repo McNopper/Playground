@@ -37,18 +37,6 @@ bool Application::init()
 		return false;
 	}
 
-	// Create uniform buffers for descriptor buffer usage
-	// UniformBuffer automatically includes VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
-	if (!m_uniform_view_buffer.create(sizeof(UniformViewData)))
-	{
-		return false;
-	}
-
-	if (!m_uniform_model_buffer.create(sizeof(UniformModelData)))
-	{
-		return false;
-	}
-
 	//
 	// Until here, data was created. Now preparing the graphics pipeline.
 	//
@@ -58,6 +46,24 @@ bool Application::init()
 	std::map<std::string, std::string> macros{};
 	auto shaders = buildSlang("colored_triangle.slang", macros, "../resources/shaders/");
 	if (shaders.empty())
+	{
+		return false;
+	}
+
+	// Create UniformBlocks from shader reflection
+	VulkanSpirvQuery spirv_query{ shaders };
+	
+	m_uniform_view_block = std::make_shared<UniformBlock>(spirv_query, "UniformViewData");
+	m_uniform_model_block = std::make_shared<UniformBlock>(spirv_query, "UniformModelData");
+
+	// Create uniform buffers for descriptor buffer usage
+	// UniformBuffer automatically includes VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
+	if (!m_uniform_view_buffer.create(m_uniform_view_block->size()))
+	{
+		return false;
+	}
+
+	if (!m_uniform_model_buffer.create(m_uniform_model_block->size()))
 	{
 		return false;
 	}
@@ -76,7 +82,7 @@ bool Application::init()
 	VkDescriptorBufferInfo descriptor_buffer_info_view{};
 	descriptor_buffer_info_view.buffer = m_uniform_view_buffer.getBuffer();
 	descriptor_buffer_info_view.offset = 0u;
-	descriptor_buffer_info_view.range = sizeof(UniformViewData);
+	descriptor_buffer_info_view.range = m_uniform_view_block->size();
 
 	if (!m_descriptor_buffer.writeBufferDescriptor(0, descriptor_buffer_info_view))
 	{
@@ -86,7 +92,7 @@ bool Application::init()
 	VkDescriptorBufferInfo descriptor_buffer_info_model{};
 	descriptor_buffer_info_model.buffer = m_uniform_model_buffer.getBuffer();
 	descriptor_buffer_info_model.offset = 0u;
-	descriptor_buffer_info_model.range = sizeof(UniformModelData);
+	descriptor_buffer_info_model.range = m_uniform_model_block->size();
 
 	if (!m_descriptor_buffer.writeBufferDescriptor(1, descriptor_buffer_info_model))
 	{
@@ -100,7 +106,6 @@ bool Application::init()
 	VulkanPipelineLayoutFactory pipeline_layout_factory{ m_device, 0u };
 	
 	// Need to create a descriptor set layout for the pipeline layout
-	VulkanSpirvQuery spirv_query{ shaders };
 	auto descriptor_set_layout_bindings = spirv_query.gatherDescriptorSetLayoutBindings();
 
 	VkDescriptorSetLayoutCreateFlags layout_flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT;
@@ -154,18 +159,18 @@ bool Application::init()
 
 bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 {
-	UniformViewData uniform_view_data{};
+	// Update uniform data using UniformBlock
+	m_uniform_view_block->setMember("u_projectionMatrix", float4x4{ 1.0f });
+	m_uniform_view_block->setMember("u_viewMatrix", float4x4{ 1.0f });
 
-	// Currently uploading two identity matrices using template method
-	if (!m_uniform_view_buffer.update(0u, uniform_view_data))
+	if (!m_uniform_view_buffer.update(0u, m_uniform_view_block->getData()))
 	{
 		return false;
 	}
 
-	UniformModelData uniform_model_data{};
+	m_uniform_model_block->setMember("u_worldMatrix", float4x4{ 1.0f });
 
-	// Currently uploading one identity matrix using template method
-	if (!m_uniform_model_buffer.update(0u, uniform_model_data))
+	if (!m_uniform_model_buffer.update(0u, m_uniform_model_block->getData()))
 	{
 		return false;
 	}

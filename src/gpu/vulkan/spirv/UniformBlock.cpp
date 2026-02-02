@@ -36,3 +36,8 @@ VkDeviceSize UniformBlock::size() const
 {
 	return static_cast<VkDeviceSize>(m_data.size());
 }
+
+const std::vector<std::uint8_t>& UniformBlock::getData() const
+{
+	return m_data;
+}

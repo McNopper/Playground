@@ -11,10 +11,11 @@
 class AGeometry;
 class MaterialShader;
 class UniformBuffer;
+class UniformBlock;
 
 // Renderable combines geometry, material, and world transform
 // Represents a single object that can be rendered in the scene
-// Owns and manages per-object uniform buffer for world transform
+// Owns and manages per-object uniform buffer for world transform matrix
 // Inspired by ANARI's Surface+Instance concept and OpenUSD's Gprim+Material binding
 class Renderable
 {
@@ -27,7 +28,8 @@ private:
     std::shared_ptr<AGeometry> m_geometry{};
     std::shared_ptr<MaterialShader> m_material{};
     std::unique_ptr<UniformBuffer> m_uniform_model_buffer{};
-    float4x4 m_transform{};
+    std::shared_ptr<UniformBlock> m_uniform_model_block{};
+    float4x4 m_world_matrix{};
 
 public:
 
@@ -38,7 +40,7 @@ public:
         VkDevice device,
         std::shared_ptr<AGeometry> geometry,
         std::shared_ptr<MaterialShader> material,
-        const float4x4& transform = float4x4(1.0f)
+        const float4x4& world_matrix = float4x4(1.0f)
     );
 
     ~Renderable();
@@ -46,16 +48,17 @@ public:
     // Initialize uniform buffer and bind to material
     bool init();
 
-    // Getters
-    const std::shared_ptr<AGeometry>& getGeometry() const;
-    const std::shared_ptr<MaterialShader>& getMaterial() const;
-    UniformBuffer* getUniformModelBuffer() const;
-    const float4x4& getTransform() const;
+    // Update uniform buffer with current transform
+    bool updateUniforms();
 
-    // Setters
-    void setGeometry(std::shared_ptr<AGeometry> geometry);
-    void setMaterial(std::shared_ptr<MaterialShader> material);
-    void setTransform(const float4x4& transform);
+    // Render the object (binds material and draws geometry)
+    void render(VkCommandBuffer command_buffer) const;
+
+    // Getters
+    const float4x4& getWorldMatrix() const;
+
+    // Setter for world matrix (can be updated per frame)
+    void setWorldMatrix(const float4x4& world_matrix);
 
 };
 

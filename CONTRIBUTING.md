@@ -45,7 +45,7 @@ This project follows strict C++20 coding standards with the following convention
 - Use snake_case for function-only headers: `vulkan_helper.h`
 
 **Types:**
-- Classes/Structs: `PascalCase` (e.g., `VulkanDeviceFactory`, `UniformViewData`)
+- Classes/Structs: `PascalCase` (e.g., `VulkanDeviceFactory`, `UniformBlock`)
 - Interfaces: Prefix with `I` (e.g., `IVulkanWindow`)
 - Math types: lowercase with numbers (e.g., `float2`, `float3`, `float4`, `float4x4`)
 - Enums: `PascalCase` with `enum class` (e.g., `ColorSpace`, `TransferFunction`)

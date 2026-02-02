@@ -35,6 +35,8 @@ private:
 
 	UniformBuffer m_uniform_view_buffer;
 	UniformBuffer m_uniform_model_buffer;
+	std::shared_ptr<UniformBlock> m_uniform_view_block;
+	std::shared_ptr<UniformBlock> m_uniform_model_block;
 	DescriptorBuffer m_descriptor_buffer;
 
 public:

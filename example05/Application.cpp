@@ -93,12 +93,54 @@ bool Application::init()
 		return false;
 	}
 
-	if (!m_uniform_view_buffer.create(sizeof(UniformViewData)))
+	std::map<std::string, std::string> macros{};
+	auto shaders = buildSlang("textured_quad.slang", macros, "../resources/shaders/");
+	if (shaders.empty())
 	{
 		return false;
 	}
 
-	if (!m_uniform_model_buffer.create(sizeof(UniformModelData)))
+	// Create UniformBlocks from shader reflection
+	VulkanSpirvQuery spirv_query{ shaders };
+	
+	m_uniform_view_block = std::make_shared<UniformBlock>(spirv_query, "UniformViewData");
+	m_uniform_model_block = std::make_shared<UniformBlock>(spirv_query, "UniformModelData");
+
+	// Create uniform buffers for descriptor buffer usage
+	if (!m_uniform_view_buffer.create(m_uniform_view_block->size()))
+	{
+		return false;
+	}
+
+	if (!m_uniform_model_buffer.create(m_uniform_model_block->size()))
+	{
+		return false;
+	}
+
+	m_descriptor_set0.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+	m_descriptor_set0.addBinding(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+	
+	if (!m_descriptor_set0.create())
+	{
+		return false;
+	}
+
+	VkDescriptorBufferInfo descriptor_buffer_info_view{};
+	descriptor_buffer_info_view.buffer = m_uniform_view_buffer.getBuffer();
+	descriptor_buffer_info_view.offset = 0u;
+	descriptor_buffer_info_view.range = m_uniform_view_block->size();
+
+	if (!m_descriptor_set0.writeBufferDescriptor(0, descriptor_buffer_info_view))
+	{
+		return false;
+	}
+
+	VkDescriptorBufferInfo descriptor_buffer_info_model{};
+	descriptor_buffer_info_model.buffer = m_uniform_model_buffer.getBuffer();
+	descriptor_buffer_info_model.offset = 0u;
+	descriptor_buffer_info_model.range = m_uniform_model_block->size();
+
+	if (!m_descriptor_set0.writeBufferDescriptor(1, descriptor_buffer_info_model))
 	{
 		return false;
 	}
@@ -148,41 +190,6 @@ bool Application::init()
 	m_sampler.setAddressMode(VK_SAMPLER_ADDRESS_MODE_REPEAT);
 
 	if (!m_sampler.create())
-	{
-		return false;
-	}
-
-	std::map<std::string, std::string> macros{};
-	auto shaders = buildSlang("textured_quad.slang", macros, "../resources/shaders/");
-	if (shaders.empty())
-	{
-		return false;
-	}
-
-	m_descriptor_set0.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
-	m_descriptor_set0.addBinding(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
-	
-	if (!m_descriptor_set0.create())
-	{
-		return false;
-	}
-
-	VkDescriptorBufferInfo descriptor_buffer_info_view{};
-	descriptor_buffer_info_view.buffer = m_uniform_view_buffer.getBuffer();
-	descriptor_buffer_info_view.offset = 0u;
-	descriptor_buffer_info_view.range = sizeof(UniformViewData);
-
-	if (!m_descriptor_set0.writeBufferDescriptor(0, descriptor_buffer_info_view))
-	{
-		return false;
-	}
-
-	VkDescriptorBufferInfo descriptor_buffer_info_model{};
-	descriptor_buffer_info_model.buffer = m_uniform_model_buffer.getBuffer();
-	descriptor_buffer_info_model.offset = 0u;
-	descriptor_buffer_info_model.range = sizeof(UniformModelData);
-
-	if (!m_descriptor_set0.writeBufferDescriptor(1, descriptor_buffer_info_model))
 	{
 		return false;
 	}
@@ -310,24 +317,25 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 {
 	m_rotation_angle += delta_time * 45.0;
 
-	UniformViewData uniform_view_data{};
-	
+	// Update uniform data using UniformBlock
 	float aspect = (float)m_vulkan_window.getCurrentExtent().width / (float)m_vulkan_window.getCurrentExtent().height;
-	uniform_view_data.u_projectionMatrix = perspective(45.0f, aspect, 0.1f, 100.0f);
-	uniform_view_data.u_viewMatrix = lookAt(float3{ 0.0f, 1.0f, 3.0f }, float3{ 0.0f, 0.0f, 0.0f }, float3{ 0.0f, 1.0f, 0.0f });
+	float4x4 projection_matrix = perspective(45.0f, aspect, 0.1f, 100.0f);
+	float4x4 view_matrix = lookAt(float3{ 0.0f, 1.0f, 3.0f }, float3{ 0.0f, 0.0f, 0.0f }, float3{ 0.0f, 1.0f, 0.0f });
+	
+	m_uniform_view_block->setMember("u_projectionMatrix", projection_matrix);
+	m_uniform_view_block->setMember("u_viewMatrix", view_matrix);
 
-	if (!m_uniform_view_buffer.update(0u, uniform_view_data))
+	if (!m_uniform_view_buffer.update(0u, m_uniform_view_block->getData()))
 	{
 		return false;
 	}
 
-	UniformModelData uniform_model_data{};
-	
 	quaternion rot_y = rotateRyQuaternion((float)m_rotation_angle);
+	float4x4 world_matrix = rot_y;
 	
-	uniform_model_data.u_worldMatrix = rot_y;
+	m_uniform_model_block->setMember("u_worldMatrix", world_matrix);
 
-	if (!m_uniform_model_buffer.update(0u, uniform_model_data))
+	if (!m_uniform_model_buffer.update(0u, m_uniform_model_block->getData()))
 	{
 		return false;
 	}
