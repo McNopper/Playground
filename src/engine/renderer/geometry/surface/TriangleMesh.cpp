@@ -10,7 +10,7 @@ TriangleMesh::TriangleMesh(VkPhysicalDevice physical_device, VkDevice device) :
 
 TriangleMesh::~TriangleMesh()
 {
-    // Note: We don't own the buffers, so we don't delete them
+    // Buffers are managed via shared_ptr - automatic cleanup
 }
 
 void TriangleMesh::setVertexAttribute(

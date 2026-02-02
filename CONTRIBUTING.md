@@ -112,6 +112,9 @@ void myFunction()
 - **Always use explicit `std::`** for all standard library items - never `using namespace std`
   - Types: `std::vector`, `std::string`, `std::uint32_t`
   - Functions: `std::sqrt()`, `std::sin()`, `std::cos()`, `std::pow()`
+- **Smart pointers**: Use `std::unique_ptr` for exclusive ownership, `std::shared_ptr` for shared ownership
+  - Pass `shared_ptr` by `const&` for performance (avoids atomic refcount overhead)
+  - Never use raw pointers for ownership (acceptable for Vulkan/GLFW handles and non-owning views)
 - **Initialization**: Use brace initialization `{ }` for members and constructors
 - **Constructors**: Use `= default` and `= delete` appropriately
 - **Parameters**: Use `const&` for read-only parameters
@@ -246,6 +249,7 @@ src/
     ├── renderer/      # Rendering abstractions
     │   ├── geometry/  # Mesh primitives (point, curve, surface, volume)
     │   ├── material/  # Material system (pbr, splat)
+    │   ├── scene/     # Scene objects (Renderable, etc.)
     │   └── backend/   # Backend implementations (rasterizer, raytracer, common)
     └── runtime/       # Application framework
 ```

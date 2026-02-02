@@ -75,6 +75,7 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
        - `Shader` - Base class for shader materials (can be instantiated)
        - `pbr/` - PBR material implementations
        - `splat/` - Splatting shader implementations (Gaussian, EWA)
+     - `scene/` - Scene objects (Renderable combines geometry + material + transform)
      - `backend/` - Backend-specific implementations
    - `runtime/` - Application framework and main loop
 
@@ -110,6 +111,11 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 - Always explicit `std::` for all standard library items - never `using namespace std`
   - Types: `std::vector`, `std::string`, `std::uint32_t`
   - Functions: `std::sqrt()`, `std::sin()`, `std::cos()`, `std::pow()`
+- Smart pointers for ownership:
+  - `std::unique_ptr<T>` for exclusive ownership (factory returns, owned resources)
+  - `std::shared_ptr<T>` for shared ownership (materials, textures, geometry shared across objects)
+  - Pass `shared_ptr` parameters by `const std::shared_ptr<const T>&` (avoids atomic refcount overhead)
+  - Raw pointers acceptable ONLY for: Vulkan handles (VkDevice, etc.), GLFW handles (GLFWwindow*), non-owning views
 - Brace initialization `{}` for member variables and local constants
 - `= default` and `= delete` for special members
 - `const&` for read-only parameters

@@ -10,7 +10,7 @@ class Texture2D;
 class Sampler;
 
 // Texture2DSampler - Convenience wrapper pairing Texture2D + Sampler
-// Holds references only - does not own resources (they may be shared)
+// Holds shared references - participates in resource lifetime management
 // Common pattern in material systems where textures are typically paired with samplers
 // Inspired by MaterialX texture nodes and OpenUSD UsdShadeShader conventions
 class Texture2DSampler

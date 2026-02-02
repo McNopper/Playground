@@ -77,7 +77,7 @@ public:
 
     // Resource attachment by shader variable name
     // Returns true if resource exists in shader, false otherwise
-    // Note: MaterialShader stores weak references - does not extend resource lifetime
+    // Note: MaterialShader stores shared references - participates in resource lifetime management
     bool setUniformBuffer(const std::string& name, const std::shared_ptr<const UniformBuffer>& buffer);
     bool setStorageBuffer(const std::string& name, const std::shared_ptr<const StorageBuffer>& buffer);
     bool setTexture(const std::string& name, const std::shared_ptr<const Texture>& texture);

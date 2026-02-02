@@ -11,6 +11,8 @@ package engine {
       package splat {}
     }
 
+    package scene {}
+
     package backend {}
 
   }
