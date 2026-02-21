@@ -86,6 +86,8 @@ public:
 
 	VulkanGraphicsPipelineBuilder(VkDevice device, VkPipelineCreateFlags pipeline_create_flags, VkPipelineLayout layout);
 
+	void setPipelineCache(VkPipelineCache pipeline_cache);
+
 	void addColorAttachment(VkFormat format, const VkPipelineColorBlendAttachmentState& state);
 	void setDepthAttachment(VkFormat format);
 	void setStencilAttachment(VkFormat format);

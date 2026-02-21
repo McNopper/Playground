@@ -269,7 +269,26 @@ bool VulkanWindow::init()
 
 	// Swapchain creation.
 
+	VkSwapchainCreateFlagsKHR swapchain_flags{ 0u };
+
+	// Check if VkPresentId2KHR is supported by the surface (requires VK_KHR_get_surface_capabilities2 instance ext).
+	if (vkGetPhysicalDeviceSurfaceCapabilities2KHR != nullptr)
+	{
+		VkSurfaceCapabilitiesPresentId2KHR present_id2_caps{ VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_ID_2_KHR };
+		VkPhysicalDeviceSurfaceInfo2KHR surface_info2{ VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR };
+		surface_info2.surface = m_surface;
+		VkSurfaceCapabilities2KHR surface_caps2{ VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR };
+		surface_caps2.pNext = &present_id2_caps;
+		if (vkGetPhysicalDeviceSurfaceCapabilities2KHR(m_physical_device, &surface_info2, &surface_caps2) == VK_SUCCESS
+			&& present_id2_caps.presentId2Supported == VK_TRUE)
+		{
+			m_present_id2_enabled = true;
+			swapchain_flags |= VK_SWAPCHAIN_CREATE_PRESENT_ID_2_BIT_KHR;
+		}
+	}
+
 	VulkanSwapchainFactory swapchain_factory{ m_physical_device, m_device, m_surface, surface_formats[0], surface_present_modes[0] };
+	swapchain_factory.setSwapchainCreateFlags(swapchain_flags);
 	m_swapchain = swapchain_factory.create();
 	if (m_swapchain == VK_NULL_HANDLE)
 	{
@@ -504,6 +523,8 @@ bool VulkanWindow::endFrame()
 	}
 
 	// Prepare, that present happens as soon as previous signal semaphore was triggered.
+	m_present_id++;
+
 	VkPresentInfoKHR present_info{ VK_STRUCTURE_TYPE_PRESENT_INFO_KHR };
 	present_info.waitSemaphoreCount = 1u;
 	present_info.pWaitSemaphores = &m_swapchain_image_resources[m_swapchain_image_index].signal_semaphore;
@@ -511,6 +532,14 @@ bool VulkanWindow::endFrame()
 	present_info.pSwapchains = &m_swapchain;
 	present_info.pImageIndices = &m_swapchain_image_index;
 	present_info.pResults = nullptr;
+
+	VkPresentId2KHR present_id2{ VK_STRUCTURE_TYPE_PRESENT_ID_2_KHR };
+	if (m_present_id2_enabled)
+	{
+		present_id2.swapchainCount = 1u;
+		present_id2.pPresentIds = &m_present_id;
+		present_info.pNext = &present_id2;
+	}
 
 	// Synchronization happens on GPU only.
 	result = vkQueuePresentKHR(m_queue, &present_info);
@@ -524,6 +553,20 @@ bool VulkanWindow::endFrame()
 	m_frame_index = (m_frame_index + 1u) % m_frame_resources.size();
 
 	return true;
+}
+
+uint64_t VulkanWindow::getPresentId() const
+{
+	return m_present_id;
+}
+
+VkResult VulkanWindow::waitForPresent(uint64_t present_id, uint64_t timeout) const
+{
+	VkPresentWait2InfoKHR present_wait2_info{ VK_STRUCTURE_TYPE_PRESENT_WAIT_2_INFO_KHR };
+	present_wait2_info.presentId = present_id;
+	present_wait2_info.timeout = timeout;
+
+	return vkWaitForPresent2KHR(m_device, m_swapchain, &present_wait2_info);
 }
 
 void VulkanWindow::terminate()

@@ -13,6 +13,11 @@ VulkanGraphicsPipelineBuilder::VulkanGraphicsPipelineBuilder(VkDevice device, Vk
 {
 }
 
+void VulkanGraphicsPipelineBuilder::setPipelineCache(VkPipelineCache pipeline_cache)
+{
+	m_pipeline_cache = pipeline_cache;
+}
+
 void VulkanGraphicsPipelineBuilder::addColorAttachment(VkFormat format, const VkPipelineColorBlendAttachmentState& state)
 {
 	m_color_attachment_formats.push_back(format);

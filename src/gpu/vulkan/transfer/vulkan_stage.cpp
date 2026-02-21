@@ -146,3 +146,22 @@ void transitionImageLayout(VkCommandBuffer command_buffer, VkImage image, VkImag
 
 	vkCmdPipelineBarrier2(command_buffer, &dependency_info);
 }
+
+void copyHostToImage(VkDevice device, const void* src_data, uint32_t src_row_length, uint32_t src_image_height, VkImage dst_image, VkImageLayout dst_image_layout, VkExtent3D extent, VkImageSubresourceLayers subresource_layers)
+{
+	VkMemoryToImageCopyEXT memory_to_image_copy{ VK_STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY_EXT };
+	memory_to_image_copy.pHostPointer = src_data;
+	memory_to_image_copy.memoryRowLength = src_row_length;
+	memory_to_image_copy.memoryImageHeight = src_image_height;
+	memory_to_image_copy.imageSubresource = subresource_layers;
+	memory_to_image_copy.imageOffset = { 0, 0, 0 };
+	memory_to_image_copy.imageExtent = extent;
+
+	VkCopyMemoryToImageInfoEXT copy_info{ VK_STRUCTURE_TYPE_COPY_MEMORY_TO_IMAGE_INFO_EXT };
+	copy_info.dstImage = dst_image;
+	copy_info.dstImageLayout = dst_image_layout;
+	copy_info.regionCount = 1u;
+	copy_info.pRegions = &memory_to_image_copy;
+
+	vkCopyMemoryToImageEXT(device, &copy_info);
+}

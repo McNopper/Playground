@@ -303,7 +303,7 @@ std::vector<VkPushConstantRange> VulkanSpirvQuery::gatherPushConstantRanges() co
 
 		// Merge stage flags, as push constants can also used in another shader stages.
 
-		for (uint32_t j = 0; j < count; j++)
+		for (uint32_t j = 0u; j < count; j++)
 		{
 			VkPushConstantRange push_constant_range{};
 			push_constant_range.stageFlags = *stage;

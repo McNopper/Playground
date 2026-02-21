@@ -25,10 +25,11 @@ bool VulkanRuntime::prepareInit(bool with_window)
 	{
 		uint32_t extension_count{ 0u };
 		const char** extensions = glfwGetRequiredInstanceExtensions(&extension_count);
-		for (uint32_t i = 0; i < extension_count; i++)
+		for (uint32_t i = 0u; i < extension_count; i++)
 		{
 			vulkan_instance_factory.addEnabledExtensionName(extensions[i]);
 		}
+		vulkan_instance_factory.addEnabledExtensionName(VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME);
 	}
 
 	m_instance = vulkan_instance_factory.create();
@@ -89,10 +90,13 @@ bool VulkanRuntime::init()
 
 	VulkanDeviceFactory vulkan_device_factory{ m_physical_device, m_queue_family_index };
 
-	// Only add swapchain extension if surface is available
+	// Only add presentation extensions if surface is available
 	if (m_surface != VK_NULL_HANDLE)
 	{
 		vulkan_device_factory.addEnabledExtensionName(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+		vulkan_device_factory.addEnabledExtensionName(VK_KHR_PRESENT_MODE_FIFO_LATEST_READY_EXTENSION_NAME);
+		vulkan_device_factory.addEnabledExtensionName(VK_KHR_PRESENT_ID_2_EXTENSION_NAME);
+		vulkan_device_factory.addEnabledExtensionName(VK_KHR_PRESENT_WAIT_2_EXTENSION_NAME);
 	}
 
 	m_device = vulkan_device_factory.create();
@@ -183,7 +187,7 @@ bool VulkanRuntime::loop(IApplication& application, uint32_t num_loops)
 
 	DeltaTime delta_time{};
 
-	for (uint32_t i = 0; i < num_loops; i++)
+	for (uint32_t i = 0u; i < num_loops; i++)
 	{
 		auto current_delta_time = delta_time.tick();
 

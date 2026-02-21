@@ -36,6 +36,8 @@ public:
 
     void setTargetMinImageCount(uint32_t target_min_image_count);
 
+    void setSwapchainCreateFlags(VkSwapchainCreateFlagsKHR flags);
+
     void setOldSwapchain(VkSwapchainKHR old_swapchain);
 
     VkSwapchainKHR create() const;

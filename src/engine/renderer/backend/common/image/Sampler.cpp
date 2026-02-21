@@ -44,6 +44,11 @@ void Sampler::setAddressModeW(VkSamplerAddressMode mode)
 	m_address_mode_w = mode;
 }
 
+void Sampler::setMaxAnisotropy(float max_anisotropy)
+{
+	m_max_anisotropy = max_anisotropy;
+}
+
 bool Sampler::create()
 {
 	destroy();
@@ -54,6 +59,10 @@ bool Sampler::create()
 	sampler_factory.setSamplerAddressModeU(m_address_mode_u);
 	sampler_factory.setSamplerAddressModeV(m_address_mode_v);
 	sampler_factory.setSamplerAddressModeW(m_address_mode_w);
+	if (m_max_anisotropy > 0.0f)
+	{
+		sampler_factory.setMaxAnisotropy(m_max_anisotropy);
+	}
 
 	m_sampler = sampler_factory.create();
 

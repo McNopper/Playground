@@ -20,6 +20,8 @@ public:
 
 	VkSemaphore create() const;
 
+	VkSemaphore createTimeline(uint64_t initial_value) const;
+
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANSEMAPHOREFACTORY_H_ */

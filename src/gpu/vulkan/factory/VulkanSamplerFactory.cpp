@@ -35,6 +35,12 @@ void VulkanSamplerFactory::setSamplerAddressModeW(VkSamplerAddressMode mode)
     m_address_mode_w = mode;
 }
 
+void VulkanSamplerFactory::setMaxAnisotropy(float max_anisotropy)
+{
+    m_anisotropy_enable = VK_TRUE;
+    m_max_anisotropy = max_anisotropy;
+}
+
 VkSampler VulkanSamplerFactory::create() const
 {
 	VkSamplerCreateInfo sampler_create_info{ VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO };

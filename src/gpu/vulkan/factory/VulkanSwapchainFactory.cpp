@@ -12,6 +12,11 @@ void VulkanSwapchainFactory::setTargetMinImageCount(uint32_t target_min_image_co
 	m_target_min_image_count = target_min_image_count;
 }
 
+void VulkanSwapchainFactory::setSwapchainCreateFlags(VkSwapchainCreateFlagsKHR flags)
+{
+	m_swapchain_create_flags = flags;
+}
+
 void VulkanSwapchainFactory::setOldSwapchain(VkSwapchainKHR old_swapchain)
 {
 	m_old_swapchain = old_swapchain;

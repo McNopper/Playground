@@ -22,6 +22,7 @@ protected:
 	VkSamplerAddressMode m_address_mode_u{ VK_SAMPLER_ADDRESS_MODE_REPEAT };
 	VkSamplerAddressMode m_address_mode_v{ VK_SAMPLER_ADDRESS_MODE_REPEAT };
 	VkSamplerAddressMode m_address_mode_w{ VK_SAMPLER_ADDRESS_MODE_REPEAT };
+	float m_max_anisotropy{ 0.0f };
 
 public:
 
@@ -40,6 +41,8 @@ public:
 	void setAddressModeU(VkSamplerAddressMode mode);
 	void setAddressModeV(VkSamplerAddressMode mode);
 	void setAddressModeW(VkSamplerAddressMode mode);
+
+	void setMaxAnisotropy(float max_anisotropy);
 
 	bool create();
 

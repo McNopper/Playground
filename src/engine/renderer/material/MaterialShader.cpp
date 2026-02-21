@@ -501,7 +501,7 @@ void MaterialShader::bind(VkCommandBuffer command_buffer) const
     vkCmdBindDescriptorBuffersEXT(command_buffer, static_cast<uint32_t>(descriptor_buffer_bindings.size()), descriptor_buffer_bindings.data());
 
     // Set descriptor buffer offsets for each set
-    uint32_t buffer_index = 0;
+    uint32_t buffer_index{ 0u };
     for (const auto& [set_index, descriptor_set] : m_descriptor_sets)
     {
         VkDeviceSize offset = 0;

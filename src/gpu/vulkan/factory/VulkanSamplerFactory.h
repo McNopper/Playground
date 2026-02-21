@@ -45,6 +45,8 @@ public:
 
     void setSamplerAddressModeW(VkSamplerAddressMode mode);
 
+    void setMaxAnisotropy(float max_anisotropy);
+
 	VkSampler create() const;
 
 };

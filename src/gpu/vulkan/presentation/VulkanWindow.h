@@ -70,6 +70,9 @@ private:
 	float m_clear_depth{ 1.0f };
 	uint32_t m_clear_stencil{ 0u };
 
+	uint64_t m_present_id{ 0u };
+	bool m_present_id2_enabled{ false };
+
 public:
 
 	VulkanWindow() = delete;
@@ -118,6 +121,10 @@ public:
 	void beginRendering() const override;
 
 	void endRendering() const override;
+
+	uint64_t getPresentId() const;
+
+	VkResult waitForPresent(uint64_t present_id, uint64_t timeout = UINT64_MAX) const;
 
 };
 
