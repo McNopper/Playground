@@ -383,7 +383,7 @@ std::vector<ImageData> generateMipMaps(const ImageData& image_data)
 		uint32_t mip_height = std::max(height / 2u, 1u);
 
 		OIIO::ROI roi{ 0, (int)mip_width, 0, (int)mip_height };
-		OIIO::ImageBuf dst_buf = OIIO::ImageBufAlgo::resize(base_buf, "lanczos3", 0.0f, roi);
+		OIIO::ImageBuf dst_buf = OIIO::ImageBufAlgo::resize(base_buf, "box", 0.0f, roi);
 
 		ImageData mip_data{};
 		mip_data.width          = mip_width;

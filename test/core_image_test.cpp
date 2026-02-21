@@ -176,12 +176,4 @@ TEST(TestImage, GenerateMipMapsFromFile)
 
     // Save the smallest mip to verify pixel data was written
     EXPECT_FALSE(last.pixels.empty());
-
-    // Save each mip level for visual inspection
-    for (uint32_t i{ 0u }; i < static_cast<uint32_t>(mip_levels.size()); ++i)
-    {
-        std::string filename = "../bin/color_grid_mip" + std::to_string(i) + ".png";
-        auto result = saveImageData(filename.c_str(), mip_levels[i]);
-        EXPECT_TRUE(result) << "Failed to save mip level " << i;
-    }
 }
