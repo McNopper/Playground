@@ -17,7 +17,7 @@ VulkanDeviceFactory::VulkanDeviceFactory(VkPhysicalDevice physical_device, uint3
 	addEnabledExtensionName(VK_KHR_COOPERATIVE_MATRIX_EXTENSION_NAME);
 	addEnabledExtensionName(VK_KHR_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME);
 	addEnabledExtensionName(VK_KHR_SHADER_CLOCK_EXTENSION_NAME);
-	addEnabledExtensionName(VK_EXT_ROBUSTNESS_2_EXTENSION_NAME);
+	addEnabledExtensionName(VK_KHR_ROBUSTNESS_2_EXTENSION_NAME);
 
 }
 
@@ -93,7 +93,7 @@ VkDevice VulkanDeviceFactory::create() const
 	physical_device_shader_clock_features.shaderSubgroupClock = VK_TRUE;
 	physical_device_shader_clock_features.shaderDeviceClock = VK_TRUE;
 
-	VkPhysicalDeviceRobustness2FeaturesEXT physical_device_robustness2_features{ VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT };
+	VkPhysicalDeviceRobustness2FeaturesKHR physical_device_robustness2_features{ VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_KHR };
 	physical_device_robustness2_features.robustBufferAccess2 = VK_TRUE;
 	physical_device_robustness2_features.robustImageAccess2 = VK_TRUE;
 	physical_device_robustness2_features.nullDescriptor = VK_TRUE;
