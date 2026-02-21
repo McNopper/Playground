@@ -68,13 +68,13 @@ void copyImageToBuffer(VkCommandBuffer command_buffer, VkImage src_image, VkBuff
 	vkCmdCopyImageToBuffer2(command_buffer, &copy_image_to_buffer_info);
 }
 
-void transitionImageLayout(VkCommandBuffer command_buffer, VkImage image, VkImageLayout old_layout, VkImageLayout new_layout, VkImageAspectFlags aspect_mask)
+void transitionImageLayout(VkCommandBuffer command_buffer, VkImage image, VkImageLayout old_layout, VkImageLayout new_layout, VkImageAspectFlags aspect_mask, uint32_t base_mip_level, uint32_t level_count)
 {
 	VkImageMemoryBarrier2 image_memory_barrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2 };
 	image_memory_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	image_memory_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	image_memory_barrier.image = image;
-	image_memory_barrier.subresourceRange = { aspect_mask, 0u, 1u, 0u, 1u };
+	image_memory_barrier.subresourceRange = { aspect_mask, base_mip_level, level_count, 0u, 1u };
 	image_memory_barrier.oldLayout = old_layout;
 	image_memory_barrier.newLayout = new_layout;
 

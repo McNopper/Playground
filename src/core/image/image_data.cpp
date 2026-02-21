@@ -5,6 +5,7 @@
 
 #include <OpenImageIO/imageio.h>
 #include <OpenImageIO/imagebuf.h>
+#include <OpenImageIO/imagebufalgo.h>
 #include <OpenImageIO/span.h>
 
 #include "core/math/matrix.h"
@@ -354,4 +355,52 @@ std::optional<ImageData> convertImageDataColorSpace(ColorSpace color_space, bool
 	}
 
 	return converted_image_data;
+}
+
+std::vector<ImageData> generateMipMaps(const ImageData& image_data)
+{
+	std::vector<ImageData> mip_levels;
+	mip_levels.push_back(image_data);
+
+	OIIO::TypeDesc format = getChannelFormat(image_data.channel_format);
+	if (format == OIIO::TypeDesc::UNKNOWN)
+	{
+		return mip_levels;
+	}
+
+	uint32_t channel_size = getChannelFormatSize(image_data.channel_format);
+
+	// Always resize from level 0 to avoid accumulated resampling error
+	OIIO::ImageSpec base_spec{ (int)image_data.width, (int)image_data.height, (int)image_data.channels, format };
+	OIIO::ImageBuf base_buf(base_spec, (void*)image_data.pixels.data());
+
+	uint32_t width  = image_data.width;
+	uint32_t height = image_data.height;
+
+	while (width > 1u || height > 1u)
+	{
+		uint32_t mip_width  = std::max(width  / 2u, 1u);
+		uint32_t mip_height = std::max(height / 2u, 1u);
+
+		OIIO::ROI roi{ 0, (int)mip_width, 0, (int)mip_height };
+		OIIO::ImageBuf dst_buf = OIIO::ImageBufAlgo::resize(base_buf, "lanczos3", 0.0f, roi);
+
+		ImageData mip_data{};
+		mip_data.width          = mip_width;
+		mip_data.height         = mip_height;
+		mip_data.channels       = image_data.channels;
+		mip_data.channel_format = image_data.channel_format;
+		mip_data.color_space    = image_data.color_space;
+		mip_data.linear         = image_data.linear;
+		mip_data.pixels.resize(mip_width * mip_height * image_data.channels * channel_size);
+
+		dst_buf.get_pixels(OIIO::ROI::All(), format, mip_data.pixels.data());
+
+		mip_levels.push_back(std::move(mip_data));
+
+		width  = mip_width;
+		height = mip_height;
+	}
+
+	return mip_levels;
 }

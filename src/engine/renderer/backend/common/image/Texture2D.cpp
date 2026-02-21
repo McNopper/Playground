@@ -43,7 +43,9 @@ bool Texture2D::upload(VkCommandPool command_pool, VkQueue queue, const ImageDat
 		return false;
 	}
 
-	if (image_data.width != m_extent.width || image_data.height != m_extent.height)
+	uint32_t expected_width  = std::max(m_extent.width  >> mip_level, 1u);
+	uint32_t expected_height = std::max(m_extent.height >> mip_level, 1u);
+	if (image_data.width != expected_width || image_data.height != expected_height)
 	{
 		return false;
 	}
@@ -97,8 +99,8 @@ bool Texture2D::upload(VkCommandPool command_pool, VkQueue queue, const ImageDat
 		return false;
 	}
 
-	// Transition image layout: UNDEFINED -> TRANSFER_DST_OPTIMAL
-	transitionImageLayout(command_buffer, m_image_resource.image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+	// Transition mip level: UNDEFINED -> TRANSFER_DST_OPTIMAL
+	transitionImageLayout(command_buffer, m_image_resource.image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT, mip_level, 1u);
 
 	// Copy buffer to image
 	VkImageSubresourceLayers subresource_layers{};
@@ -107,10 +109,11 @@ bool Texture2D::upload(VkCommandPool command_pool, VkQueue queue, const ImageDat
 	subresource_layers.baseArrayLayer = 0u;
 	subresource_layers.layerCount = 1u;
 
-	copyBufferToImage(command_buffer, staging_buffer->buffer, m_image_resource.image, m_extent, subresource_layers);
+	VkExtent3D mip_extent{ expected_width, expected_height, 1u };
+	copyBufferToImage(command_buffer, staging_buffer->buffer, m_image_resource.image, mip_extent, subresource_layers);
 
-	// Transition image layout: TRANSFER_DST_OPTIMAL -> SHADER_READ_ONLY_OPTIMAL
-	transitionImageLayout(command_buffer, m_image_resource.image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+	// Transition mip level: TRANSFER_DST_OPTIMAL -> SHADER_READ_ONLY_OPTIMAL
+	transitionImageLayout(command_buffer, m_image_resource.image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT, mip_level, 1u);
 
 	result = vkEndCommandBuffer(command_buffer);
 	if (result != VK_SUCCESS)
@@ -156,4 +159,22 @@ uint32_t Texture2D::getWidth() const
 uint32_t Texture2D::getHeight() const
 {
 	return m_extent.height;
+}
+
+bool Texture2D::uploadMipMaps(VkCommandPool command_pool, VkQueue queue, const std::vector<ImageData>& mip_levels)
+{
+	if (static_cast<uint32_t>(mip_levels.size()) != m_mip_levels)
+	{
+		return false;
+	}
+
+	for (uint32_t i{ 0u }; i < static_cast<uint32_t>(mip_levels.size()); ++i)
+	{
+		if (!upload(command_pool, queue, mip_levels[i], i))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }

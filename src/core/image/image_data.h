@@ -44,4 +44,6 @@ std::optional<ImageData> convertImageDataChannels(uint32_t channels, const Image
 
 std::optional<ImageData> convertImageDataColorSpace(ColorSpace color_space, bool linear, const ImageData& image_data);
 
+std::vector<ImageData> generateMipMaps(const ImageData& image_data);
+
 #endif /* CORE_IMAGE_DATA_H_ */

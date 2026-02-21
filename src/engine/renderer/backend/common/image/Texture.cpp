@@ -49,6 +49,7 @@ bool Texture::createImage()
 	VkImageUsageFlags usage = m_usage | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
 	VulkanImageFactory image_factory{ m_device, m_format, m_extent, VK_SAMPLE_COUNT_1_BIT, usage };
+	image_factory.setMipLevels(m_mip_levels);
 	m_image_resource.image = image_factory.create();
 	if (m_image_resource.image == VK_NULL_HANDLE)
 	{

@@ -5,6 +5,11 @@ VulkanImageFactory::VulkanImageFactory(VkDevice device, VkFormat format, const V
 {
 }
 
+void VulkanImageFactory::setMipLevels(uint32_t mip_levels)
+{
+    m_mip_levels = mip_levels;
+}
+
 VkImage VulkanImageFactory::create() const
 {
 	VkImageCreateInfo image_create_info{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };

@@ -31,6 +31,8 @@ public:
 
 	bool upload(VkCommandPool command_pool, VkQueue queue, const ImageData& image_data, uint32_t mip_level = 0);
 
+	bool uploadMipMaps(VkCommandPool command_pool, VkQueue queue, const std::vector<ImageData>& mip_levels);
+
 	uint32_t getWidth() const;
 	uint32_t getHeight() const;
 

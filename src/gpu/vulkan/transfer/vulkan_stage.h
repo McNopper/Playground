@@ -13,6 +13,6 @@ void copyBufferToImage(VkCommandBuffer command_buffer, VkBuffer src_buffer, VkIm
 
 void copyImageToBuffer(VkCommandBuffer command_buffer, VkImage src_image, VkBuffer dst_buffer, VkExtent3D extent, VkImageSubresourceLayers subresource_layers = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1});
 
-void transitionImageLayout(VkCommandBuffer command_buffer, VkImage image, VkImageLayout old_layout, VkImageLayout new_layout, VkImageAspectFlags aspect_mask = VK_IMAGE_ASPECT_COLOR_BIT);
+void transitionImageLayout(VkCommandBuffer command_buffer, VkImage image, VkImageLayout old_layout, VkImageLayout new_layout, VkImageAspectFlags aspect_mask = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t base_mip_level = 0u, uint32_t level_count = 1u);
 
 #endif /* GPU_VULKAN_TRANSFER_STAGE_H_ */
