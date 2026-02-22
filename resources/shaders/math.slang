@@ -3,6 +3,11 @@
 
 module math;
 
+public static const float PI         = 3.14159265359;
+public static const float TWO_PI     = 6.28318530718;
+public static const float INV_PI     = 0.31830988618;
+public static const float INV_TWO_PI = 0.15915494309;
+
 // Matrix multiplication operators
 public float4x4 operator*(float4x4 a, float4x4 b)
 {
