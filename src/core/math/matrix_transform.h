@@ -1,5 +1,5 @@
-#ifndef CORE_MATH_MATRIXTRANSFORM_H_
-#define CORE_MATH_MATRIXTRANSFORM_H_
+#ifndef CORE_MATH_MATRIX_TRANSFORM_H_
+#define CORE_MATH_MATRIX_TRANSFORM_H_
 
 #include "matrix.h"
 #include "vector.h"
@@ -14,4 +14,4 @@ float4x4 rotateRyMatrix(float degree);
 
 float4x4 rotateRzMatrix(float degree);
 
-#endif /* CORE_MATH_MATRIXTRANSFORM_H_ */
+#endif /* CORE_MATH_MATRIX_TRANSFORM_H_ */

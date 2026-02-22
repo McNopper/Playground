@@ -1,5 +1,5 @@
-#ifndef GPU_VULKAN_UTILITY_VULKANHELPER_H_
-#define GPU_VULKAN_UTILITY_VULKANHELPER_H_
+#ifndef GPU_VULKAN_UTILITY_VULKAN_HELPER_H_
+#define GPU_VULKAN_UTILITY_VULKAN_HELPER_H_
 
 #include <volk.h>
 
@@ -31,4 +31,4 @@ TransferFunction getTransferFunction(VkColorSpaceKHR color_space);
 
 TransferFunction getTransferFunction(VkSurfaceFormatKHR surface_format);
 
-#endif /* GPU_VULKAN_UTILITY_VULKANHELPER_H_ */
+#endif /* GPU_VULKAN_UTILITY_VULKAN_HELPER_H_ */

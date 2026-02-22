@@ -1,5 +1,5 @@
-#ifndef RENDERER_BACKEND_COMMON_IMAGE_TEXTURE_H_
-#define RENDERER_BACKEND_COMMON_IMAGE_TEXTURE_H_
+#ifndef ENGINE_RENDERER_BACKEND_COMMON_IMAGE_TEXTURE_H_
+#define ENGINE_RENDERER_BACKEND_COMMON_IMAGE_TEXTURE_H_
 
 #include <volk.h>
 
@@ -47,7 +47,7 @@ public:
 
     virtual ~Texture();
 
-    Texture operator=(const Texture& other) = delete;
+    Texture& operator=(const Texture& other) = delete;
 
     void setFormat(VkFormat format);
     void setUsage(VkImageUsageFlags usage);
@@ -71,4 +71,4 @@ public:
     virtual void destroy();
 };
 
-#endif /* RENDERER_BACKEND_COMMON_IMAGE_TEXTURE_H_ */
+#endif /* ENGINE_RENDERER_BACKEND_COMMON_IMAGE_TEXTURE_H_ */

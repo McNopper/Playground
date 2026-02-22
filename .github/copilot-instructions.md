@@ -48,7 +48,7 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 **Four-Layer Structure:**
 
 1. **core/** - Foundation layer with no external dependencies
-   - `math/` - Vector types (float2, float3, float4), float4x4 matrices
+   - `math/` - Vector types (float2–float7), matrix types (float2x2–float7x7)
    - `color/` - Color spaces (sRGB, BT709, BT2020) and transfer functions
    - `image/` - Image loading/saving via OpenImageIO
    - `io/` - File I/O utilities
@@ -104,7 +104,7 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 **Types:**
 - Classes/Structs: `PascalCase` (e.g., `VulkanDeviceFactory`, `GpuBuffer`)
 - Interfaces: Prefix `I` (e.g., `IVulkanWindow`)
-- Math types: lowercase+numbers (e.g., `float2`, `float3`, `float4x4`)
+- Math types: lowercase+numbers (e.g., `float2`, `float3`, `float4`, `float5`, `float6`, `float7`, `float4x4`)
 - Enums: `enum class` with `PascalCase` names, `SCREAMING_SNAKE_CASE` values
 
 **Variables:**
@@ -315,7 +315,7 @@ See `docs/coordinate_system.md` for complete details.
 
 Managed via vcpkg:
 - **Vulkan**: volk (dynamic loader), SPIRV-Tools, SPIRV-Reflect
-- **Shaders**: shaderc (GLSL), slang (Slang language)
+- **Shaders**: shaderc (GLSL via vcpkg), slang (included with Vulkan SDK)
 - **Graphics**: imgui (UI), glfw (windowing)
 - **Images**: OpenImageIO (loading/saving)
 - **Data**: nlohmann/json (JSON parsing), zlib (gzip compression)

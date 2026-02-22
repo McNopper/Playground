@@ -1,5 +1,5 @@
-#ifndef RENDERER_GEOMETRY_VOLUME_AVOLUME_H_
-#define RENDERER_GEOMETRY_VOLUME_AVOLUME_H_
+#ifndef ENGINE_RENDERER_GEOMETRY_VOLUME_AVOLUME_H_
+#define ENGINE_RENDERER_GEOMETRY_VOLUME_AVOLUME_H_
 
 #include "engine/renderer/geometry/AGeometry.h"
 
@@ -11,4 +11,4 @@ public:
     virtual ~AVolume() = default;
 };
 
-#endif /* RENDERER_GEOMETRY_VOLUME_AVOLUME_H_ */
+#endif /* ENGINE_RENDERER_GEOMETRY_VOLUME_AVOLUME_H_ */

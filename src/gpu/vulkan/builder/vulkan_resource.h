@@ -1,5 +1,5 @@
-#ifndef GPU_VULKAN_BUILDER_VULKANRESOURCE_H_
-#define GPU_VULKAN_BUILDER_VULKANRESOURCE_H_
+#ifndef GPU_VULKAN_BUILDER_VULKAN_RESOURCE_H_
+#define GPU_VULKAN_BUILDER_VULKAN_RESOURCE_H_
 
 #include <volk.h>
 
@@ -20,4 +20,4 @@ void destroyResource(VkDevice device, VulkanImageResource& image_resource);
 
 void destroyResource(VkDevice device, VulkanBufferResource& buffer_resource);
 
-#endif /* GPU_VULKAN_BUILDER_VULKANRESOURCE_H_ */
+#endif /* GPU_VULKAN_BUILDER_VULKAN_RESOURCE_H_ */

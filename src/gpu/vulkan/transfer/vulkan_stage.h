@@ -1,5 +1,5 @@
-#ifndef GPU_VULKAN_TRANSFER_STAGE_H_
-#define GPU_VULKAN_TRANSFER_STAGE_H_
+#ifndef GPU_VULKAN_TRANSFER_VULKAN_STAGE_H_
+#define GPU_VULKAN_TRANSFER_VULKAN_STAGE_H_
 
 #include <optional>
 
@@ -17,4 +17,4 @@ void transitionImageLayout(VkCommandBuffer command_buffer, VkImage image, VkImag
 
 void copyHostToImage(VkDevice device, const void* src_data, uint32_t src_row_length, uint32_t src_image_height, VkImage dst_image, VkImageLayout dst_image_layout, VkExtent3D extent, VkImageSubresourceLayers subresource_layers = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 });
 
-#endif /* GPU_VULKAN_TRANSFER_STAGE_H_ */
+#endif /* GPU_VULKAN_TRANSFER_VULKAN_STAGE_H_ */

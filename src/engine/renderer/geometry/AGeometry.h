@@ -1,5 +1,5 @@
-#ifndef RENDERER_GEOMETRY_AGEOMETRY_H_
-#define RENDERER_GEOMETRY_AGEOMETRY_H_
+#ifndef ENGINE_RENDERER_GEOMETRY_AGEOMETRY_H_
+#define ENGINE_RENDERER_GEOMETRY_AGEOMETRY_H_
 
 #include <volk.h>
 
@@ -17,4 +17,4 @@ public:
     virtual void draw(VkCommandBuffer command_buffer) const = 0;
 };
 
-#endif /* RENDERER_GEOMETRY_AGEOMETRY_H_ */
+#endif /* ENGINE_RENDERER_GEOMETRY_AGEOMETRY_H_ */

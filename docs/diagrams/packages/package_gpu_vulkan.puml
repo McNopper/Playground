@@ -22,7 +22,7 @@ package gpu {
 
 gpu.vulkan.factory .d.> gpu.vulkan.utility
 
-gpu.vulkan.spirv .d.> gpu.vulkan.factory
+gpu.vulkan.spirv .d.> gpu.vulkan.utility
 
 gpu.vulkan.builder .d.> gpu.vulkan.spirv
 

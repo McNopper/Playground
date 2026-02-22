@@ -1,6 +1,6 @@
 
-#ifndef RENDERER_H_
-#define RENDERER_H_
+#ifndef ENGINE_RENDERER_H_
+#define ENGINE_RENDERER_H_
 
 // Layer
 
@@ -42,4 +42,4 @@
 #include "engine/renderer/backend/common/image/Texture2D.h"
 #include "engine/renderer/backend/common/image/TextureCube.h"
 
-#endif /* RENDERER_H_ */
+#endif /* ENGINE_RENDERER_H_ */

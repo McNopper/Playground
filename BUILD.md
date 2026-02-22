@@ -119,7 +119,7 @@ Verify your compiler supports C++20:
 - [nlohmann/json](https://github.com/nlohmann/json)
 - [OpenImageIO](https://github.com/AcademySoftwareFoundation/OpenImageIO)
 - [Shaderc](https://github.com/google/shaderc)
-- [slang](https://github.com/shader-slang/slang)
+- [slang](https://github.com/shader-slang/slang) *(included with Vulkan SDK)*
 - [SPIRV-Reflect](https://github.com/KhronosGroup/SPIRV-Reflect)
 - [SPIRV-Tools](https://github.com/KhronosGroup/SPIRV-Tools)
 - [volk](https://github.com/zeux/volk)

@@ -1,5 +1,5 @@
-#ifndef RENDERER_BACKEND_COMMON_BUFFER_GPUBUFFER_H_
-#define RENDERER_BACKEND_COMMON_BUFFER_GPUBUFFER_H_
+#ifndef ENGINE_RENDERER_BACKEND_COMMON_BUFFER_GPUBUFFER_H_
+#define ENGINE_RENDERER_BACKEND_COMMON_BUFFER_GPUBUFFER_H_
 
 #include <vector>
 
@@ -31,7 +31,7 @@ public:
 
     virtual ~GpuBuffer();
 
-    GpuBuffer operator=(const GpuBuffer& other) = delete;
+    GpuBuffer& operator=(const GpuBuffer& other) = delete;
 
     bool create(VkDeviceSize size, VkBufferUsageFlags usage);
 
@@ -236,4 +236,4 @@ bool GpuBuffer::readBack(VkDeviceSize offset, std::vector<T>& data, size_t count
     return true;
 }
 
-#endif /* RENDERER_BACKEND_COMMON_BUFFER_GPUBUFFER_H_ */
+#endif /* ENGINE_RENDERER_BACKEND_COMMON_BUFFER_GPUBUFFER_H_ */

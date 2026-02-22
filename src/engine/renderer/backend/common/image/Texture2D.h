@@ -1,5 +1,5 @@
-#ifndef RENDERER_BACKEND_COMMON_IMAGE_TEXTURE2D_H_
-#define RENDERER_BACKEND_COMMON_IMAGE_TEXTURE2D_H_
+#ifndef ENGINE_RENDERER_BACKEND_COMMON_IMAGE_TEXTURE2D_H_
+#define ENGINE_RENDERER_BACKEND_COMMON_IMAGE_TEXTURE2D_H_
 
 #include "Texture.h"
 
@@ -22,7 +22,7 @@ public:
 
     ~Texture2D() override;
 
-    Texture2D operator=(const Texture2D& other) = delete;
+    Texture2D& operator=(const Texture2D& other) = delete;
 
     void setWidth(uint32_t width);
     void setHeight(uint32_t height);
@@ -38,4 +38,4 @@ public:
     uint32_t getHeight() const;
 };
 
-#endif /* RENDERER_BACKEND_COMMON_IMAGE_TEXTURE2D_H_ */
+#endif /* ENGINE_RENDERER_BACKEND_COMMON_IMAGE_TEXTURE2D_H_ */

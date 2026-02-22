@@ -1,5 +1,5 @@
-#ifndef CORE_MATH_REALSPHERICALHARMONICS_H_
-#define CORE_MATH_REALSPHERICALHARMONICS_H_
+#ifndef CORE_MATH_REAL_SPHERICAL_HARMONICS_H_
+#define CORE_MATH_REAL_SPHERICAL_HARMONICS_H_
 
 #include <cstdint>
 #include <vector>
@@ -49,4 +49,4 @@ struct rsh
     float Yln(std::uint32_t l, std::uint32_t n, float x, float y, float z) const;
 };
 
-#endif /* CORE_MATH_REALSPHERICALHARMONICS_H_*/
+#endif /* CORE_MATH_REAL_SPHERICAL_HARMONICS_H_*/

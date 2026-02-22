@@ -1,5 +1,5 @@
-#ifndef CORE_MATH_MATRIXCAMERA_H_
-#define CORE_MATH_MATRIXCAMERA_H_
+#ifndef CORE_MATH_MATRIX_CAMERA_H_
+#define CORE_MATH_MATRIX_CAMERA_H_
 
 #include "matrix.h"
 #include "vector.h"
@@ -14,4 +14,4 @@ float4x4 perspective(float fov_y, float aspect, float near_val, float far_val);
 
 float4x4 viewport(float x, float y, float width, float height, float near_val, float far_val);
 
-#endif /* CORE_MATH_MATRIXCAMERA_H_ */
+#endif /* CORE_MATH_MATRIX_CAMERA_H_ */

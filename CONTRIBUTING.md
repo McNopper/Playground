@@ -47,7 +47,7 @@ This project follows strict C++20 coding standards with the following convention
 **Types:**
 - Classes/Structs: `PascalCase` (e.g., `VulkanDeviceFactory`, `UniformBlock`)
 - Interfaces: Prefix with `I` (e.g., `IVulkanWindow`)
-- Math types: lowercase with numbers (e.g., `float2`, `float3`, `float4`, `float4x4`)
+- Math types: lowercase with numbers (e.g., `float2`, `float3`, `float4`, `float5`, `float6`, `float7`, `float4x4`)
 - Enums: `PascalCase` with `enum class` (e.g., `ColorSpace`, `TransferFunction`)
 - Enum values: `SCREAMING_SNAKE_CASE` (e.g., `ColorSpace::SRGB`, `TransferFunction::LINEAR`)
 
@@ -262,7 +262,8 @@ src/
 │   ├── templates/     # Template utilities
 │   └── utility/       # Base64, gzip, etc.
 ├── cpu/               # CPU-side implementations
-│   └── ai/            # AI/ML components
+│   ├── ai/            # AI/ML components
+│   └── geometry/      # Procedural mesh generation
 ├── gpu/               # GPU abstractions
 │   ├── shader/        # Shader compilation (GLSL, SPIR-V, Slang)
 │   └── vulkan/        # Vulkan-specific code
@@ -293,13 +294,13 @@ src/
 
 ### Adding a New Example
 
-1. Create a new directory: `example05/`
+1. Create a new directory: `exampleNN/`
 2. Add `main.cpp` and any supporting files
 3. Update `CMakeLists.txt`:
    ```cmake
-   collect_sources_and_headers(${CMAKE_SOURCE_DIR}/example05 SOURCES_EXAMPLE05)
-   add_executable(Example05 ${SOURCES_EXAMPLE05})
-   target_link_libraries(Example05 PRIVATE PlaygroundSDK volk::volk_headers unofficial::spirv-reflect)
+   collect_sources_and_headers(${CMAKE_SOURCE_DIR}/exampleNN SOURCES_EXAMPLENN)
+   add_executable(ExampleNN ${SOURCES_EXAMPLENN})
+   target_link_libraries(ExampleNN PRIVATE PlaygroundSDK volk::volk_headers unofficial::spirv-reflect)
    ```
 
 ### Adding Tests
