@@ -13,37 +13,37 @@ class Application : public IApplication
 
 private:
 
-	VkPhysicalDevice m_physical_device{ VK_NULL_HANDLE };
-	VkDevice m_device{ VK_NULL_HANDLE };
-	uint32_t m_queue_family_index{ VK_QUEUE_FAMILY_IGNORED };
+    VkPhysicalDevice m_physical_device{ VK_NULL_HANDLE };
+    VkDevice m_device{ VK_NULL_HANDLE };
+    uint32_t m_queue_family_index{ VK_QUEUE_FAMILY_IGNORED };
 
-	IVulkanWindow& m_vulkan_window;
+    IVulkanWindow& m_vulkan_window;
 
-	// Scene object - combines geometry, material, and transform
-	std::shared_ptr<Renderable> m_renderable;
+    // Scene object - combines geometry, material, and transform
+    std::shared_ptr<Renderable> m_renderable;
 
-	// Shared resources (potentially reusable across multiple renderables)
-	std::shared_ptr<VertexBuffer> m_vertex_buffer;
-	std::shared_ptr<IndexBuffer> m_index_buffer;
-	std::shared_ptr<UniformBuffer> m_uniform_view_buffer;
-	std::shared_ptr<UniformBlock> m_uniform_view_block;
-	std::shared_ptr<Texture2D> m_texture;
-	std::shared_ptr<Sampler> m_sampler;
-	std::shared_ptr<Texture2DSampler> m_texture_sampler;
+    // Shared resources (potentially reusable across multiple renderables)
+    std::shared_ptr<VertexBuffer> m_vertex_buffer;
+    std::shared_ptr<IndexBuffer> m_index_buffer;
+    std::shared_ptr<UniformBuffer> m_uniform_view_buffer;
+    std::shared_ptr<UniformBlock> m_uniform_view_block;
+    std::shared_ptr<Texture2D> m_texture;
+    std::shared_ptr<Sampler> m_sampler;
+    std::shared_ptr<Texture2DSampler> m_texture_sampler;
 
-	VkPipeline m_pipeline{ VK_NULL_HANDLE };
+    VkPipeline m_pipeline{ VK_NULL_HANDLE };
 
-	double m_rotation_angle{ 0.0 };
+    double m_rotation_angle{ 0.0 };
 
 public:
 
-	Application(VkPhysicalDevice physical_device, VkDevice device, uint32_t queue_family_index, IVulkanWindow& vulkan_window);
+    Application(VkPhysicalDevice physical_device, VkDevice device, uint32_t queue_family_index, IVulkanWindow& vulkan_window);
 
-	bool init() override;
+    bool init() override;
 
-	bool update(double delta_time, VkCommandBuffer command_buffer) override;
+    bool update(double delta_time, VkCommandBuffer command_buffer) override;
 
-	void terminate() override;
+    void terminate() override;
 
 };
 

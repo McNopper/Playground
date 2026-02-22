@@ -12,7 +12,8 @@ namespace ebnf {
 
 // Exclude (aka. exception)
 
-class Exclude : public ASingleSymbol {
+class Exclude : public ASingleSymbol
+{
 
 protected:
 

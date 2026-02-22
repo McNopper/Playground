@@ -10,19 +10,19 @@ class VulkanCommandBufferFactory
 
 private:
 
-	VkDevice m_device{ VK_NULL_HANDLE };
+    VkDevice m_device{ VK_NULL_HANDLE };
 
-	VkCommandPool m_command_pool{ VK_NULL_HANDLE };
-	VkCommandBufferLevel m_command_buffer_level{ VK_COMMAND_BUFFER_LEVEL_PRIMARY };
-	uint32_t m_command_buffer_count{ 0u };
+    VkCommandPool m_command_pool{ VK_NULL_HANDLE };
+    VkCommandBufferLevel m_command_buffer_level{ VK_COMMAND_BUFFER_LEVEL_PRIMARY };
+    uint32_t m_command_buffer_count{ 0u };
 
 public:
 
-	VulkanCommandBufferFactory() = delete;
+    VulkanCommandBufferFactory() = delete;
 
-	VulkanCommandBufferFactory(VkDevice device, VkCommandPool command_pool, VkCommandBufferLevel command_buffer_level, uint32_t command_buffer_count);
+    VulkanCommandBufferFactory(VkDevice device, VkCommandPool command_pool, VkCommandBufferLevel command_buffer_level, uint32_t command_buffer_count);
 
-	std::vector<VkCommandBuffer> create() const;
+    std::vector<VkCommandBuffer> create() const;
 
 };
 

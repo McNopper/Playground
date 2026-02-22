@@ -3,11 +3,12 @@
 
 #include "engine/renderer/geometry/AGeometry.h"
 
-class AVolume : public AGeometry {
+class AVolume : public AGeometry
+{
 
 public:
 
-	virtual ~AVolume() = default;
+    virtual ~AVolume() = default;
 
 };
 

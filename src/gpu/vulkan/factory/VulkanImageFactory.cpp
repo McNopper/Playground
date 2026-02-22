@@ -22,7 +22,7 @@ void VulkanImageFactory::setFlags(VkImageCreateFlags flags)
 
 VkImage VulkanImageFactory::create() const
 {
-	VkImageCreateInfo image_create_info{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
+    VkImageCreateInfo image_create_info{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
     image_create_info.flags = m_flags;
     image_create_info.imageType = m_image_type;
     image_create_info.format = m_format;
@@ -41,7 +41,7 @@ VkImage VulkanImageFactory::create() const
     image_create_info.initialLayout = m_initial_layout;
 
     VkImage image{ VK_NULL_HANDLE };
-	vkCreateImage(m_device, &image_create_info, nullptr, &image);
+    vkCreateImage(m_device, &image_create_info, nullptr, &image);
 
-	return image;
+    return image;
 }

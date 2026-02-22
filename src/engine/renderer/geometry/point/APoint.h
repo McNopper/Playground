@@ -3,11 +3,12 @@
 
 #include "engine/renderer/geometry/AGeometry.h"
 
-class APoint : public AGeometry {
+class APoint : public AGeometry
+{
 
 public:
 
-	virtual ~APoint() = default;
+    virtual ~APoint() = default;
 
 };
 

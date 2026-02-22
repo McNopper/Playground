@@ -10,52 +10,53 @@
  * Provides filtering and addressing mode control.
  */
 
-class Sampler {
+class Sampler
+{
 
 protected:
 
-	VkDevice m_device{ VK_NULL_HANDLE };
-	VkSampler m_sampler{ VK_NULL_HANDLE };
+    VkDevice m_device{ VK_NULL_HANDLE };
+    VkSampler m_sampler{ VK_NULL_HANDLE };
 
-	VkFilter m_mag_filter{ VK_FILTER_LINEAR };
-	VkFilter m_min_filter{ VK_FILTER_LINEAR };
-	VkSamplerAddressMode m_address_mode_u{ VK_SAMPLER_ADDRESS_MODE_REPEAT };
-	VkSamplerAddressMode m_address_mode_v{ VK_SAMPLER_ADDRESS_MODE_REPEAT };
-	VkSamplerAddressMode m_address_mode_w{ VK_SAMPLER_ADDRESS_MODE_REPEAT };
-	float m_max_anisotropy{ 0.0f };
+    VkFilter m_mag_filter{ VK_FILTER_LINEAR };
+    VkFilter m_min_filter{ VK_FILTER_LINEAR };
+    VkSamplerAddressMode m_address_mode_u{ VK_SAMPLER_ADDRESS_MODE_REPEAT };
+    VkSamplerAddressMode m_address_mode_v{ VK_SAMPLER_ADDRESS_MODE_REPEAT };
+    VkSamplerAddressMode m_address_mode_w{ VK_SAMPLER_ADDRESS_MODE_REPEAT };
+    float m_max_anisotropy{ 0.0f };
 
 public:
 
-	Sampler() = delete;
-	Sampler(const Sampler& other) = delete;
+    Sampler() = delete;
+    Sampler(const Sampler& other) = delete;
 
-	explicit Sampler(VkDevice device);
+    explicit Sampler(VkDevice device);
 
-	virtual ~Sampler();
+    virtual ~Sampler();
 
-	Sampler operator=(const Sampler& other) = delete;
+    Sampler operator=(const Sampler& other) = delete;
 
-	void setMagFilter(VkFilter filter);
-	void setMinFilter(VkFilter filter);
-	void setAddressMode(VkSamplerAddressMode mode);
-	void setAddressModeU(VkSamplerAddressMode mode);
-	void setAddressModeV(VkSamplerAddressMode mode);
-	void setAddressModeW(VkSamplerAddressMode mode);
+    void setMagFilter(VkFilter filter);
+    void setMinFilter(VkFilter filter);
+    void setAddressMode(VkSamplerAddressMode mode);
+    void setAddressModeU(VkSamplerAddressMode mode);
+    void setAddressModeV(VkSamplerAddressMode mode);
+    void setAddressModeW(VkSamplerAddressMode mode);
 
-	void setMaxAnisotropy(float max_anisotropy);
+    void setMaxAnisotropy(float max_anisotropy);
 
-	bool create();
+    bool create();
 
-	VkSampler getSampler() const;
-	VkFilter getMagFilter() const;
-	VkFilter getMinFilter() const;
-	VkSamplerAddressMode getAddressModeU() const;
-	VkSamplerAddressMode getAddressModeV() const;
-	VkSamplerAddressMode getAddressModeW() const;
+    VkSampler getSampler() const;
+    VkFilter getMagFilter() const;
+    VkFilter getMinFilter() const;
+    VkSamplerAddressMode getAddressModeU() const;
+    VkSamplerAddressMode getAddressModeV() const;
+    VkSamplerAddressMode getAddressModeW() const;
 
-	bool isValid() const;
+    bool isValid() const;
 
-	void destroy();
+    void destroy();
 
 };
 

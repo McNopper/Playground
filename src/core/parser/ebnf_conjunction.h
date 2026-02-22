@@ -11,7 +11,8 @@ namespace ebnf {
 
 // Sequence operations
 
-class Alternation : public ASequenceSymbol {
+class Alternation : public ASequenceSymbol
+{
 
 public:
 
@@ -41,7 +42,8 @@ public:
 
 };
 
-class Concatenation : public ASequenceSymbol {
+class Concatenation : public ASequenceSymbol
+{
 
 public:
 

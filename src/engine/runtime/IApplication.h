@@ -13,17 +13,18 @@ class IVulkanWindow;
  *   - update(): Update and render (called every frame/iteration)
  *   - terminate(): Cleanup resources (called once at shutdown)
  */
-class IApplication {
+class IApplication
+{
 
 public:
 
-	virtual ~IApplication() = default;
+    virtual ~IApplication() = default;
 
-	virtual bool init() = 0;
+    virtual bool init() = 0;
 
-	virtual bool update(double delta_time, VkCommandBuffer command_buffer) = 0;
+    virtual bool update(double delta_time, VkCommandBuffer command_buffer) = 0;
 
-	virtual void terminate() = 0;
+    virtual void terminate() = 0;
 
 };
 

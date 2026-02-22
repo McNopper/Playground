@@ -8,85 +8,85 @@
 
 int main()
 {
-	//
-	// Vulkan Runtime
-	//
+    //
+    // Vulkan Runtime
+    //
 
-	VulkanRuntime vulkan_runtime{};
-	vulkan_runtime.setSamples(VK_SAMPLE_COUNT_4_BIT);
+    VulkanRuntime vulkan_runtime{};
+    vulkan_runtime.setSamples(VK_SAMPLE_COUNT_4_BIT);
 
-	if (!vulkan_runtime.prepareInitWindow(1024, 768, "Example05"))
-	{
-		printf("Window preparation failed\n");
+    if (!vulkan_runtime.prepareInitWindow(1024, 768, "Example05"))
+    {
+        printf("Window preparation failed\n");
 
-		vulkan_runtime.terminate();
+        vulkan_runtime.terminate();
 
-		return -1;
-	}
+        return -1;
+    }
 
-	if (!vulkan_runtime.prepareInit())
-	{
-		printf("Vulkan runtime prepare init failed\n");
+    if (!vulkan_runtime.prepareInit())
+    {
+        printf("Vulkan runtime prepare init failed\n");
 
-		vulkan_runtime.terminate();
+        vulkan_runtime.terminate();
 
-		return -1;
-	}
+        return -1;
+    }
 
-	if (!vulkan_runtime.initWindow())
-	{
-		printf("Window initialization failed\n");
+    if (!vulkan_runtime.initWindow())
+    {
+        printf("Window initialization failed\n");
 
-		vulkan_runtime.terminate();
+        vulkan_runtime.terminate();
 
-		return -1;
-	}
+        return -1;
+    }
 
-	if (!vulkan_runtime.init())
-	{
-		printf("Vulkan runtime init failed\n");
+    if (!vulkan_runtime.init())
+    {
+        printf("Vulkan runtime init failed\n");
 
-		vulkan_runtime.terminate();
+        vulkan_runtime.terminate();
 
-		return -1;
-	}
+        return -1;
+    }
 
-	//
-	// Application
-	//
+    //
+    // Application
+    //
 
-	Application application{ vulkan_runtime.getPhysicalDevice(), vulkan_runtime.getDevice(), vulkan_runtime.getQueueFamilyIndex(), *vulkan_runtime.getVulkanWindow() };
-	if (!application.init())
-	{
-		printf("Could not initialize application.\n");
+    Application application{ vulkan_runtime.getPhysicalDevice(), vulkan_runtime.getDevice(), vulkan_runtime.getQueueFamilyIndex(), *vulkan_runtime.getVulkanWindow() };
+    if (!application.init())
+    {
+        printf("Could not initialize application.\n");
 
-		application.terminate();
+        application.terminate();
 
-		vulkan_runtime.terminate();
+        vulkan_runtime.terminate();
 
-		return -1;
-	}
-	printf("Application initialized.\n");
+        return -1;
+    }
+    printf("Application initialized.\n");
 
-	//
-	// Main loop
-	//
+    //
+    // Main loop
+    //
 
-	printf("Application executing.\n");
+    printf("Application executing.\n");
 
-	vulkan_runtime.loopWindow(application);
+    vulkan_runtime.loopWindow(application);
 
-	printf("Application done.\n");
+    printf("Application done.\n");
 
-	//
-	// Cleanup
-	//
+    //
+    // Cleanup
+    //
 
-	application.terminate();
+    application.terminate();
 
-	vulkan_runtime.terminate();
+    vulkan_runtime.terminate();
 
-	printf("Application terminated.\n");
+    printf("Application terminated.\n");
 
-	return 0;
+    return 0;
 }

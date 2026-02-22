@@ -7,7 +7,7 @@ VulkanShaderModuleFactory::VulkanShaderModuleFactory(VkDevice device, const std:
 
 VkShaderModule VulkanShaderModuleFactory::create() const
 {
-	VkShaderModuleCreateInfo shader_module_create_info{ VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO };
+    VkShaderModuleCreateInfo shader_module_create_info{ VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO };
     shader_module_create_info.flags = m_flags;
     if (!m_code.empty())
     {
@@ -16,7 +16,7 @@ VkShaderModule VulkanShaderModuleFactory::create() const
     }
 
     VkShaderModule shader_module{ VK_NULL_HANDLE };
-	vkCreateShaderModule(m_device, &shader_module_create_info, nullptr, &shader_module);
+    vkCreateShaderModule(m_device, &shader_module_create_info, nullptr, &shader_module);
 
-	return shader_module;
+    return shader_module;
 }

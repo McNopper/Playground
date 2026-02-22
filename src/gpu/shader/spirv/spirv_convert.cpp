@@ -14,7 +14,7 @@ static std::vector<uint32_t> convertFromTo(const std::vector<uint32_t>& code, co
         return {};
     }
 
-	disassembled = replaceAll(disassembled, from, to);
+    disassembled = replaceAll(disassembled, from, to);
 
     std::vector<uint32_t> assembled{};
     if (!spirv_tools.Assemble(disassembled, &assembled))

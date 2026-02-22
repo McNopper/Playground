@@ -37,9 +37,9 @@ TEST(TestMath, Float2x2Transpose)
 
 TEST(TestMath, Float2x2Inverse)
 {
-	float2x2 a{ {1.0f, 2.0f}, {3.0f, 4.0f} };
+    float2x2 a{ {1.0f, 2.0f}, {3.0f, 4.0f} };
 
-	auto b = inverse(a);
+    auto b = inverse(a);
 
     EXPECT_FLOAT_EQ(b[0].x, -2.0f);
     EXPECT_FLOAT_EQ(b[0].y, 1.0f);

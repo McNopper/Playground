@@ -115,12 +115,39 @@ void myFunction()
 - **Smart pointers**: Use `std::unique_ptr` for exclusive ownership, `std::shared_ptr` for shared ownership
   - Pass `shared_ptr` by `const&` for performance (avoids atomic refcount overhead)
   - Never use raw pointers for ownership (acceptable for Vulkan/GLFW handles and non-owning views)
-- **Initialization**: Use brace initialization `{ }` for members and constructors
+- **Initialization**:
+  - Member variables: Always use `{}` brace initialization
+  - Local variables with constants/literals: Use `{}` brace initialization
+  - Local variables from function calls: Use `=` assignment
+  - Default function parameters: Use `=`
+  - Assignment statements: Use `=`
 - **Constructors**: Use `= default` and `= delete` appropriately
+- **Constructor initializer lists**: Colon on same line as closing paren, all initializers on single line
 - **Parameters**: Use `const&` for read-only parameters
 - **Null pointers**: Use `nullptr` instead of `NULL`
 - **Type inference**: Use `auto` when type is obvious from context
 - **Enums**: Use `enum class` for type safety
+
+### Error Handling
+
+- Use `std::optional<T>` for functions that may fail or return nothing
+- Use `bool` return for `create()` / initialization methods
+- No exceptions in production code
+- No logging library — return values indicate success/failure
+
+### Class Structure
+
+- Access specifier order: `private:` first (member variables), then `public:` (constructors, methods)
+- Delete default and copy constructors for resource/factory classes
+- Virtual destructors on base classes
+- Non-copyable pattern for GPU resource wrappers
+
+### Namespace Usage
+
+- Minimal — mostly global or class scope
+- No deep hierarchical namespaces (e.g., no `gpu::vulkan::`)
+- Exception: `ebnf` namespace for parser utilities
+- Anonymous namespaces in `.cpp` files and test files for internal helpers
 
 ### Code Examples
 
@@ -134,11 +161,12 @@ private:
 
 public:
     GpuBuffer() = delete;
-    GpuBuffer(const GpuBuffer& other) = delete;
-    
+    GpuBuffer(const GpuBuffer&) = delete;
+    GpuBuffer& operator=(const GpuBuffer&) = delete;
+
     explicit GpuBuffer(VkDevice device);
     virtual ~GpuBuffer();
-    
+
     bool create(const std::vector<float>& data);
     VkBuffer getBuffer() const;
 };
@@ -278,10 +306,23 @@ src/
 
 - Place tests in `test/` directory
 - Use Google Test framework
-- Name test files descriptively (e.g., `core_math.cpp`, `gpu_vulkan.cpp`)
+- File naming: `{module}_{feature}_test.cpp` (e.g., `core_math_test.cpp`, `gpu_vulkan_test.cpp`)
+- Test suites: `TEST(TestCategory, TestName)` with PascalCase names
+- Anonymous namespaces for test helper structs/functions
 - Tests are automatically discovered by CMake
 
+### Shader Conventions
+
+- Primary language: Slang (`.slang` files, `snake_case` naming)
+- Secondary: GLSL (`.vert`/`.frag`) and SPIR-V binary (`.spirv`)
+- Uniform variables: `u_` prefix with camelCase (e.g., `u_worldMatrix`, `u_projectionMatrix`)
+- Vertex inputs: `i_` prefix (e.g., `i_position`, `i_texcoord`)
+- Shader functions: `camelCase`
+- Shader variables/parameters: `camelCase` (MaterialX convention)
+
 ## Code Quality
+
+**Zero warnings policy:** All code must compile without warnings and produce no cppcheck diagnostics. Treat warnings as errors.
 
 ### Static Analysis
 

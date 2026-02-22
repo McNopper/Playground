@@ -4,33 +4,34 @@
 #include <vector>
 
 template<class T>
-class Filter {
+class Filter
+{
 
 protected:
 
-	std::vector<T> m_data{};
+    std::vector<T> m_data{};
 
-	virtual void algorithm()
-	{
-	};
+    virtual void algorithm()
+    {
+    };
 
 public:
 
-	virtual ~Filter() = default;
+    virtual ~Filter() = default;
 
-	Filter<T>& operator<<(const std::vector<T>& data)
-	{
-		m_data = data;
+    Filter<T>& operator<<(const std::vector<T>& data)
+    {
+        m_data = data;
 
-		algorithm();
+        algorithm();
 
-		return *this;
-	}
+        return *this;
+    }
 
-	operator std::vector<T>() const
-	{
-		return m_data;
-	}
+    operator std::vector<T>() const
+    {
+        return m_data;
+    }
 
 };
 

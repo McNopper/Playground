@@ -3,11 +3,12 @@
 
 #include "engine/renderer/geometry/AGeometry.h"
 
-class ACurve : public AGeometry {
+class ACurve : public AGeometry
+{
 
 public:
 
-	virtual ~ACurve() = default;
+    virtual ~ACurve() = default;
 
 };
 

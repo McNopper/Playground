@@ -8,17 +8,17 @@ class VulkanFenceFactory
 
 private:
 
-	VkDevice m_device{ VK_NULL_HANDLE };
+    VkDevice m_device{ VK_NULL_HANDLE };
 
-	VkFenceCreateFlags m_fence_create_flags{ 0u };
+    VkFenceCreateFlags m_fence_create_flags{ 0u };
 
 public:
 
-	VulkanFenceFactory() = delete;
+    VulkanFenceFactory() = delete;
 
-	VulkanFenceFactory(VkDevice device, VkFenceCreateFlags fence_create_flags);
+    VulkanFenceFactory(VkDevice device, VkFenceCreateFlags fence_create_flags);
 
-	VkFence create() const;
+    VkFence create() const;
 
 };
 

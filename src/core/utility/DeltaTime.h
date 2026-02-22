@@ -8,22 +8,22 @@ class DeltaTime
 
 private:
 
-	std::chrono::time_point<std::chrono::steady_clock> m_last_time{};
-	std::chrono::time_point<std::chrono::steady_clock> m_current_time{};
+    std::chrono::time_point<std::chrono::steady_clock> m_last_time{};
+    std::chrono::time_point<std::chrono::steady_clock> m_current_time{};
 
 public:
 
-	DeltaTime();
+    DeltaTime();
 
-	DeltaTime(const DeltaTime&) = delete;
-	DeltaTime(DeltaTime&&) = delete;
+    DeltaTime(const DeltaTime&) = delete;
+    DeltaTime(DeltaTime&&) = delete;
 
-	DeltaTime operator=(const DeltaTime&) = delete;
-	DeltaTime operator=(DeltaTime&&) = delete;
+    DeltaTime operator=(const DeltaTime&) = delete;
+    DeltaTime operator=(DeltaTime&&) = delete;
 
-	void reset();
+    void reset();
 
-	double tick();
+    double tick();
 
 };
 

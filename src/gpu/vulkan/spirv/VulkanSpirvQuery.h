@@ -12,45 +12,46 @@
 #include "gpu/shader/spirv/spirv_data.h"
 
 struct DescriptorBufferInfo {
-	VkDeviceSize offset{ 0u };
-	VkDeviceSize range{ 0u };
+    VkDeviceSize offset{ 0u };
+    VkDeviceSize range{ 0u };
 };
 
-class VulkanSpirvQuery {
+class VulkanSpirvQuery
+{
 
 private:
 
-	std::vector<SpvReflectShaderModule> m_shader_modules{};
+    std::vector<SpvReflectShaderModule> m_shader_modules{};
 
-	void destroyShaderModules(std::size_t max);
+    void destroyShaderModules(std::size_t max);
 
 public:
 
-	VulkanSpirvQuery() = delete;
+    VulkanSpirvQuery() = delete;
 
-	explicit VulkanSpirvQuery(const std::vector<SpirvData>& shaders);
+    explicit VulkanSpirvQuery(const std::vector<SpirvData>& shaders);
 
-	~VulkanSpirvQuery();
+    ~VulkanSpirvQuery();
 
-	// Uniform
+    // Uniform
 
-	std::vector<VkDescriptorSetLayoutBinding> gatherDescriptorSetLayoutBindings() const;
+    std::vector<VkDescriptorSetLayoutBinding> gatherDescriptorSetLayoutBindings() const;
 
-	std::vector<std::string> gatherDescriptorSetBlockNames() const;
+    std::vector<std::string> gatherDescriptorSetBlockNames() const;
 
-	std::vector<std::string> gatherDescriptorSetBlockMemberNames() const;
+    std::vector<std::string> gatherDescriptorSetBlockMemberNames() const;
 
-	std::optional<DescriptorBufferInfo> gatherDescriptorSetBufferInfo(const std::string& name) const;
+    std::optional<DescriptorBufferInfo> gatherDescriptorSetBufferInfo(const std::string& name) const;
 
-	std::vector<VkPushConstantRange> gatherPushConstantRanges() const;
+    std::vector<VkPushConstantRange> gatherPushConstantRanges() const;
 
-	// Vertex
+    // Vertex
 
-	std::optional<VkVertexInputBindingDescription> gatherVertexInputBindingDescription(uint32_t binding) const;
+    std::optional<VkVertexInputBindingDescription> gatherVertexInputBindingDescription(uint32_t binding) const;
 
-	std::vector<VkVertexInputAttributeDescription> gatherVertexInputAttributeDescriptions(uint32_t binding) const;
+    std::vector<VkVertexInputAttributeDescription> gatherVertexInputAttributeDescriptions(uint32_t binding) const;
 
-	std::vector<std::string> gatherVertexInputNames() const;
+    std::vector<std::string> gatherVertexInputNames() const;
 
 };
 

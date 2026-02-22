@@ -34,6 +34,8 @@ PlaygroundSDK_test.exe --gtest_filter=TestSuiteName.TestName
 
 ### Code Quality
 
+**Zero warnings policy:** All code must compile without warnings and produce no cppcheck diagnostics. Treat warnings as errors.
+
 ```bash
 # cppcheck (from project root)
 cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,performance,portability --suppress=cstyleCast --suppress=useStlAlgorithm
@@ -131,6 +133,39 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 - `auto` when type is obvious
 - `enum class` for type safety
 
+**Error Handling:**
+- Use `std::optional<T>` for functions that may fail or return nothing
+- Use `bool` return for `create()` / initialization methods
+- No exceptions in production code
+- No logging library — return values indicate success/failure
+
+**Class Structure:**
+- Access specifier order: `private:` first (member variables), then `public:` (constructors, methods)
+- Delete default and copy constructors for resource/factory classes
+- Virtual destructors on base classes
+- Non-copyable pattern for GPU resource wrappers:
+  ```cpp
+  class GpuBuffer
+  {
+  private:
+      VkDevice m_device{ VK_NULL_HANDLE };
+
+  public:
+      GpuBuffer() = delete;
+      GpuBuffer(const GpuBuffer&) = delete;
+      GpuBuffer& operator=(const GpuBuffer&) = delete;
+
+      explicit GpuBuffer(VkDevice device);
+      virtual ~GpuBuffer();
+  };
+  ```
+
+**Namespace Usage:**
+- Minimal — mostly global or class scope
+- No deep hierarchical namespaces (e.g., no `gpu::vulkan::`)
+- Exception: `ebnf` namespace for parser utilities
+- Anonymous namespaces in .cpp files and test files for internal helpers
+
 **Initialization style:**
 - **Member variables**: Always use `{}` brace initialization
   ```cpp
@@ -165,6 +200,7 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 - Always use braces for control structures, even single statements
 - Space after keywords: `if (`, `while (`
 - No space after function names: `create()`
+- Space around operators: `x = y + z`
 - Constructor initializer lists: Colon on same line as closing paren, all initializers on single line
   ```cpp
   ClassName::ClassName(Type param1, Type param2) :
@@ -177,11 +213,32 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 - Format: `<NAMESPACE>_<PATH>_<FILENAME>_H_`
 - Example: `CORE_MATH_VECTOR_H_`, `GPU_VULKAN_FACTORY_VULKANDEVICEFACTORY_H_`
 
-**Include Order:**
+**Include Order** (separate each group with a blank line):
 1. Corresponding header (for .cpp files)
 2. Standard library
 3. Third-party libraries
 4. Project headers
+
+```cpp
+#include "vector.h"
+
+#include <cmath>
+
+#include <volk.h>
+
+#include "gpu/gpu.h"
+```
+
+**Comments:**
+- Write self-documenting code - minimize comments
+- Comment "why", not "what"
+- Use `//` for single-line comments
+- Use blank `//` lines to separate logical sections
+
+**Commit Messages:**
+- Use present tense ("Add feature" not "Added feature")
+- Start with a verb ("Fix", "Add", "Update", "Refactor")
+- Keep first line under 72 characters
 
 ### Coordinate System
 
@@ -203,6 +260,21 @@ See `docs/coordinate_system.md` for complete details.
 - Builder classes construct complex objects via method chaining (pipelines, descriptor sets)
 - SPIRV-Reflect for shader reflection and descriptor set layout generation
 - Support multiple shader languages: GLSL, SPIR-V binary, Slang
+
+### Shader Conventions
+
+- Primary language: Slang (`.slang` files, `snake_case` naming)
+- Secondary: GLSL (`.vert`/`.frag`) and SPIR-V binary (`.spirv`)
+- Uniform variables: `u_` prefix with camelCase (e.g., `u_worldMatrix`, `u_projectionMatrix`)
+- Vertex inputs: `i_` prefix (e.g., `i_position`, `i_texcoord`)
+- Shader functions: `camelCase`
+- Shader variables/parameters: `camelCase` (MaterialX convention)
+
+### Test Conventions
+
+- File naming: `{module}_{feature}_test.cpp` (e.g., `core_math_test.cpp`, `gpu_vulkan_test.cpp`)
+- Test suites: `TEST(TestCategory, TestName)` with PascalCase names
+- Anonymous namespaces for test helper structs/functions
 
 ### Project Organization
 

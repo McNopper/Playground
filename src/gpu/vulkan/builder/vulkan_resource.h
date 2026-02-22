@@ -4,14 +4,14 @@
 #include <volk.h>
 
 struct VulkanImageResource {
-	VkImage image{ VK_NULL_HANDLE };
-	VkDeviceMemory device_memory{ VK_NULL_HANDLE };
-	VkImageView image_view{ VK_NULL_HANDLE };
+    VkImage image{ VK_NULL_HANDLE };
+    VkDeviceMemory device_memory{ VK_NULL_HANDLE };
+    VkImageView image_view{ VK_NULL_HANDLE };
 };
 
 struct VulkanBufferResource {
-	VkBuffer buffer{ VK_NULL_HANDLE };
-	VkDeviceMemory device_memory{ VK_NULL_HANDLE };
+    VkBuffer buffer{ VK_NULL_HANDLE };
+    VkDeviceMemory device_memory{ VK_NULL_HANDLE };
 };
 
 void destroyResource(VkDevice device, VulkanImageResource& image_resource);

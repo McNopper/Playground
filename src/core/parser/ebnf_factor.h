@@ -12,7 +12,8 @@ namespace ebnf {
 
 // Factors
 
-class ZeroOneFactor : public ASingleSymbol {
+class ZeroOneFactor : public ASingleSymbol
+{
 
 public:
 
@@ -45,7 +46,8 @@ public:
 
 };
 
-class ZeroManyFactor : public ASingleSymbol {
+class ZeroManyFactor : public ASingleSymbol
+{
 
 public:
 
@@ -84,7 +86,8 @@ public:
 
 };
 
-class OneManyFactor : public ASingleSymbol {
+class OneManyFactor : public ASingleSymbol
+{
 
 public:
 

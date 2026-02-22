@@ -43,7 +43,7 @@ void VulkanSamplerFactory::setMaxAnisotropy(float max_anisotropy)
 
 VkSampler VulkanSamplerFactory::create() const
 {
-	VkSamplerCreateInfo sampler_create_info{ VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO };
+    VkSamplerCreateInfo sampler_create_info{ VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO };
     sampler_create_info.flags = m_flags;
     sampler_create_info.magFilter = m_mag_filter;
     sampler_create_info.minFilter = m_min_filter;
@@ -62,7 +62,7 @@ VkSampler VulkanSamplerFactory::create() const
     sampler_create_info.unnormalizedCoordinates = m_unnormalized_coordinates;
 
     VkSampler sampler{ VK_NULL_HANDLE };
-	vkCreateSampler(m_device, &sampler_create_info, nullptr, &sampler);
+    vkCreateSampler(m_device, &sampler_create_info, nullptr, &sampler);
 
-	return sampler;
+    return sampler;
 }

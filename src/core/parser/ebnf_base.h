@@ -25,7 +25,8 @@ struct ParseResult {
 
 // Base symbol
 
-class ASymbol {
+class ASymbol
+{
 
 private:
 
@@ -62,7 +63,8 @@ public:
 
 };
 
-class ASingleSymbol : public ASymbol {
+class ASingleSymbol : public ASymbol
+{
 
 protected:
 
@@ -79,7 +81,8 @@ public:
 
 };
 
-class ASequenceSymbol : public ASymbol {
+class ASequenceSymbol : public ASymbol
+{
 
 protected:
 

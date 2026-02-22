@@ -8,22 +8,22 @@ class VulkanDeviceMemoryFactory
 
 private:
 
-	VkDevice m_device{ VK_NULL_HANDLE };
+    VkDevice m_device{ VK_NULL_HANDLE };
 
-	VkDeviceSize m_allocation_size{ 0u };
-	uint32_t m_memory_type_index{ 0u };
+    VkDeviceSize m_allocation_size{ 0u };
+    uint32_t m_memory_type_index{ 0u };
 
-	VkMemoryAllocateFlags m_memory_allocate_flags{ 0u };
+    VkMemoryAllocateFlags m_memory_allocate_flags{ 0u };
 
 public:
 
-	VulkanDeviceMemoryFactory() = delete;
+    VulkanDeviceMemoryFactory() = delete;
 
-	VulkanDeviceMemoryFactory(VkDevice device, VkDeviceSize allocation_size, uint32_t memory_type_index);
+    VulkanDeviceMemoryFactory(VkDevice device, VkDeviceSize allocation_size, uint32_t memory_type_index);
 
-	void setMemoryAllocateFlags(VkMemoryAllocateFlags flags);
+    void setMemoryAllocateFlags(VkMemoryAllocateFlags flags);
 
-	VkDeviceMemory create() const;
+    VkDeviceMemory create() const;
 
 };
 

@@ -3,79 +3,83 @@
 
 #include <random>
 
-class ARandomGenerator {
+class ARandomGenerator
+{
 
 protected:
 
-	std::default_random_engine m_generator{};
+    std::default_random_engine m_generator{};
 
 public:
 
-	ARandomGenerator();
+    ARandomGenerator();
 
-	explicit ARandomGenerator(std::uint32_t seed);
+    explicit ARandomGenerator(std::uint32_t seed);
 
-	virtual ~ARandomGenerator() = default;
+    virtual ~ARandomGenerator() = default;
 
-	virtual float generate() = 0;
+    virtual float generate() = 0;
 
 };
 
-class NoRandomGenerator : public ARandomGenerator {
+class NoRandomGenerator : public ARandomGenerator
+{
 
 private:
 
-	float m_value{ 0.0f };
+    float m_value{ 0.0f };
 
 public:
 
-	NoRandomGenerator() = default;
+    NoRandomGenerator() = default;
 
-	explicit NoRandomGenerator(float value);
+    explicit NoRandomGenerator(float value);
 
-	NoRandomGenerator(float value, std::uint32_t seed);
+    NoRandomGenerator(float value, std::uint32_t seed);
 
-	float generate() override;
+    float generate() override;
 
 };
 
-class UniformRandomGenerator : public ARandomGenerator {
+class UniformRandomGenerator : public ARandomGenerator
+{
 
 private:
 
-	std::uniform_real_distribution<float> m_uniform{};
+    std::uniform_real_distribution<float> m_uniform{};
 
 public:
 
-	UniformRandomGenerator();
+    UniformRandomGenerator();
 
-	explicit UniformRandomGenerator(std::uint32_t seed);
+    explicit UniformRandomGenerator(std::uint32_t seed);
 
-	UniformRandomGenerator(float min_value, float max_value);
+    UniformRandomGenerator(float min_value, float max_value);
 
-	UniformRandomGenerator(float min_value, float max_value, std::uint32_t seed);
+    UniformRandomGenerator(float min_value, float max_value, std::uint32_t seed);
 
-	float generate() override;
+    float generate() override;
 
 };
 
-class NormalRandomGenerator : public ARandomGenerator {
+class NormalRandomGenerator : public ARandomGenerator
+{
 
 private:
 
-	std::normal_distribution<float> m_normal{};
+    std::normal_distribution<float> m_normal{};
 
 public:
 
-	NormalRandomGenerator();
+    NormalRandomGenerator();
 
-	explicit NormalRandomGenerator(std::uint32_t seed);
+    explicit NormalRandomGenerator(std::uint32_t seed);
 
-	NormalRandomGenerator(float mean, float std_dev);
+    NormalRandomGenerator(float mean, float std_dev);
 
-	NormalRandomGenerator(float mean, float std_dev, std::uint32_t seed);
+    NormalRandomGenerator(float mean, float std_dev, std::uint32_t seed);
 
-	float generate() override;
+    float generate() override;
 
 };
 

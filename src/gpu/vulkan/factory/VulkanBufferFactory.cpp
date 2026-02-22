@@ -7,7 +7,7 @@ VulkanBufferFactory::VulkanBufferFactory(VkDevice device, VkDeviceSize size, VkB
 
 VkBuffer VulkanBufferFactory::create() const
 {
-	VkBufferCreateInfo buffer_create_info{ VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
+    VkBufferCreateInfo buffer_create_info{ VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
     buffer_create_info.flags = m_flags;
     buffer_create_info.size = m_size;
     buffer_create_info.usage = m_usage;
@@ -19,7 +19,7 @@ VkBuffer VulkanBufferFactory::create() const
     }
 
     VkBuffer buffer{ VK_NULL_HANDLE };
-	vkCreateBuffer(m_device, &buffer_create_info, nullptr, &buffer);
+    vkCreateBuffer(m_device, &buffer_create_info, nullptr, &buffer);
 
-	return buffer;
+    return buffer;
 }

@@ -40,10 +40,10 @@ float4x4 lookAt(const float3& eye, const float3& center, const float3& up)
 
 float4x4 frustum(float left, float right, float bottom, float top, float near_val, float far_val)
 {
-	// Vulkan NDC: x:[-1,1], y:[-1,1], z:[0,1]
-	// Vulkan has Y-down in NDC: -1 = top, +1 = bottom
-	// Use negative Y-scale to flip from Y-up world space to Y-down NDC
-	return {
+    // Vulkan NDC: x:[-1,1], y:[-1,1], z:[0,1]
+    // Vulkan has Y-down in NDC: -1 = top, +1 = bottom
+    // Use negative Y-scale to flip from Y-up world space to Y-down NDC
+    return {
         {
             2.0f * near_val / (right - left),
             0.0f,
@@ -68,7 +68,7 @@ float4x4 frustum(float left, float right, float bottom, float top, float near_va
             (near_val * far_val) / (near_val - far_val),
             0.0f
         }
-	};
+    };
 }
 
 float4x4 orthographic(float left, float right, float bottom, float top, float near_val, float far_val)

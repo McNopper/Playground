@@ -3,17 +3,18 @@
 
 #include <volk.h>
 
-class AGeometry {
+class AGeometry
+{
 
 public:
 
-	virtual ~AGeometry() = default;
+    virtual ~AGeometry() = default;
 
-	// Bind geometry buffers for rendering
-	virtual void bind(VkCommandBuffer command_buffer) const = 0;
+    // Bind geometry buffers for rendering
+    virtual void bind(VkCommandBuffer command_buffer) const = 0;
 
-	// Issue draw call
-	virtual void draw(VkCommandBuffer command_buffer) const = 0;
+    // Issue draw call
+    virtual void draw(VkCommandBuffer command_buffer) const = 0;
 
 };
 

@@ -11,7 +11,8 @@ namespace ebnf {
 
 // Terminal
 
-class Terminal : public ASymbol {
+class Terminal : public ASymbol
+{
 
 protected:
 

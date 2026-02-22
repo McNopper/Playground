@@ -15,23 +15,23 @@
 // - Everything is consistent - no flipping needed anywhere
 
 enum class ChannelFormat {
-	UNDEFINED,
-	UNORM,
-	SHALF,
-	SFLOAT
+    UNDEFINED,
+    UNORM,
+    SHALF,
+    SFLOAT
 };
 
 struct ImageData {
-	uint32_t width{ 0u };
-	uint32_t height{ 0u };
+    uint32_t width{ 0u };
+    uint32_t height{ 0u };
 
-	uint32_t channels{ 0u };
-	ChannelFormat channel_format{ ChannelFormat::UNDEFINED };
+    uint32_t channels{ 0u };
+    ChannelFormat channel_format{ ChannelFormat::UNDEFINED };
 
-	ColorSpace color_space{ ColorSpace::UNKNOWN };
-	bool linear{ false };
+    ColorSpace color_space{ ColorSpace::UNKNOWN };
+    bool linear{ false };
 
-	std::vector<uint8_t> pixels{};
+    std::vector<uint8_t> pixels{};
 };
 
 uint32_t getChannelFormatSize(ChannelFormat channel_format);

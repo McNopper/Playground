@@ -8,7 +8,7 @@ class VulkanSamplerFactory
 
 private:
 
-	VkDevice m_device{ VK_NULL_HANDLE };
+    VkDevice m_device{ VK_NULL_HANDLE };
 
     VkSamplerCreateFlags    m_flags{ 0u };
     VkFilter                m_mag_filter{ VK_FILTER_NEAREST };
@@ -29,9 +29,9 @@ private:
 
 public:
 
-	VulkanSamplerFactory() = delete;
+    VulkanSamplerFactory() = delete;
 
-	VulkanSamplerFactory(VkDevice device, VkSamplerCreateFlags flags);
+    VulkanSamplerFactory(VkDevice device, VkSamplerCreateFlags flags);
 
     void setMagFilter(VkFilter filter);
 
@@ -47,7 +47,7 @@ public:
 
     void setMaxAnisotropy(float max_anisotropy);
 
-	VkSampler create() const;
+    VkSampler create() const;
 
 };
 

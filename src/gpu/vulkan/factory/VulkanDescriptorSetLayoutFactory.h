@@ -10,20 +10,20 @@ class VulkanDescriptorSetLayoutFactory
 
 private:
 
-	VkDevice m_device{ VK_NULL_HANDLE };
-	VkDescriptorSetLayoutCreateFlags  m_flags{};
+    VkDevice m_device{ VK_NULL_HANDLE };
+    VkDescriptorSetLayoutCreateFlags  m_flags{};
 
-	std::vector<VkDescriptorSetLayoutBinding> m_descriptor_set_layout_bindings{};
+    std::vector<VkDescriptorSetLayoutBinding> m_descriptor_set_layout_bindings{};
 
 public:
 
-	VulkanDescriptorSetLayoutFactory() = delete;
+    VulkanDescriptorSetLayoutFactory() = delete;
 
-	VulkanDescriptorSetLayoutFactory(VkDevice device, VkDescriptorSetLayoutCreateFlags flags);
+    VulkanDescriptorSetLayoutFactory(VkDevice device, VkDescriptorSetLayoutCreateFlags flags);
 
-	void addDescriptorSetLayoutBinding(const VkDescriptorSetLayoutBinding& descriptor_set_layout_binding);
+    void addDescriptorSetLayoutBinding(const VkDescriptorSetLayoutBinding& descriptor_set_layout_binding);
 
-	VkDescriptorSetLayout create() const;
+    VkDescriptorSetLayout create() const;
 
 };
 

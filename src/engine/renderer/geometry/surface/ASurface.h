@@ -3,11 +3,12 @@
 
 #include "engine/renderer/geometry/AGeometry.h"
 
-class ASurface : public AGeometry {
+class ASurface : public AGeometry
+{
 
 public:
 
-	virtual ~ASurface() = default;
+    virtual ~ASurface() = default;
 
 };
 

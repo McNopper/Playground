@@ -8,19 +8,19 @@ class VulkanSemaphoreFactory
 
 private:
 
-	VkDevice m_device{ VK_NULL_HANDLE };
+    VkDevice m_device{ VK_NULL_HANDLE };
 
-	VkSemaphoreCreateFlags m_semaphore_create_flags{ 0u };
+    VkSemaphoreCreateFlags m_semaphore_create_flags{ 0u };
 
 public:
 
-	VulkanSemaphoreFactory() = delete;
+    VulkanSemaphoreFactory() = delete;
 
-	VulkanSemaphoreFactory(VkDevice device, VkSemaphoreCreateFlags semaphore_create_flags);
+    VulkanSemaphoreFactory(VkDevice device, VkSemaphoreCreateFlags semaphore_create_flags);
 
-	VkSemaphore create() const;
+    VkSemaphore create() const;
 
-	VkSemaphore createTimeline(uint64_t initial_value) const;
+    VkSemaphore createTimeline(uint64_t initial_value) const;
 
 };
 

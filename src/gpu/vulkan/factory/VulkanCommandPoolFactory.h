@@ -10,17 +10,17 @@ class VulkanCommandPoolFactory
 
 private:
 
-	VkDevice m_device{ VK_NULL_HANDLE };
-	VkCommandPoolCreateFlags m_command_pool_create_flags{ 0u };
-	uint32_t m_queue_family_index{ 0u };
+    VkDevice m_device{ VK_NULL_HANDLE };
+    VkCommandPoolCreateFlags m_command_pool_create_flags{ 0u };
+    uint32_t m_queue_family_index{ 0u };
 
 public:
 
-	VulkanCommandPoolFactory() = delete;
+    VulkanCommandPoolFactory() = delete;
 
-	VulkanCommandPoolFactory(VkDevice device, VkCommandPoolCreateFlags command_pool_create_flags, uint32_t queue_family_index);
+    VulkanCommandPoolFactory(VkDevice device, VkCommandPoolCreateFlags command_pool_create_flags, uint32_t queue_family_index);
 
-	VkCommandPool create() const;
+    VkCommandPool create() const;
 
 };
 

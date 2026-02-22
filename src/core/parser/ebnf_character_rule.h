@@ -13,7 +13,8 @@ namespace ebnf {
 
 // Character rules
 
-class ACharacterRule : public ASymbol {
+class ACharacterRule : public ASymbol
+{
 
 protected:
 
@@ -35,7 +36,8 @@ public:
 
 };
 
-class IntervalCharacterRule : public ACharacterRule {
+class IntervalCharacterRule : public ACharacterRule
+{
 
 protected:
 
@@ -91,7 +93,8 @@ public:
 
 };
 
-class AnyCharacterRule : public ACharacterRule {
+class AnyCharacterRule : public ACharacterRule
+{
 
 public:
 
