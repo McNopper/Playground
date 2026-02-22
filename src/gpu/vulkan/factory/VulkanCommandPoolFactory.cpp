@@ -1,7 +1,9 @@
 #include "VulkanCommandPoolFactory.h"
 
 VulkanCommandPoolFactory::VulkanCommandPoolFactory(VkDevice device, VkCommandPoolCreateFlags command_pool_create_flags, uint32_t queue_family_index) :
-    m_device{ device }, m_command_pool_create_flags{ command_pool_create_flags }, m_queue_family_index{ queue_family_index }
+    m_device{ device },
+    m_command_pool_create_flags{ command_pool_create_flags },
+    m_queue_family_index{ queue_family_index }
 {
 }
 

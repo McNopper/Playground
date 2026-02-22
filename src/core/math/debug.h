@@ -3,11 +3,9 @@
 
 #include <string>
 
-#include "vector.h"
-
 #include "matrix.h"
-
 #include "quaternion.h"
+#include "vector.h"
 
 std::string toString(const float2& value);
 

@@ -10,7 +10,7 @@ struct float7x7;
 
 //
 // Spherical Harmonics Rotation (Bands 0-3)
-// 
+//
 // Extracted and adapted from sh-lib by Andrew Willmott
 // https://github.com/andrewwillmott/sh-lib
 //

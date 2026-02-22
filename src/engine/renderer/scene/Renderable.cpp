@@ -1,8 +1,8 @@
 #include "Renderable.h"
 
+#include "engine/renderer/backend/common/buffer/UniformBuffer.h"
 #include "engine/renderer/geometry/AGeometry.h"
 #include "engine/renderer/material/MaterialShader.h"
-#include "engine/renderer/backend/common/buffer/UniformBuffer.h"
 #include "gpu/gpu.h"
 
 Renderable::Renderable(
@@ -10,8 +10,7 @@ Renderable::Renderable(
     VkDevice device,
     std::shared_ptr<AGeometry> geometry,
     std::shared_ptr<MaterialShader> material,
-    const float4x4& world_matrix
-) :
+    const float4x4& world_matrix) :
     m_physical_device{ physical_device },
     m_device{ device },
     m_geometry{ std::move(geometry) },
@@ -32,7 +31,7 @@ bool Renderable::init()
 {
     // Create uniform buffer for world transform
     m_uniform_model_buffer = std::make_shared<UniformBuffer>(m_physical_device, m_device);
-    
+
     // Create UniformBlock from material's shader
     if (m_material)
     {
@@ -41,7 +40,7 @@ bool Renderable::init()
         {
             VulkanSpirvQuery spirv_query{ spirv_shaders };
             m_uniform_model_block = std::make_shared<UniformBlock>(spirv_query, "UniformModelData");
-            
+
             if (!m_uniform_model_buffer->create(m_uniform_model_block->size()))
             {
                 return false;

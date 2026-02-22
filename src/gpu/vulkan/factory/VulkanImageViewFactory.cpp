@@ -1,7 +1,11 @@
 #include "VulkanImageViewFactory.h"
 
 VulkanImageViewFactory::VulkanImageViewFactory(VkDevice device, VkImage image, VkImageViewType image_view_type, VkFormat format, const VkImageSubresourceRange& image_subresource_range) :
-    m_device{ device }, m_image{ image }, m_image_view_type{ image_view_type }, m_format{ format }, m_image_subresource_range{ image_subresource_range }
+    m_device{ device },
+    m_image{ image },
+    m_image_view_type{ image_view_type },
+    m_format{ format },
+    m_image_subresource_range{ image_subresource_range }
 {
 }
 

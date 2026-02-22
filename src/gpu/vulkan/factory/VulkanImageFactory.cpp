@@ -1,7 +1,11 @@
 #include "VulkanImageFactory.h"
 
 VulkanImageFactory::VulkanImageFactory(VkDevice device, VkFormat format, const VkExtent3D& extent, VkSampleCountFlagBits samples, VkImageUsageFlags usage) :
-    m_device{ device }, m_format{ format }, m_extent{ extent }, m_samples{ samples }, m_usage{ usage }
+    m_device{ device },
+    m_format{ format },
+    m_extent{ extent },
+    m_samples{ samples },
+    m_usage{ usage }
 {
 }
 

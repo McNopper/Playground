@@ -1,15 +1,16 @@
-#include <gtest/gtest.h>
-
 #include <algorithm>
 #include <map>
 #include <string>
 #include <vector>
 
-#include "core/core.h"
-#include "gpu/gpu.h"
-#include "engine/engine.h"
+#include <gtest/gtest.h>
 
-namespace {
+#include "core/core.h"
+#include "engine/engine.h"
+#include "gpu/gpu.h"
+
+namespace
+{
 
 constexpr uint32_t CUBE_SIZE{ 64u };
 constexpr VkFormat CUBE_FORMAT{ VK_FORMAT_R32G32B32A32_SFLOAT };
@@ -126,8 +127,8 @@ VkDescriptorPool createDescriptorPool(VkDevice device, const std::vector<VkDescr
 
     VkDescriptorPoolCreateInfo pool_ci{ VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO };
     pool_ci.poolSizeCount = static_cast<uint32_t>(pool_sizes.size());
-    pool_ci.pPoolSizes    = pool_sizes.data();
-    pool_ci.maxSets       = 1u;
+    pool_ci.pPoolSizes = pool_sizes.data();
+    pool_ci.maxSets = 1u;
 
     VkDescriptorPool pool{ VK_NULL_HANDLE };
     vkCreateDescriptorPool(device, &pool_ci, nullptr, &pool);
@@ -150,15 +151,15 @@ void writeIBLDescriptors(
     for (const auto& binding : bindings)
     {
         VkWriteDescriptorSet write{ VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
-        write.dstSet         = descriptor_set;
-        write.dstBinding     = binding.binding;
+        write.dstSet = descriptor_set;
+        write.dstBinding = binding.binding;
         write.descriptorCount = 1u;
         write.descriptorType = binding.descriptorType;
 
         if (binding.descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE)
         {
             auto& info = image_infos[image_info_idx++];
-            info.imageView   = output_view;
+            info.imageView = output_view;
             info.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
             write.pImageInfo = &info;
             writes.push_back(write);
@@ -166,16 +167,16 @@ void writeIBLDescriptors(
         else if (binding.descriptorType == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
         {
             auto& info = image_infos[image_info_idx++];
-            info.imageView   = env_map_view;
+            info.imageView = env_map_view;
             info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            info.sampler     = sampler;
+            info.sampler = sampler;
             write.pImageInfo = &info;
             writes.push_back(write);
         }
         else if (binding.descriptorType == VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE)
         {
             auto& info = image_infos[image_info_idx++];
-            info.imageView   = env_map_view;
+            info.imageView = env_map_view;
             info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
             write.pImageInfo = &info;
             writes.push_back(write);
@@ -192,7 +193,7 @@ void writeIBLDescriptors(
     vkUpdateDescriptorSets(device, static_cast<uint32_t>(writes.size()), writes.data(), 0u, nullptr);
 }
 
-}
+} // namespace
 
 TEST(TestIBL, GenerateDiffuseIrradiance)
 {
@@ -272,9 +273,9 @@ TEST(TestIBL, GenerateDiffuseIrradiance)
     ASSERT_NE(pipeline_layout, VK_NULL_HANDLE);
 
     VkPipelineShaderStageCreateInfo stage{ VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO };
-    stage.stage  = VK_SHADER_STAGE_COMPUTE_BIT;
+    stage.stage = VK_SHADER_STAGE_COMPUTE_BIT;
     stage.module = shader_module;
-    stage.pName  = "main";
+    stage.pName = "main";
 
     VulkanComputePipelineFactory pipeline_factory{ handles.device, 0u, stage, pipeline_layout };
     VkPipeline pipeline = pipeline_factory.create();
@@ -284,9 +285,9 @@ TEST(TestIBL, GenerateDiffuseIrradiance)
     ASSERT_NE(descriptor_pool, VK_NULL_HANDLE);
 
     VkDescriptorSetAllocateInfo alloc_info{ VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO };
-    alloc_info.descriptorPool     = descriptor_pool;
+    alloc_info.descriptorPool = descriptor_pool;
     alloc_info.descriptorSetCount = 1u;
-    alloc_info.pSetLayouts        = &descriptor_set_layout;
+    alloc_info.pSetLayouts = &descriptor_set_layout;
 
     VkDescriptorSet descriptor_set{ VK_NULL_HANDLE };
     ASSERT_EQ(vkAllocateDescriptorSets(handles.device, &alloc_info, &descriptor_set), VK_SUCCESS);
@@ -308,7 +309,7 @@ TEST(TestIBL, GenerateDiffuseIrradiance)
 
     VkSubmitInfo2 submit{ VK_STRUCTURE_TYPE_SUBMIT_INFO_2 };
     submit.commandBufferInfoCount = 1u;
-    submit.pCommandBufferInfos    = &cmd_submit;
+    submit.pCommandBufferInfos = &cmd_submit;
 
     vkBeginCommandBuffer(cmd, &begin_info);
     transitionCubeArrayLayout(cmd, output.getImage(), VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
@@ -336,10 +337,10 @@ TEST(TestIBL, GenerateDiffuseIrradiance)
     auto& staging = *staging_opt;
 
     VkImageSubresourceLayers face0_layer{};
-    face0_layer.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    face0_layer.mipLevel       = 0u;
+    face0_layer.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    face0_layer.mipLevel = 0u;
     face0_layer.baseArrayLayer = 0u;
-    face0_layer.layerCount     = 1u;
+    face0_layer.layerCount = 1u;
 
     vkResetCommandBuffer(cmd, 0u);
     vkBeginCommandBuffer(cmd, &begin_info);
@@ -361,21 +362,27 @@ TEST(TestIBL, GenerateDiffuseIrradiance)
         float r = pixels[i * 4u + 0u];
         float g = pixels[i * 4u + 1u];
         float b = pixels[i * 4u + 2u];
-        if (r < 0.0f || g < 0.0f || b < 0.0f) { all_positive = false; }
-        if (!std::isfinite(r) || !std::isfinite(g) || !std::isfinite(b)) { all_finite = false; }
+        if (r < 0.0f || g < 0.0f || b < 0.0f)
+        {
+            all_positive = false;
+        }
+        if (!std::isfinite(r) || !std::isfinite(g) || !std::isfinite(b))
+        {
+            all_finite = false;
+        }
     }
     EXPECT_TRUE(all_positive) << "Irradiance values should be non-negative";
-    EXPECT_TRUE(all_finite)   << "Irradiance values should be finite";
+    EXPECT_TRUE(all_finite) << "Irradiance values should be finite";
     EXPECT_GT(pixels[0], 0.0f) << "Face 0 top-left should have positive irradiance";
 
     // Save for visual inspection
     ImageData out_image{};
-    out_image.width          = CUBE_SIZE;
-    out_image.height         = CUBE_SIZE;
-    out_image.channels       = 4u;
+    out_image.width = CUBE_SIZE;
+    out_image.height = CUBE_SIZE;
+    out_image.channels = 4u;
     out_image.channel_format = ChannelFormat::SFLOAT;
-    out_image.color_space    = ColorSpace::SRGB;
-    out_image.linear         = true;
+    out_image.color_space = ColorSpace::SRGB;
+    out_image.linear = true;
     out_image.pixels.resize(face_bytes);
     std::memcpy(out_image.pixels.data(), data, face_bytes);
     vkUnmapMemory(handles.device, staging.device_memory);
@@ -482,9 +489,9 @@ TEST(TestIBL, GenerateSpecularPrefilter)
     ASSERT_NE(pipeline_layout, VK_NULL_HANDLE);
 
     VkPipelineShaderStageCreateInfo stage{ VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO };
-    stage.stage  = VK_SHADER_STAGE_COMPUTE_BIT;
+    stage.stage = VK_SHADER_STAGE_COMPUTE_BIT;
     stage.module = shader_module;
-    stage.pName  = "main";
+    stage.pName = "main";
 
     VulkanComputePipelineFactory pipeline_factory{ handles.device, 0u, stage, pipeline_layout };
     VkPipeline pipeline = pipeline_factory.create();
@@ -494,9 +501,9 @@ TEST(TestIBL, GenerateSpecularPrefilter)
     ASSERT_NE(descriptor_pool, VK_NULL_HANDLE);
 
     VkDescriptorSetAllocateInfo alloc_info{ VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO };
-    alloc_info.descriptorPool     = descriptor_pool;
+    alloc_info.descriptorPool = descriptor_pool;
     alloc_info.descriptorSetCount = 1u;
-    alloc_info.pSetLayouts        = &descriptor_set_layout;
+    alloc_info.pSetLayouts = &descriptor_set_layout;
 
     VkDescriptorSet descriptor_set{ VK_NULL_HANDLE };
     ASSERT_EQ(vkAllocateDescriptorSets(handles.device, &alloc_info, &descriptor_set), VK_SUCCESS);
@@ -505,7 +512,11 @@ TEST(TestIBL, GenerateSpecularPrefilter)
                         env_texture.getImageView(), sampler, output.getStorageImageView());
 
     // Push constants: roughness=0.5, 512 samples
-    struct PushConstants { float roughness; uint32_t sample_count; };
+    struct PushConstants
+    {
+        float roughness;
+        uint32_t sample_count;
+    };
     PushConstants push{ 0.5f, 512u };
 
     // Record and submit compute work
@@ -522,7 +533,7 @@ TEST(TestIBL, GenerateSpecularPrefilter)
 
     VkSubmitInfo2 submit{ VK_STRUCTURE_TYPE_SUBMIT_INFO_2 };
     submit.commandBufferInfoCount = 1u;
-    submit.pCommandBufferInfos    = &cmd_submit;
+    submit.pCommandBufferInfos = &cmd_submit;
 
     vkBeginCommandBuffer(cmd, &begin_info);
     transitionCubeArrayLayout(cmd, output.getImage(), VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
@@ -551,10 +562,10 @@ TEST(TestIBL, GenerateSpecularPrefilter)
     auto& staging = *staging_opt;
 
     VkImageSubresourceLayers face0_layer{};
-    face0_layer.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    face0_layer.mipLevel       = 0u;
+    face0_layer.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    face0_layer.mipLevel = 0u;
     face0_layer.baseArrayLayer = 0u;
-    face0_layer.layerCount     = 1u;
+    face0_layer.layerCount = 1u;
 
     vkResetCommandBuffer(cmd, 0u);
     vkBeginCommandBuffer(cmd, &begin_info);
@@ -576,20 +587,26 @@ TEST(TestIBL, GenerateSpecularPrefilter)
         float r = pixels[i * 4u + 0u];
         float g = pixels[i * 4u + 1u];
         float b = pixels[i * 4u + 2u];
-        if (r < 0.0f || g < 0.0f || b < 0.0f) { all_non_negative = false; }
-        if (!std::isfinite(r) || !std::isfinite(g) || !std::isfinite(b)) { all_finite = false; }
+        if (r < 0.0f || g < 0.0f || b < 0.0f)
+        {
+            all_non_negative = false;
+        }
+        if (!std::isfinite(r) || !std::isfinite(g) || !std::isfinite(b))
+        {
+            all_finite = false;
+        }
     }
     EXPECT_TRUE(all_non_negative) << "Specular prefilter values should be non-negative";
-    EXPECT_TRUE(all_finite)       << "Specular prefilter values should be finite";
+    EXPECT_TRUE(all_finite) << "Specular prefilter values should be finite";
 
     // Save for visual inspection
     ImageData out_image{};
-    out_image.width          = CUBE_SIZE;
-    out_image.height         = CUBE_SIZE;
-    out_image.channels       = 4u;
+    out_image.width = CUBE_SIZE;
+    out_image.height = CUBE_SIZE;
+    out_image.channels = 4u;
     out_image.channel_format = ChannelFormat::SFLOAT;
-    out_image.color_space    = ColorSpace::SRGB;
-    out_image.linear         = true;
+    out_image.color_space = ColorSpace::SRGB;
+    out_image.linear = true;
     out_image.pixels.resize(face_bytes);
     std::memcpy(out_image.pixels.data(), data, face_bytes);
     vkUnmapMemory(handles.device, staging.device_memory);

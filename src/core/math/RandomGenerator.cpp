@@ -1,6 +1,6 @@
 #include "RandomGenerator.h"
 
-ARandomGenerator::ARandomGenerator() : 
+ARandomGenerator::ARandomGenerator() :
     m_generator{ std::default_random_engine{ std::random_device{}() } }
 {
 }
@@ -16,7 +16,8 @@ NoRandomGenerator::NoRandomGenerator(float value) :
 }
 
 NoRandomGenerator::NoRandomGenerator(float value, std::uint32_t seed) :
-    ARandomGenerator(seed), m_value{ value }
+    ARandomGenerator(seed),
+    m_value{ value }
 {
 }
 
@@ -31,7 +32,8 @@ UniformRandomGenerator::UniformRandomGenerator() :
 }
 
 UniformRandomGenerator::UniformRandomGenerator(std::uint32_t seed) :
-    ARandomGenerator(seed), m_uniform{ 0.0f, 1.0f }
+    ARandomGenerator(seed),
+    m_uniform{ 0.0f, 1.0f }
 {
 }
 
@@ -41,7 +43,8 @@ UniformRandomGenerator::UniformRandomGenerator(float min_value, float max_value)
 }
 
 UniformRandomGenerator::UniformRandomGenerator(float min_value, float max_value, std::uint32_t seed) :
-    ARandomGenerator(seed), m_uniform{ min_value, max_value }
+    ARandomGenerator(seed),
+    m_uniform{ min_value, max_value }
 {
 }
 
@@ -56,7 +59,8 @@ NormalRandomGenerator::NormalRandomGenerator() :
 }
 
 NormalRandomGenerator::NormalRandomGenerator(std::uint32_t seed) :
-    ARandomGenerator(seed), m_normal{ 0.0f, 1.0f }
+    ARandomGenerator(seed),
+    m_normal{ 0.0f, 1.0f }
 {
 }
 
@@ -66,7 +70,8 @@ NormalRandomGenerator::NormalRandomGenerator(float mean, float std_dev) :
 }
 
 NormalRandomGenerator::NormalRandomGenerator(float mean, float std_dev, std::uint32_t seed) :
-    ARandomGenerator(seed), m_normal{ mean, std_dev }
+    ARandomGenerator(seed),
+    m_normal{ mean, std_dev }
 {
 }
 

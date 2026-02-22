@@ -1,7 +1,10 @@
 #include "VulkanCommandBufferFactory.h"
 
 VulkanCommandBufferFactory::VulkanCommandBufferFactory(VkDevice device, VkCommandPool command_pool, VkCommandBufferLevel command_buffer_level, uint32_t command_buffer_count) :
-    m_device{ device }, m_command_pool{ command_pool }, m_command_buffer_level{ command_buffer_level }, m_command_buffer_count{ command_buffer_count }
+    m_device{ device },
+    m_command_pool{ command_pool },
+    m_command_buffer_level{ command_buffer_level },
+    m_command_buffer_count{ command_buffer_count }
 {
 }
 

@@ -3,7 +3,11 @@
 #include "gpu/vulkan/utility/vulkan_query.h"
 
 VulkanSwapchainFactory::VulkanSwapchainFactory(VkPhysicalDevice physical_device, VkDevice device, VkSurfaceKHR surface, const VkSurfaceFormatKHR& surface_format, VkPresentModeKHR present_mode) :
-    m_physical_device{ physical_device }, m_device{ device }, m_surface{ surface }, m_surface_format{ surface_format }, m_present_mode{ present_mode }
+    m_physical_device{ physical_device },
+    m_device{ device },
+    m_surface{ surface },
+    m_surface_format{ surface_format },
+    m_present_mode{ present_mode }
 {
 }
 

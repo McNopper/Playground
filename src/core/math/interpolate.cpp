@@ -2,8 +2,8 @@
 
 #include <cmath>
 
-#include "vector.h"
 #include "quaternion.h"
+#include "vector.h"
 
 float min(float x, float y)
 {

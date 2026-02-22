@@ -6,7 +6,6 @@
 
 #include "core/io/binary_data.h"
 #include "core/utility/convert.h"
-
 #include "spirv_convert.h"
 
 std::optional<SpirvData> loadSpirv(const std::string& filename)
@@ -40,7 +39,7 @@ std::optional<SpirvData> loadSpirv(const std::string& filename)
     {
         return {};
     }
-    
+
     spirv_data.execution_model = module.spirv_execution_model;
 
     spvReflectDestroyShaderModule(&module);
@@ -48,7 +47,7 @@ std::optional<SpirvData> loadSpirv(const std::string& filename)
     // Cross check, if we support internally.
 
     // Current execution models, which can be extended.
-    std::vector<SpvExecutionModel> execution_model_checks {
+    std::vector<SpvExecutionModel> execution_model_checks{
         SpvExecutionModelVertex,
         SpvExecutionModelTessellationControl,
         SpvExecutionModelTessellationEvaluation,

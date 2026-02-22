@@ -38,7 +38,6 @@ public:
     void destroy() override;
 
     uint32_t getSize() const;
-
 };
 
 #endif /* RENDERER_BACKEND_COMMON_IMAGE_TEXTURECUBE_H_ */

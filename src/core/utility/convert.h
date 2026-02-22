@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-struct RawData {
+struct RawData
+{
     const uint8_t* data{ nullptr };
     std::size_t length{ 0u };
     std::size_t stride{ 0u };

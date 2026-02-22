@@ -3,9 +3,7 @@
 #include <algorithm>
 
 #include "core/utility/strings.h"
-
 #include "gpu/vulkan/utility/vulkan_helper.h"
-
 #include "vulkan_spirv.h"
 
 void VulkanSpirvQuery::destroyShaderModules(std::size_t max)
@@ -196,7 +194,7 @@ std::vector<std::string> VulkanSpirvQuery::gatherDescriptorSetBlockMemberNames()
 
                     std::string name = std::string(descriptor_sets[j]->bindings[k]->block.name) + "." + std::string(descriptor_sets[j]->bindings[k]->block.members[l].name);
 
-                    if(std::find(names.begin(), names.end(), name) == names.end())
+                    if (std::find(names.begin(), names.end(), name) == names.end())
                     {
                         names.push_back(name);
                     }
@@ -356,10 +354,9 @@ std::optional<VkVertexInputBindingDescription> VulkanSpirvQuery::gatherVertexInp
 
         // Sort by location.
         std::sort(std::begin(input_variables), std::end(input_variables),
-            [](const SpvReflectInterfaceVariable* a, const SpvReflectInterfaceVariable* b) {
-                return a->location < b->location;
-            }
-        );
+                  [](const SpvReflectInterfaceVariable* a, const SpvReflectInterfaceVariable* b) {
+                      return a->location < b->location;
+                  });
 
         VkVertexInputBindingDescription vertex_input_binding_description{};
 
@@ -416,10 +413,9 @@ std::vector<VkVertexInputAttributeDescription> VulkanSpirvQuery::gatherVertexInp
 
         // Sort by location.
         std::sort(std::begin(input_variables), std::end(input_variables),
-            [](const SpvReflectInterfaceVariable* a, const SpvReflectInterfaceVariable* b) {
-                return a->location < b->location;
-            }
-        );
+                  [](const SpvReflectInterfaceVariable* a, const SpvReflectInterfaceVariable* b) {
+                      return a->location < b->location;
+                  });
 
         vertex_input_attribute_descriptions.resize(input_variables.size());
 
@@ -484,10 +480,9 @@ std::vector<std::string> VulkanSpirvQuery::gatherVertexInputNames() const
 
         // Sort by location.
         std::sort(std::begin(input_variables), std::end(input_variables),
-            [](const SpvReflectInterfaceVariable* a, const SpvReflectInterfaceVariable* b) {
-                return a->location < b->location;
-            }
-        );
+                  [](const SpvReflectInterfaceVariable* a, const SpvReflectInterfaceVariable* b) {
+                      return a->location < b->location;
+                  });
 
         for (uint32_t j = 0u; j < (uint32_t)input_variables.size(); j++)
         {

@@ -30,7 +30,6 @@ public:
     bool addEnabledExtensionName(const char* name);
 
     VkDevice create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANDEVICEFACTORY_H_ */

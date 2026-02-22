@@ -8,26 +8,30 @@
 
 #include "activation_functions.h"
 
-enum class InitializationMethod {
+enum class InitializationMethod
+{
     ZERO,
     KAIMING, // also known as He initialization
     UNIFORM_XAVIER,
     NORMAL_XAVIER
 };
 
-struct ActivationFunction {
+struct ActivationFunction
+{
     std::function<float(float)> function{ nullptr };
     std::function<float(float)> derivative{ nullptr };
 };
 
-struct Neuron {
+struct Neuron
+{
     std::vector<float> weights{};
     float bias{ 0.0f };
     float output{ 0.0f };
     float delta{ 0.0f };
 };
 
-struct Layer {
+struct Layer
+{
     std::vector<Neuron> neurons{};
     ActivationFunction af{};
 };
@@ -58,7 +62,6 @@ public:
     std::vector<float> forwardPropagation(const std::vector<float>& inputs);
 
     std::optional<float> backwardPropagation(const std::vector<float>& inputs, const std::vector<float>& targets, float learning_rate);
-
 };
 
 #endif /* CPU_AI_MULTILAYERPERCEPTRON_H_ */

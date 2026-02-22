@@ -25,7 +25,6 @@ public:
     virtual bool update(double delta_time, VkCommandBuffer command_buffer) = 0;
 
     virtual void terminate() = 0;
-
 };
 
 #endif /* ENGINE_RUNTIME_IAPPLICATION_H_ */

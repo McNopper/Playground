@@ -6,7 +6,8 @@
 
 #include <spirv-reflect/spirv.h>
 
-struct SpirvData {
+struct SpirvData
+{
     std::vector<uint32_t> code{};
     SpvExecutionModel execution_model{};
 };

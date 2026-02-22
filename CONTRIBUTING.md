@@ -122,7 +122,7 @@ void myFunction()
   - Default function parameters: Use `=`
   - Assignment statements: Use `=`
 - **Constructors**: Use `= default` and `= delete` appropriately
-- **Constructor initializer lists**: Colon on same line as closing paren, all initializers on single line
+- **Constructor initializer lists**: Colon on same line as closing paren, pack initializers on current line if they fit, otherwise one per line
 - **Parameters**: Use `const&` for read-only parameters
 - **Null pointers**: Use `nullptr` instead of `NULL`
 - **Type inference**: Use `auto` when type is obvious from context

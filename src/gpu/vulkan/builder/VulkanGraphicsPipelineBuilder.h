@@ -101,7 +101,6 @@ public:
     void addDynamicState(VkDynamicState dynamic_state);
 
     VkPipeline create(const std::vector<SpirvData>& shaders) const;
-
 };
 
 #endif /* GPU_VULKAN_BUILDER_VULKANGRAPHICSPIPELINEBUILDER_H_ */

@@ -5,8 +5,8 @@
 
 #include <volk.h>
 
-#include "gpu/gpu.h"
 #include "engine/engine.h"
+#include "gpu/gpu.h"
 
 /**
  * Application - Compute shader application
@@ -47,7 +47,6 @@ public:
     bool update(double delta_time, VkCommandBuffer command_buffer) override;
 
     void terminate();
-
 };
 
 #endif /* APPLICATION_H_ */

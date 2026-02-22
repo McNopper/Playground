@@ -5,8 +5,8 @@
 
 #include <volk.h>
 
-#include "gpu/gpu.h"
 #include "engine/engine.h"
+#include "gpu/gpu.h"
 
 /**
  * Application - Graphics application with rendering
@@ -48,7 +48,6 @@ public:
     bool update(double delta_time, VkCommandBuffer command_buffer) override;
 
     void terminate() override;
-
 };
 
 #endif /* APPLICATION_H_ */

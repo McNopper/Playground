@@ -46,11 +46,11 @@ std::vector<std::string> UniformBlock::getMemberNames() const
 {
     std::vector<std::string> names{};
     names.reserve(m_member_infos.size());
-    
+
     for (const auto& info : m_member_infos)
     {
         names.push_back(info.name);
     }
-    
+
     return names;
 }

@@ -43,7 +43,7 @@ bool Texture2D::upload(VkCommandPool command_pool, VkQueue queue, const ImageDat
         return false;
     }
 
-    uint32_t expected_width  = std::max(m_extent.width  >> mip_level, 1u);
+    uint32_t expected_width = std::max(m_extent.width >> mip_level, 1u);
     uint32_t expected_height = std::max(m_extent.height >> mip_level, 1u);
     if (image_data.width != expected_width || image_data.height != expected_height)
     {

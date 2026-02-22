@@ -57,7 +57,6 @@ public:
     bool isValid() const;
 
     void destroy();
-
 };
 
 #endif /* RENDERER_BACKEND_COMMON_IMAGE_SAMPLER_H_ */

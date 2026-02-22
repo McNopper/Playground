@@ -9,7 +9,8 @@
 
 #include "ebnf_base.h"
 
-namespace ebnf {
+namespace ebnf
+{
 
 // Character rules
 
@@ -33,7 +34,6 @@ public:
     {
         return m_characters_ignored.contains(c);
     }
-
 };
 
 class IntervalCharacterRule : public ACharacterRule
@@ -41,15 +41,16 @@ class IntervalCharacterRule : public ACharacterRule
 
 protected:
 
-    char m_character_start{'\0'};
-    char m_character_end{'\0'};
+    char m_character_start{ '\0' };
+    char m_character_end{ '\0' };
 
 public:
 
     IntervalCharacterRule() = delete;
 
     IntervalCharacterRule(char character_start, char character_end) :
-        m_character_start{character_start}, m_character_end{character_end}
+        m_character_start{ character_start },
+        m_character_end{ character_end }
     {
     }
 
@@ -73,7 +74,7 @@ public:
         {
             if (c < m_character_start || c > m_character_end)
                 break;
-            
+
             if (isIgnored(c))
                 break;
 
@@ -88,9 +89,8 @@ public:
 
         executeOnSuccess(result);
 
-        return {.success = true, .next_position = current_pos, .value = std::move(result)};
+        return { .success = true, .next_position = current_pos, .value = std::move(result) };
     }
-
 };
 
 class AnyCharacterRule : public ACharacterRule
@@ -127,9 +127,8 @@ public:
 
         executeOnSuccess(result);
 
-        return {.success = true, .next_position = current_pos, .value = std::move(result)};
+        return { .success = true, .next_position = current_pos, .value = std::move(result) };
     }
-
 };
 
 } // namespace ebnf

@@ -75,7 +75,7 @@ int main()
 
         return -1;
     }
-    VkPhysicalDevice physical_device{physical_devices[0u]};
+    VkPhysicalDevice physical_device{ physical_devices[0u] };
     printf("Found suitable physical device with given filter.\n");
     printf("\n");
 
@@ -96,7 +96,7 @@ int main()
     std::generate(queue_family_indices.begin(), queue_family_indices.end(), [index = 0u]() mutable { return index++; });
 
     // Filtering to find a suitable queue family index.
-    queue_family_indices = QueueFamilyIndexFlagsFilter{VK_QUEUE_GRAPHICS_BIT, queue_family_properties} << queue_family_indices;
+    queue_family_indices = QueueFamilyIndexFlagsFilter{ VK_QUEUE_GRAPHICS_BIT, queue_family_properties } << queue_family_indices;
     if (queue_family_indices.empty())
     {
         printf("No suitable queue family found.\n");
@@ -129,7 +129,7 @@ int main()
     }
     printf("Vulkan device created.\n");
 
-    VkQueue queue{VK_NULL_HANDLE};
+    VkQueue queue{ VK_NULL_HANDLE };
     vkGetDeviceQueue(device, queue_family_index, 0, &queue);
     printf("Vulkan queue retrieved.\n");
     printf("\n");

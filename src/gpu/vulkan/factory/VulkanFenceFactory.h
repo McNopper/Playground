@@ -19,7 +19,6 @@ public:
     VulkanFenceFactory(VkDevice device, VkFenceCreateFlags fence_create_flags);
 
     VkFence create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANFENCEFACTORY_H_ */

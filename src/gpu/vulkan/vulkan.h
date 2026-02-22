@@ -7,16 +7,11 @@
 // utility
 
 #include "gpu/vulkan/utility/VulkanFilter.h"
-
 #include "gpu/vulkan/utility/VulkanFrame.h"
-
-#include "gpu/vulkan/utility/vulkan_helper.h"
-
-#include "gpu/vulkan/utility/vulkan_host_memory.h"
-
-#include "gpu/vulkan/utility/vulkan_query.h"
-
 #include "gpu/vulkan/utility/VulkanSetup.h"
+#include "gpu/vulkan/utility/vulkan_helper.h"
+#include "gpu/vulkan/utility/vulkan_host_memory.h"
+#include "gpu/vulkan/utility/vulkan_query.h"
 
 // Layer
 
@@ -43,19 +38,17 @@
 
 // spirv
 
-#include "gpu/vulkan/spirv/vulkan_spirv.h"
-
-#include "gpu/vulkan/spirv/VulkanSpirvQuery.h"
-
 #include "gpu/vulkan/spirv/UniformBlock.h"
+#include "gpu/vulkan/spirv/VulkanSpirvQuery.h"
+#include "gpu/vulkan/spirv/vulkan_spirv.h"
 
 // Layer
 
 // builder
 
+#include "gpu/vulkan/builder/VulkanGraphicsPipelineBuilder.h"
 #include "gpu/vulkan/builder/vulkan_device_memory.h"
 #include "gpu/vulkan/builder/vulkan_resource.h"
-#include "gpu/vulkan/builder/VulkanGraphicsPipelineBuilder.h"
 
 // Layer
 

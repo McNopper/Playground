@@ -2,11 +2,7 @@
 
 #include <algorithm>
 
-#include "gpu/vulkan/utility/VulkanFilter.h"
-#include "gpu/vulkan/utility/VulkanFrame.h"
-#include "gpu/vulkan/utility/vulkan_helper.h"
-#include "gpu/vulkan/utility/vulkan_query.h"
-
+#include "gpu/vulkan/builder/vulkan_device_memory.h"
 #include "gpu/vulkan/factory/VulkanCommandBufferFactory.h"
 #include "gpu/vulkan/factory/VulkanCommandPoolFactory.h"
 #include "gpu/vulkan/factory/VulkanDeviceMemoryFactory.h"
@@ -15,11 +11,16 @@
 #include "gpu/vulkan/factory/VulkanImageViewFactory.h"
 #include "gpu/vulkan/factory/VulkanSemaphoreFactory.h"
 #include "gpu/vulkan/factory/VulkanSwapchainFactory.h"
-
-#include "gpu/vulkan/builder/vulkan_device_memory.h"
+#include "gpu/vulkan/utility/VulkanFilter.h"
+#include "gpu/vulkan/utility/VulkanFrame.h"
+#include "gpu/vulkan/utility/vulkan_helper.h"
+#include "gpu/vulkan/utility/vulkan_query.h"
 
 VulkanWindow::VulkanWindow(VkPhysicalDevice physical_device, VkDevice device, uint32_t queue_family_index, VkSurfaceKHR surface) :
-    m_physical_device{ physical_device }, m_device{ device }, m_queue_family_index{ queue_family_index }, m_surface{ surface }
+    m_physical_device{ physical_device },
+    m_device{ device },
+    m_queue_family_index{ queue_family_index },
+    m_surface{ surface }
 {
 }
 
@@ -127,7 +128,7 @@ bool VulkanWindow::init()
             return false;
         }
 
-        VulkanImageFactory image_factory{ m_device, m_surface_format.format, {m_current_extent.width, m_current_extent.height, 1u}, m_samples, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT };
+        VulkanImageFactory image_factory{ m_device, m_surface_format.format, { m_current_extent.width, m_current_extent.height, 1u }, m_samples, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT };
         m_msaa_image_resource.image = image_factory.create();
         if (m_msaa_image_resource.image == VK_NULL_HANDLE)
         {
@@ -209,7 +210,7 @@ bool VulkanWindow::init()
             }
         }
 
-        VulkanImageFactory image_factory{ m_device, m_depth_stencil_format, {m_current_extent.width, m_current_extent.height, 1u}, m_samples, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT };
+        VulkanImageFactory image_factory{ m_device, m_depth_stencil_format, { m_current_extent.width, m_current_extent.height, 1u }, m_samples, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT };
         m_depth_stencil_image_resource.image = image_factory.create();
         if (m_depth_stencil_image_resource.image == VK_NULL_HANDLE)
         {
@@ -279,8 +280,7 @@ bool VulkanWindow::init()
         surface_info2.surface = m_surface;
         VkSurfaceCapabilities2KHR surface_caps2{ VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR };
         surface_caps2.pNext = &present_id2_caps;
-        if (vkGetPhysicalDeviceSurfaceCapabilities2KHR(m_physical_device, &surface_info2, &surface_caps2) == VK_SUCCESS
-            && present_id2_caps.presentId2Supported == VK_TRUE)
+        if (vkGetPhysicalDeviceSurfaceCapabilities2KHR(m_physical_device, &surface_info2, &surface_caps2) == VK_SUCCESS && present_id2_caps.presentId2Supported == VK_TRUE)
         {
             m_present_id2_enabled = true;
             swapchain_flags |= VK_SWAPCHAIN_CREATE_PRESENT_ID_2_BIT_KHR;
@@ -312,7 +312,7 @@ bool VulkanWindow::init()
         return false;
     }
 
-    VulkanCommandBufferFactory command_buffer_factory{ m_device , m_command_pool , VK_COMMAND_BUFFER_LEVEL_PRIMARY , number_frames };
+    VulkanCommandBufferFactory command_buffer_factory{ m_device, m_command_pool, VK_COMMAND_BUFFER_LEVEL_PRIMARY, number_frames };
 
     auto command_buffers = command_buffer_factory.create();
     if (command_buffers.empty())
@@ -440,7 +440,7 @@ void VulkanWindow::beginRendering() const
 {
     // Prepare the begin of rendering.
 
-    VulkanFrame vulkan_frame{ m_swapchain_image_resources[m_swapchain_image_index].image_view , {{ 0, 0}, m_current_extent } };
+    VulkanFrame vulkan_frame{ m_swapchain_image_resources[m_swapchain_image_index].image_view, { { 0, 0 }, m_current_extent } };
     vulkan_frame.setClearColor(m_clear_color);
 
     if (m_samples != VK_SAMPLE_COUNT_1_BIT)

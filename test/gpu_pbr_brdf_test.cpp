@@ -1,16 +1,18 @@
-#include <gtest/gtest.h>
-
 #include <algorithm>
 #include <map>
 #include <vector>
 
+#include <gtest/gtest.h>
+
 #include "core/core.h"
-#include "gpu/gpu.h"
 #include "engine/engine.h"
+#include "gpu/gpu.h"
 
-namespace {
+namespace
+{
 
-struct VulkanHandles {
+struct VulkanHandles
+{
     VkInstance instance{ VK_NULL_HANDLE };
     VkPhysicalDevice physical_device{ VK_NULL_HANDLE };
     uint32_t queue_family_index{ 0u };
@@ -35,7 +37,7 @@ bool initVulkan(VulkanHandles& handles)
         VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU,
         VK_PHYSICAL_DEVICE_TYPE_CPU
     } << physical_devices;
-    
+
     if (physical_devices.empty())
     {
         return false;
@@ -46,14 +48,14 @@ bool initVulkan(VulkanHandles& handles)
     std::vector<uint32_t> queue_family_indices(queue_family_properties.size());
     std::generate(queue_family_indices.begin(), queue_family_indices.end(), [index = 0u]() mutable { return index++; });
 
-    queue_family_indices = QueueFamilyIndexFlagsFilter{VK_QUEUE_COMPUTE_BIT, queue_family_properties} << queue_family_indices;
+    queue_family_indices = QueueFamilyIndexFlagsFilter{ VK_QUEUE_COMPUTE_BIT, queue_family_properties } << queue_family_indices;
     if (queue_family_indices.empty())
     {
         return false;
     }
     handles.queue_family_index = queue_family_indices[0u];
 
-    VulkanDeviceFactory vulkan_device_factory{handles.physical_device, handles.queue_family_index};
+    VulkanDeviceFactory vulkan_device_factory{ handles.physical_device, handles.queue_family_index };
     handles.device = vulkan_device_factory.create();
     if (handles.device == VK_NULL_HANDLE)
     {
@@ -62,7 +64,7 @@ bool initVulkan(VulkanHandles& handles)
 
     vkGetDeviceQueue(handles.device, handles.queue_family_index, 0, &handles.queue);
 
-    VulkanCommandPoolFactory command_pool_factory{handles.device, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT, handles.queue_family_index};
+    VulkanCommandPoolFactory command_pool_factory{ handles.device, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT, handles.queue_family_index };
     handles.command_pool = command_pool_factory.create();
     if (handles.command_pool == VK_NULL_HANDLE)
     {
@@ -98,7 +100,7 @@ void terminateVulkan(VulkanHandles& handles)
     }
 }
 
-}
+} // namespace
 
 TEST(TestBRDF, GenerateLUT)
 {
@@ -116,7 +118,7 @@ TEST(TestBRDF, GenerateLUT)
     ASSERT_NE(handles.command_pool, VK_NULL_HANDLE);
 
     // Create output texture
-    Texture2D output_texture{handles.physical_device, handles.device};
+    Texture2D output_texture{ handles.physical_device, handles.device };
     output_texture.setExtent(LUT_SIZE, LUT_SIZE);
     output_texture.setFormat(VK_FORMAT_R32G32B32A32_SFLOAT);
     output_texture.setUsage(VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
@@ -132,17 +134,17 @@ TEST(TestBRDF, GenerateLUT)
     EXPECT_GT(shaders[0].code.size(), 0u);
 
     // Create shader module
-    VulkanShaderModuleFactory shader_factory{handles.device, shaders[0].code};
+    VulkanShaderModuleFactory shader_factory{ handles.device, shaders[0].code };
     VkShaderModule shader_module = shader_factory.create();
     ASSERT_NE(shader_module, VK_NULL_HANDLE);
 
     // Get descriptor bindings from SPIR-V reflection
-    VulkanSpirvQuery spirv_query{shaders};
+    VulkanSpirvQuery spirv_query{ shaders };
     auto descriptor_bindings = spirv_query.gatherDescriptorSetLayoutBindings();
     ASSERT_FALSE(descriptor_bindings.empty());
 
     // Create descriptor set layout using factory
-    VulkanDescriptorSetLayoutFactory descriptor_set_layout_factory{handles.device, 0};
+    VulkanDescriptorSetLayoutFactory descriptor_set_layout_factory{ handles.device, 0 };
     for (const auto& binding : descriptor_bindings)
     {
         descriptor_set_layout_factory.addDescriptorSetLayoutBinding(binding);
@@ -151,7 +153,7 @@ TEST(TestBRDF, GenerateLUT)
     ASSERT_NE(descriptor_set_layout, VK_NULL_HANDLE);
 
     // Create pipeline layout using factory
-    VulkanPipelineLayoutFactory pipeline_layout_factory{handles.device, 0};
+    VulkanPipelineLayoutFactory pipeline_layout_factory{ handles.device, 0 };
     pipeline_layout_factory.addDescriptorSetLayout(descriptor_set_layout);
     VkPipelineLayout pipeline_layout = pipeline_layout_factory.create();
     ASSERT_NE(pipeline_layout, VK_NULL_HANDLE);
@@ -163,7 +165,7 @@ TEST(TestBRDF, GenerateLUT)
     stage.module = shader_module;
     stage.pName = "main";
 
-    VulkanComputePipelineFactory pipeline_factory{handles.device, 0, stage, pipeline_layout};
+    VulkanComputePipelineFactory pipeline_factory{ handles.device, 0, stage, pipeline_layout };
     VkPipeline compute_pipeline = pipeline_factory.create();
     ASSERT_NE(compute_pipeline, VK_NULL_HANDLE);
 
@@ -193,7 +195,7 @@ TEST(TestBRDF, GenerateLUT)
     ASSERT_EQ(vk_result, VK_SUCCESS);
 
     // Get command buffer
-    VulkanCommandBufferFactory command_buffer_factory{handles.device, handles.command_pool, VK_COMMAND_BUFFER_LEVEL_PRIMARY, 1};
+    VulkanCommandBufferFactory command_buffer_factory{ handles.device, handles.command_pool, VK_COMMAND_BUFFER_LEVEL_PRIMARY, 1 };
     auto command_buffers = command_buffer_factory.create();
     ASSERT_FALSE(command_buffers.empty());
     VkCommandBuffer cmd = command_buffers[0];
@@ -257,7 +259,7 @@ TEST(TestBRDF, GenerateLUT)
     vkResetCommandBuffer(cmd, 0);
     vkBeginCommandBuffer(cmd, &begin_info);
     transitionImageLayout(cmd, output_texture.getImage(), VK_IMAGE_LAYOUT_GENERAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-    copyImageToBuffer(cmd, output_texture.getImage(), staging_buffer.buffer, {LUT_SIZE, LUT_SIZE, 1});
+    copyImageToBuffer(cmd, output_texture.getImage(), staging_buffer.buffer, { LUT_SIZE, LUT_SIZE, 1 });
     vkEndCommandBuffer(cmd);
     vkQueueSubmit2(handles.queue, 1, &submit_info, VK_NULL_HANDLE);
     vkQueueWaitIdle(handles.queue);
@@ -265,16 +267,16 @@ TEST(TestBRDF, GenerateLUT)
     // Verify data
     void* data;
     vkMapMemory(handles.device, staging_buffer.device_memory, 0, VK_WHOLE_SIZE, 0, &data);
-    
+
     float* pixels = static_cast<float*>(data);
-    
+
     // Sanity checks on BRDF LUT values
     EXPECT_GT(pixels[0], 0.0f) << "Bottom-left R should be positive";
     EXPECT_GE(pixels[1], 0.0f) << "Bottom-left G should be non-negative";
-    
+
     size_t top_right_idx = ((LUT_SIZE - 1) * LUT_SIZE + (LUT_SIZE - 1)) * 4;
     EXPECT_GT(pixels[top_right_idx], 0.0f) << "Top-right R should be positive";
-    
+
     // All values should be in valid range
     bool all_valid = true;
     for (uint32_t i = 0; i < LUT_SIZE * LUT_SIZE && all_valid; ++i)
@@ -313,7 +315,7 @@ TEST(TestBRDF, GenerateLUT)
     vkDestroyPipelineLayout(handles.device, pipeline_layout, nullptr);
     vkDestroyDescriptorSetLayout(handles.device, descriptor_set_layout, nullptr);
     vkDestroyShaderModule(handles.device, shader_module, nullptr);
-    
+
     terminateVulkan(handles);
     vulkan_setup.terminate();
 }

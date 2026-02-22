@@ -36,7 +36,6 @@ public:
 
     uint32_t getWidth() const;
     uint32_t getHeight() const;
-
 };
 
 #endif /* RENDERER_BACKEND_COMMON_IMAGE_TEXTURE2D_H_ */

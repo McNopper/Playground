@@ -9,7 +9,6 @@ class ASurface : public AGeometry
 public:
 
     virtual ~ASurface() = default;
-
 };
 
 #endif /* RENDERER_GEOMETRY_SURFACE_ASURFACE_H_ */

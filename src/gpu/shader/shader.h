@@ -6,10 +6,8 @@
 
 // spirv
 
-#include "gpu/shader/spirv/spirv_data.h"
-
 #include "gpu/shader/spirv/spirv_convert.h"
-
+#include "gpu/shader/spirv/spirv_data.h"
 #include "gpu/shader/spirv/spirv_io.h"
 
 // Layer

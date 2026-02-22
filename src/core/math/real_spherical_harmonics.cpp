@@ -1,4 +1,5 @@
 #include "real_spherical_harmonics.h"
+
 #include <cmath>
 
 float rsh::Cln(std::uint32_t l, std::uint32_t n) const
@@ -15,13 +16,13 @@ float rsh::Yln(std::uint32_t l, std::uint32_t n, float x, float y, float z) cons
 {
     const float C = Cln(l, n);
     const std::int32_t m = static_cast<std::int32_t>(n) - static_cast<std::int32_t>(l);
-    
+
     // l=0
     if (l == 0)
     {
         return C;
     }
-    
+
     // l=1
     if (l == 1)
     {
@@ -38,7 +39,7 @@ float rsh::Yln(std::uint32_t l, std::uint32_t n, float x, float y, float z) cons
             return C * x;
         }
     }
-    
+
     // l=2
     if (l == 2)
     {
@@ -63,7 +64,7 @@ float rsh::Yln(std::uint32_t l, std::uint32_t n, float x, float y, float z) cons
             return C * (x * x - y * y);
         }
     }
-    
+
     // l=3
     if (l == 3)
     {
@@ -96,7 +97,7 @@ float rsh::Yln(std::uint32_t l, std::uint32_t n, float x, float y, float z) cons
             return C * x * (x * x - 3.0f * y * y);
         }
     }
-    
+
     return 0.0f;
 }
 

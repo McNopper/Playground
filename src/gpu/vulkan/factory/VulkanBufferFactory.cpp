@@ -1,7 +1,9 @@
 #include "VulkanBufferFactory.h"
 
 VulkanBufferFactory::VulkanBufferFactory(VkDevice device, VkDeviceSize size, VkBufferUsageFlags usage) :
-    m_device{ device }, m_size{ size }, m_usage{ usage }
+    m_device{ device },
+    m_size{ size },
+    m_usage{ usage }
 {
 }
 

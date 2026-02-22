@@ -1,15 +1,17 @@
-#include <gtest/gtest.h>
-
 #include <algorithm>
 #include <iostream>
+
+#include <gtest/gtest.h>
 
 #include "core/core.h"
 #include "engine/engine.h"
 #include "gpu/gpu.h"
 
-namespace {
+namespace
+{
 
-struct VulkanHandles {
+struct VulkanHandles
+{
     VkInstance instance{ VK_NULL_HANDLE };
     VkPhysicalDevice physical_device{ VK_NULL_HANDLE };
     std::uint32_t queue_family_index{ 0u };
@@ -39,7 +41,7 @@ bool initVulkan(VulkanHandles& handles)
     std::vector<std::uint32_t> queue_family_indices(queue_family_properties.size());
     std::generate(queue_family_indices.begin(), queue_family_indices.end(), [index = 0u]() mutable { return index++; });
 
-    queue_family_indices = QueueFamilyIndexFlagsFilter{VK_QUEUE_GRAPHICS_BIT, queue_family_properties} << queue_family_indices;
+    queue_family_indices = QueueFamilyIndexFlagsFilter{ VK_QUEUE_GRAPHICS_BIT, queue_family_properties } << queue_family_indices;
     if (queue_family_indices.empty())
     {
         return false;
@@ -99,28 +101,27 @@ protected:
         terminateVulkan(m_vulkan);
         m_vulkan_setup.terminate();
     }
-
 };
 
 TEST_F(TestTriangleMesh, CreateWithSeparateBuffers)
 {
     // Create separate vertex buffers
     std::vector<float3> positions = {
-        float3{-1.0f, -1.0f, 0.0f},
-        float3{ 1.0f, -1.0f, 0.0f},
-        float3{ 0.0f,  1.0f, 0.0f}
+        float3{ -1.0f, -1.0f, 0.0f },
+        float3{ 1.0f, -1.0f, 0.0f },
+        float3{ 0.0f, 1.0f, 0.0f }
     };
 
     std::vector<float3> normals = {
-        float3{0.0f, 0.0f, 1.0f},
-        float3{0.0f, 0.0f, 1.0f},
-        float3{0.0f, 0.0f, 1.0f}
+        float3{ 0.0f, 0.0f, 1.0f },
+        float3{ 0.0f, 0.0f, 1.0f },
+        float3{ 0.0f, 0.0f, 1.0f }
     };
 
     std::vector<float2> uvs = {
-        float2{0.0f, 0.0f},
-        float2{1.0f, 0.0f},
-        float2{0.5f, 1.0f}
+        float2{ 0.0f, 0.0f },
+        float2{ 1.0f, 0.0f },
+        float2{ 0.5f, 1.0f }
     };
 
     auto position_buffer = std::make_shared<VertexBuffer>(m_vulkan.physical_device, m_vulkan.device);
@@ -162,10 +163,10 @@ TEST_F(TestTriangleMesh, CreateWithIndexBuffer)
 {
     // Create vertex data
     std::vector<float3> positions = {
-        float3{-1.0f, -1.0f, 0.0f},
-        float3{ 1.0f, -1.0f, 0.0f},
-        float3{ 1.0f,  1.0f, 0.0f},
-        float3{-1.0f,  1.0f, 0.0f}
+        float3{ -1.0f, -1.0f, 0.0f },
+        float3{ 1.0f, -1.0f, 0.0f },
+        float3{ 1.0f, 1.0f, 0.0f },
+        float3{ -1.0f, 1.0f, 0.0f }
     };
 
     std::vector<uint32_t> indices = {
@@ -201,9 +202,9 @@ TEST_F(TestTriangleMesh, CreateWithInterleavedData)
     };
 
     std::vector<Vertex> vertices = {
-        {float3{-1.0f, -1.0f, 0.0f}, float2{0.0f, 0.0f}},
-        {float3{ 1.0f, -1.0f, 0.0f}, float2{1.0f, 0.0f}},
-        {float3{ 0.0f,  1.0f, 0.0f}, float2{0.5f, 1.0f}}
+        { float3{ -1.0f, -1.0f, 0.0f }, float2{ 0.0f, 0.0f } },
+        { float3{ 1.0f, -1.0f, 0.0f }, float2{ 1.0f, 0.0f } },
+        { float3{ 0.0f, 1.0f, 0.0f }, float2{ 0.5f, 1.0f } }
     };
 
     auto interleaved_buffer = std::make_shared<VertexBuffer>(m_vulkan.physical_device, m_vulkan.device);
@@ -240,7 +241,7 @@ TEST_F(TestTriangleMesh, InvalidMesh)
 
     // Mesh with attribute but no vertex/index count
     auto buffer = std::make_shared<VertexBuffer>(m_vulkan.physical_device, m_vulkan.device);
-    std::vector<float3> positions = {float3{0.0f, 0.0f, 0.0f}};
+    std::vector<float3> positions = { float3{ 0.0f, 0.0f, 0.0f } };
     ASSERT_TRUE(buffer->create(positions));
 
     mesh.setVertexAttribute("inPosition", buffer, 0, VK_FORMAT_R32G32B32_SFLOAT);

@@ -41,7 +41,6 @@ public:
     void setOldSwapchain(VkSwapchainKHR old_swapchain);
 
     VkSwapchainKHR create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANSWAPCHAINFACTORY_H_ */

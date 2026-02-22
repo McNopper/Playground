@@ -6,7 +6,8 @@
 #include "gpu/vulkan/utility/vulkan_query.h"
 
 VulkanDeviceFactory::VulkanDeviceFactory(VkPhysicalDevice physical_device, uint32_t queue_family_index) :
-    m_physical_device{ physical_device }, m_queue_family_index{ queue_family_index }
+    m_physical_device{ physical_device },
+    m_queue_family_index{ queue_family_index }
 {
     addEnabledExtensionName(VK_EXT_DESCRIPTOR_BUFFER_EXTENSION_NAME);
     // VK_KHR_map_memory2 promoted to Vulkan 1.4 core - no longer needed as extension
@@ -18,7 +19,6 @@ VulkanDeviceFactory::VulkanDeviceFactory(VkPhysicalDevice physical_device, uint3
     addEnabledExtensionName(VK_KHR_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME);
     addEnabledExtensionName(VK_KHR_SHADER_CLOCK_EXTENSION_NAME);
     addEnabledExtensionName(VK_KHR_ROBUSTNESS_2_EXTENSION_NAME);
-
 }
 
 const std::vector<const char*>& VulkanDeviceFactory::getEnabledExtensionNames() const

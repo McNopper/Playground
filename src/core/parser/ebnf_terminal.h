@@ -7,7 +7,8 @@
 
 #include "ebnf_base.h"
 
-namespace ebnf {
+namespace ebnf
+{
 
 // Terminal
 
@@ -23,12 +24,12 @@ public:
     Terminal() = delete;
 
     explicit Terminal(char character) :
-        m_character_sequence{character}
+        m_character_sequence{ character }
     {
     }
 
     explicit Terminal(std::string character_sequence) :
-        m_character_sequence{std::move(character_sequence)}
+        m_character_sequence{ std::move(character_sequence) }
     {
     }
 
@@ -52,11 +53,10 @@ public:
 
         executeOnSuccess(m_character_sequence);
 
-        return {.success = true, 
-                .next_position = position + m_character_sequence.size(), 
-                .value = m_character_sequence};
+        return { .success = true,
+                 .next_position = position + m_character_sequence.size(),
+                 .value = m_character_sequence };
     }
-
 };
 
 } // namespace ebnf

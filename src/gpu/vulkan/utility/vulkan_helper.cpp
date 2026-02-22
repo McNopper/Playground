@@ -9,33 +9,33 @@ VkFormat getVulkanFormat(const ImageData& image_data)
         bool use_srgb = !image_data.linear && image_data.color_space == ColorSpace::SRGB;
         switch (image_data.channels)
         {
-        case 1: return use_srgb ? VK_FORMAT_R8_SRGB : VK_FORMAT_R8_UNORM;
-        case 2: return use_srgb ? VK_FORMAT_R8G8_SRGB : VK_FORMAT_R8G8_UNORM;
-        case 3: return use_srgb ? VK_FORMAT_R8G8B8_SRGB : VK_FORMAT_R8G8B8_UNORM;
-        case 4: return use_srgb ? VK_FORMAT_R8G8B8A8_SRGB : VK_FORMAT_R8G8B8A8_UNORM;
-        default: break;
+            case 1: return use_srgb ? VK_FORMAT_R8_SRGB : VK_FORMAT_R8_UNORM;
+            case 2: return use_srgb ? VK_FORMAT_R8G8_SRGB : VK_FORMAT_R8G8_UNORM;
+            case 3: return use_srgb ? VK_FORMAT_R8G8B8_SRGB : VK_FORMAT_R8G8B8_UNORM;
+            case 4: return use_srgb ? VK_FORMAT_R8G8B8A8_SRGB : VK_FORMAT_R8G8B8A8_UNORM;
+            default: break;
         }
     }
     else if (image_data.channel_format == ChannelFormat::SHALF)
     {
         switch (image_data.channels)
         {
-        case 1: return VK_FORMAT_R16_SFLOAT;
-        case 2: return VK_FORMAT_R16G16_SFLOAT;
-        case 3: return VK_FORMAT_R16G16B16_SFLOAT;
-        case 4: return VK_FORMAT_R16G16B16A16_SFLOAT;
-        default: break;
+            case 1: return VK_FORMAT_R16_SFLOAT;
+            case 2: return VK_FORMAT_R16G16_SFLOAT;
+            case 3: return VK_FORMAT_R16G16B16_SFLOAT;
+            case 4: return VK_FORMAT_R16G16B16A16_SFLOAT;
+            default: break;
         }
     }
     else if (image_data.channel_format == ChannelFormat::SFLOAT)
     {
         switch (image_data.channels)
         {
-        case 1: return VK_FORMAT_R32_SFLOAT;
-        case 2: return VK_FORMAT_R32G32_SFLOAT;
-        case 3: return VK_FORMAT_R32G32B32_SFLOAT;
-        case 4: return VK_FORMAT_R32G32B32A32_SFLOAT;
-        default: break;
+            case 1: return VK_FORMAT_R32_SFLOAT;
+            case 2: return VK_FORMAT_R32G32_SFLOAT;
+            case 3: return VK_FORMAT_R32G32B32_SFLOAT;
+            case 4: return VK_FORMAT_R32G32B32A32_SFLOAT;
+            default: break;
         }
     }
 
@@ -194,7 +194,7 @@ bool isFormatSRGB(VkFormat format)
         case VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG:
         case VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG:
         case VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG:
-        return true;
+            return true;
 
         default:
             break;

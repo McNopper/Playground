@@ -23,7 +23,6 @@ public:
     bool init();
 
     void terminate();
-
 };
 
 #endif /* GPU_VULKAN_UTILITY_VULKANSETUP_H_ */

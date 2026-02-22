@@ -9,7 +9,6 @@ class APoint : public AGeometry
 public:
 
     virtual ~APoint() = default;
-
 };
 
 #endif /* RENDERER_GEOMETRY_POINT_APOINT_H_ */

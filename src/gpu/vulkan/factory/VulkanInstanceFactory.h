@@ -33,7 +33,6 @@ public:
     bool addEnabledExtensionName(const char* name);
 
     VkInstance create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANINSTANCEFACTORY_H_ */

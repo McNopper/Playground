@@ -6,7 +6,9 @@
 #include "core/core.h"
 
 Application::Application(VkPhysicalDevice physical_device, VkDevice device, uint32_t queue_family_index) :
-    m_physical_device{ physical_device }, m_device{ device }, m_queue_family_index{ queue_family_index },
+    m_physical_device{ physical_device },
+    m_device{ device },
+    m_queue_family_index{ queue_family_index },
     m_output_storage_buffer(physical_device, device, false, true),
     m_descriptor_buffer(physical_device, device)
 {
@@ -46,14 +48,11 @@ bool Application::init()
     VkDescriptorSetLayoutCreateFlags layout_flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT;
     VulkanDescriptorSetLayoutFactory descriptor_set_layout_factory{ m_device, layout_flags };
     descriptor_set_layout_factory.addDescriptorSetLayoutBinding(
-        {
-            0u,
-            VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-            1u,
-            VK_SHADER_STAGE_COMPUTE_BIT,
-            nullptr
-        }
-    );
+        { 0u,
+          VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+          1u,
+          VK_SHADER_STAGE_COMPUTE_BIT,
+          nullptr });
 
     VkDescriptorSetLayout descriptor_set_layout = descriptor_set_layout_factory.create();
     if (descriptor_set_layout == VK_NULL_HANDLE)
@@ -92,7 +91,7 @@ bool Application::init()
     pipeline_shader_stage_create_info.module = shader_module;
     pipeline_shader_stage_create_info.pName = "main";
 
-    VulkanComputePipelineFactory compute_pipeline_factory{m_device, VK_PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT, pipeline_shader_stage_create_info, m_pipeline_layout};
+    VulkanComputePipelineFactory compute_pipeline_factory{ m_device, VK_PIPELINE_CREATE_DESCRIPTOR_BUFFER_BIT_EXT, pipeline_shader_stage_create_info, m_pipeline_layout };
     m_pipeline = compute_pipeline_factory.create();
 
     vkDestroyShaderModule(m_device, shader_module, nullptr);
@@ -174,7 +173,7 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
     buffer_copy.dstOffset = 0u;
     buffer_copy.size = c_buffer_size;
 
-    VkCopyBufferInfo2 copy_buffer_info{ VK_STRUCTURE_TYPE_COPY_BUFFER_INFO_2};
+    VkCopyBufferInfo2 copy_buffer_info{ VK_STRUCTURE_TYPE_COPY_BUFFER_INFO_2 };
     copy_buffer_info.srcBuffer = m_output_storage_buffer.getBuffer();
     copy_buffer_info.dstBuffer = staging_buffer->buffer;
     copy_buffer_info.regionCount = 1u;

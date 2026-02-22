@@ -13,7 +13,8 @@ float& float2::operator[](std::uint32_t index)
 }
 
 float2::float2(float scalar) :
-    x{ scalar }, y{ scalar }
+    x{ scalar },
+    y{ scalar }
 {
 }
 
@@ -52,7 +53,9 @@ float& float3::operator[](std::uint32_t index)
 }
 
 float3::float3(float scalar) :
-    x{ scalar }, y{ scalar }, z{ scalar }
+    x{ scalar },
+    y{ scalar },
+    z{ scalar }
 {
 }
 
@@ -102,7 +105,10 @@ float& float4::operator[](std::uint32_t index)
 }
 
 float4::float4(float scalar) :
-    x{ scalar }, y{ scalar }, z{ scalar }, w{ scalar }
+    x{ scalar },
+    y{ scalar },
+    z{ scalar },
+    w{ scalar }
 {
 }
 
@@ -173,7 +179,11 @@ float& float5::operator[](std::uint32_t index)
 }
 
 float5::float5(float scalar) :
-    x{ scalar }, y{ scalar }, z{ scalar }, w{ scalar }, v{ scalar }
+    x{ scalar },
+    y{ scalar },
+    z{ scalar },
+    w{ scalar },
+    v{ scalar }
 {
 }
 
@@ -233,7 +243,12 @@ float& float6::operator[](std::uint32_t index)
 }
 
 float6::float6(float scalar) :
-    x{ scalar }, y{ scalar }, z{ scalar }, w{ scalar }, v{ scalar }, u{ scalar }
+    x{ scalar },
+    y{ scalar },
+    z{ scalar },
+    w{ scalar },
+    v{ scalar },
+    u{ scalar }
 {
 }
 
@@ -288,7 +303,13 @@ float& float7::operator[](std::uint32_t index)
 }
 
 float7::float7(float scalar) :
-    x{ scalar }, y{ scalar }, z{ scalar }, w{ scalar }, v{ scalar }, u{ scalar }, t{ scalar }
+    x{ scalar },
+    y{ scalar },
+    z{ scalar },
+    w{ scalar },
+    v{ scalar },
+    u{ scalar },
+    t{ scalar }
 {
 }
 

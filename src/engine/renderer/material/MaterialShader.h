@@ -96,7 +96,6 @@ public:
     const std::vector<SpirvData>& getSpirvShaders() const;
 
     VkPipelineLayout getPipelineLayout() const;
-
 };
 
 #endif /* ENGINE_RENDERER_MATERIAL_MATERIALSHADER_H_ */

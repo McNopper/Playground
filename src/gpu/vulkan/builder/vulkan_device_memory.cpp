@@ -1,15 +1,13 @@
 #include "vulkan_device_memory.h"
 
 #include "core/utility/generator.h"
-
+#include "gpu/vulkan/factory/VulkanDeviceMemoryFactory.h"
 #include "gpu/vulkan/utility/VulkanFilter.h"
 #include "gpu/vulkan/utility/vulkan_query.h"
 
-#include "gpu/vulkan/factory/VulkanDeviceMemoryFactory.h"
-
 VkDeviceMemory buildImageDeviceMemory(VkPhysicalDevice physical_device, VkDevice device, VkImage image, VkMemoryPropertyFlags memory_property_flags)
 {
-    VkDeviceMemory device_memory{VK_NULL_HANDLE};
+    VkDeviceMemory device_memory{ VK_NULL_HANDLE };
 
     auto image_memory_requirements = gatherDeviceImageMemoryRequirements2(device, image);
 

@@ -5,7 +5,10 @@
 #include <vector>
 
 Application::Application(VkPhysicalDevice physical_device, VkDevice device, uint32_t queue_family_index, IVulkanWindow& vulkan_window) :
-    m_physical_device{ physical_device }, m_device{ device }, m_queue_family_index{ queue_family_index }, m_vulkan_window{ vulkan_window },
+    m_physical_device{ physical_device },
+    m_device{ device },
+    m_queue_family_index{ queue_family_index },
+    m_vulkan_window{ vulkan_window },
     m_vertex_buffer(physical_device, device),
     m_index_buffer(physical_device, device),
     m_uniform_view_buffer(physical_device, device),
@@ -23,8 +26,8 @@ bool Application::init()
 
     struct VertexInputData
     {
-        float3    position;
-        float2    texCoord;
+        float3 position;
+        float2 texCoord;
     };
 
     // Quad with two triangles using 4 vertices
@@ -33,17 +36,17 @@ bool Application::init()
     // Positions in Vulkan clip space: Y=-1 is top, Y=+1 is bottom
 
     std::vector<VertexInputData> vertex_buffer_data{
-        {{ -0.5f, +0.5f, 0.0f }, { 0.0f, 1.0f }},  // Bottom-left (Y=+0.5 → bottom)
-        {{ +0.5f, +0.5f, 0.0f }, { 1.0f, 1.0f }},  // Bottom-right
-        {{ +0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f }},  // Top-right (Y=-0.5 → top)
-        {{ -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f }}   // Top-left
+        { { -0.5f, +0.5f, 0.0f }, { 0.0f, 1.0f } }, // Bottom-left (Y=+0.5 → bottom)
+        { { +0.5f, +0.5f, 0.0f }, { 1.0f, 1.0f } }, // Bottom-right
+        { { +0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f } }, // Top-right (Y=-0.5 → top)
+        { { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f } }  // Top-left
     };
 
     // Index buffer for two triangles making a quad
     // Counter-clockwise winding order
     std::vector<uint16_t> index_buffer_data{
-        0, 1, 2,  // First triangle
-        0, 2, 3   // Second triangle
+        0, 1, 2, // First triangle
+        0, 2, 3  // Second triangle
     };
 
     // Create vertex buffer using template method
@@ -67,7 +70,7 @@ bool Application::init()
 
     // Create UniformBlocks from shader reflection
     VulkanSpirvQuery spirv_query{ shaders };
-    
+
     m_uniform_view_block = std::make_shared<UniformBlock>(spirv_query, "UniformViewData");
     m_uniform_model_block = std::make_shared<UniformBlock>(spirv_query, "UniformModelData");
 
@@ -147,7 +150,7 @@ bool Application::init()
     // Set 0: 2 uniform buffers (bindings 0, 1)
     m_descriptor_set0.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
     m_descriptor_set0.addBinding(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
-    
+
     if (!m_descriptor_set0.create())
     {
         return false;
@@ -177,7 +180,7 @@ bool Application::init()
     // Set 1: Separated texture and sampler (binding 0 = texture, binding 1 = sampler)
     m_descriptor_set1.addBinding(0, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE);
     m_descriptor_set1.addBinding(1, VK_DESCRIPTOR_TYPE_SAMPLER);
-    
+
     if (!m_descriptor_set1.create())
     {
         return false;
@@ -210,12 +213,12 @@ bool Application::init()
     //
 
     VulkanPipelineLayoutFactory pipeline_layout_factory{ m_device, 0u };
-    
+
     VkDescriptorSetLayoutCreateFlags layout_flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT;
-    
+
     // Create descriptor set layout 0 for uniform buffers (bindings 0, 1)
     VulkanDescriptorSetLayoutFactory descriptor_set_layout_factory_0{ m_device, layout_flags };
-    
+
     VkDescriptorSetLayoutBinding uniform_view_binding{};
     uniform_view_binding.binding = 0;
     uniform_view_binding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -223,7 +226,7 @@ bool Application::init()
     uniform_view_binding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
     uniform_view_binding.pImmutableSamplers = nullptr;
     descriptor_set_layout_factory_0.addDescriptorSetLayoutBinding(uniform_view_binding);
-    
+
     VkDescriptorSetLayoutBinding uniform_model_binding{};
     uniform_model_binding.binding = 1;
     uniform_model_binding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -231,16 +234,16 @@ bool Application::init()
     uniform_model_binding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
     uniform_model_binding.pImmutableSamplers = nullptr;
     descriptor_set_layout_factory_0.addDescriptorSetLayoutBinding(uniform_model_binding);
-    
+
     VkDescriptorSetLayout descriptor_set_layout_0 = descriptor_set_layout_factory_0.create();
     if (descriptor_set_layout_0 == VK_NULL_HANDLE)
     {
         return false;
     }
-    
+
     // Create descriptor set layout 1 for separated texture and sampler
     VulkanDescriptorSetLayoutFactory descriptor_set_layout_factory_1{ m_device, layout_flags };
-    
+
     // Binding 0: Sampled image (texture)
     VkDescriptorSetLayoutBinding texture_binding{};
     texture_binding.binding = 0;
@@ -249,7 +252,7 @@ bool Application::init()
     texture_binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
     texture_binding.pImmutableSamplers = nullptr;
     descriptor_set_layout_factory_1.addDescriptorSetLayoutBinding(texture_binding);
-    
+
     // Binding 1: Sampler
     VkDescriptorSetLayoutBinding sampler_binding{};
     sampler_binding.binding = 1;
@@ -258,7 +261,7 @@ bool Application::init()
     sampler_binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
     sampler_binding.pImmutableSamplers = nullptr;
     descriptor_set_layout_factory_1.addDescriptorSetLayoutBinding(sampler_binding);
-    
+
     VkDescriptorSetLayout descriptor_set_layout_1 = descriptor_set_layout_factory_1.create();
     if (descriptor_set_layout_1 == VK_NULL_HANDLE)
     {
@@ -269,11 +272,11 @@ bool Application::init()
     pipeline_layout_factory.addDescriptorSetLayout(descriptor_set_layout_0);
     pipeline_layout_factory.addDescriptorSetLayout(descriptor_set_layout_1);
     m_pipeline_layout = pipeline_layout_factory.create();
-    
+
     // Clean up temporary descriptor set layouts
     vkDestroyDescriptorSetLayout(m_device, descriptor_set_layout_0, nullptr);
     vkDestroyDescriptorSetLayout(m_device, descriptor_set_layout_1, nullptr);
-    
+
     if (m_pipeline_layout == VK_NULL_HANDLE)
     {
         return false;
@@ -333,12 +336,12 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 
     // Bind the descriptor buffers using VK_EXT_descriptor_buffer
     VkDescriptorBufferBindingInfoEXT descriptor_buffer_bindings[2]{};
-    
+
     // Buffer 0: Set 0 (Uniform buffers) - usage flags auto-detected
     descriptor_buffer_bindings[0].sType = VK_STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT;
     descriptor_buffer_bindings[0].address = m_descriptor_set0.getDeviceAddress();
     descriptor_buffer_bindings[0].usage = m_descriptor_set0.getUsageFlags();
-    
+
     // Buffer 1: Set 1 (Combined image sampler) - usage flags auto-detected
     descriptor_buffer_bindings[1].sType = VK_STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT;
     descriptor_buffer_bindings[1].address = m_descriptor_set1.getDeviceAddress();
@@ -350,7 +353,7 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
     uint32_t buffer_index_set0 = 0;
     VkDeviceSize descriptor_offset_set0 = 0;
     vkCmdSetDescriptorBufferOffsetsEXT(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout, 0, 1, &buffer_index_set0, &descriptor_offset_set0);
-    
+
     // Set descriptor buffer offsets for set 1 (buffer index 1, offset 0)
     uint32_t buffer_index_set1 = 1;
     VkDeviceSize descriptor_offset_set1 = 0;

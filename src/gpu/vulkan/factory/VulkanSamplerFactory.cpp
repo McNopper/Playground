@@ -1,7 +1,8 @@
 #include "VulkanSamplerFactory.h"
 
 VulkanSamplerFactory::VulkanSamplerFactory(VkDevice device, VkSamplerCreateFlags flags) :
-    m_device{ device }, m_flags{ flags }
+    m_device{ device },
+    m_flags{ flags }
 {
 }
 

@@ -1,8 +1,8 @@
-#include <gtest/gtest.h>
-#include <cstdint>
-
 #include <cmath>
+#include <cstdint>
 #include <vector>
+
+#include <gtest/gtest.h>
 
 #include "cpu/cpu.h"
 
@@ -12,8 +12,8 @@ TEST(AI, XOR)
     ActivationFunction activation_function{ sigmoid, sigmoidDerivative };
 
     // XOR dataset
-    std::vector<std::vector<float>> inputs = { {0.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 0.0f}, {1.0f, 1.0f} };
-    std::vector<std::vector<float>> targets = { {0.0f}, {1.0f}, {1.0f}, {0.0f} };
+    std::vector<std::vector<float>> inputs = { { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f } };
+    std::vector<std::vector<float>> targets = { { 0.0f }, { 1.0f }, { 1.0f }, { 0.0f } };
 
     // Create perceptron: 2 inputs, use bias
     MultiLayerPerceptron mlp(2u, true);
@@ -35,7 +35,7 @@ TEST(AI, XOR)
             if (error)
             {
                 total_error += *error;
-            }                
+            }
         }
         if (total_error < 0.001f)
         {
@@ -44,7 +44,7 @@ TEST(AI, XOR)
     }
 
     // Validate
-    std::int32_t correct{0};
+    std::int32_t correct{ 0 };
     for (std::size_t i = 0u; i < inputs.size(); i++)
     {
         auto out = mlp.forwardPropagation(inputs[i]);
@@ -55,7 +55,7 @@ TEST(AI, XOR)
         if (predicted == expected)
         {
             correct++;
-        } 
+        }
     }
 
     EXPECT_EQ(correct, static_cast<std::int32_t>(inputs.size()));

@@ -1,7 +1,8 @@
 #include "VulkanShaderModuleFactory.h"
 
 VulkanShaderModuleFactory::VulkanShaderModuleFactory(VkDevice device, const std::vector<uint32_t>& code) :
-    m_device{ device }, m_code{ code }
+    m_device{ device },
+    m_code{ code }
 {
 }
 

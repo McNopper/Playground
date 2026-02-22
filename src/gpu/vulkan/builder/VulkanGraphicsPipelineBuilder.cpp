@@ -2,14 +2,14 @@
 
 #include <optional>
 
-
 #include "gpu/vulkan/factory/VulkanShaderModuleFactory.h"
-
-#include "gpu/vulkan/spirv/vulkan_spirv.h"
 #include "gpu/vulkan/spirv/VulkanSpirvQuery.h"
+#include "gpu/vulkan/spirv/vulkan_spirv.h"
 
 VulkanGraphicsPipelineBuilder::VulkanGraphicsPipelineBuilder(VkDevice device, VkPipelineCreateFlags pipeline_create_flags, VkPipelineLayout layout) :
-    m_device{ device }, m_pipeline_create_flags{ pipeline_create_flags }, m_layout{ layout }
+    m_device{ device },
+    m_pipeline_create_flags{ pipeline_create_flags },
+    m_layout{ layout }
 {
 }
 

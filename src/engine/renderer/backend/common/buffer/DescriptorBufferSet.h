@@ -1,15 +1,15 @@
 #ifndef RENDERER_BACKEND_COMMON_BUFFER_DESCRIPTORBUFFERSET_H_
 #define RENDERER_BACKEND_COMMON_BUFFER_DESCRIPTORBUFFERSET_H_
 
-#include <vector>
 #include <map>
+#include <vector>
 
 #include <volk.h>
 
 #include "GpuBuffer.h"
 
 // DescriptorBufferSet - Enhanced descriptor buffer supporting multiple descriptor types
-// 
+//
 // Unlike DescriptorBuffer which only supports one type, this class allows multiple
 // descriptor types in a single buffer, managing proper alignment and offsets.
 //
@@ -29,7 +29,8 @@
 //   desc_set.writeBufferDescriptor(0, buffer_info);
 //   desc_set.writeImageDescriptor(2, image_info);
 
-struct DescriptorBinding {
+struct DescriptorBinding
+{
     uint32_t binding{ 0u };
     VkDescriptorType type{ VK_DESCRIPTOR_TYPE_MAX_ENUM };
     VkDeviceSize offset{ 0u };
@@ -45,7 +46,7 @@ private:
     VkDeviceAddress m_device_address{ 0u };
     VkDeviceSize m_alignment{ 0u };
     VkBufferUsageFlags m_usage{ 0u };
-    
+
     bool queryDescriptorSizes();
     VkDeviceSize getDescriptorSize(VkDescriptorType type) const;
     VkDeviceSize alignOffset(VkDeviceSize offset) const;
@@ -74,10 +75,9 @@ public:
 
     // Get offset for a specific binding (for vkCmdSetDescriptorBufferOffsetsEXT)
     VkDeviceSize getBindingOffset(uint32_t binding) const;
-    
+
     VkDeviceAddress getDeviceAddress() const;
     VkBufferUsageFlags getUsageFlags() const;
-
 };
 
 #endif /* RENDERER_BACKEND_COMMON_BUFFER_DESCRIPTORBUFFERSET_H_ */

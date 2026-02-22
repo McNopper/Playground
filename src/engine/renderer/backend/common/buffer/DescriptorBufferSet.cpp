@@ -66,7 +66,7 @@ VkDeviceSize DescriptorBufferSet::alignOffset(VkDeviceSize offset) const
     {
         return offset;
     }
-    
+
     return ((offset + m_alignment - 1) / m_alignment) * m_alignment;
 }
 
@@ -80,7 +80,7 @@ bool DescriptorBufferSet::addBinding(uint32_t binding, VkDescriptorType type)
     DescriptorBinding desc_binding{};
     desc_binding.binding = binding;
     desc_binding.type = type;
-    
+
     m_bindings[binding] = desc_binding;
     return true;
 }
@@ -101,7 +101,7 @@ bool DescriptorBufferSet::create()
     VkDeviceSize total_size = 0u;
     for (auto& [binding_index, binding] : m_bindings)
     {
-        binding.offset = total_size;  // No alignment between descriptors
+        binding.offset = total_size; // No alignment between descriptors
         total_size = binding.offset + binding.size;
     }
 
@@ -142,7 +142,7 @@ bool DescriptorBufferSet::create()
         usage |= VK_BUFFER_USAGE_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT;
     }
 
-    m_usage = usage;  // Store usage flags
+    m_usage = usage; // Store usage flags
 
     if (!GpuBuffer::create(total_size, usage))
     {

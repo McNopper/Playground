@@ -5,7 +5,10 @@
 #include <vector>
 
 Application::Application(VkPhysicalDevice physical_device, VkDevice device, uint32_t queue_family_index, IVulkanWindow& vulkan_window) :
-    m_physical_device{ physical_device }, m_device{ device }, m_queue_family_index{ queue_family_index }, m_vulkan_window{ vulkan_window },
+    m_physical_device{ physical_device },
+    m_device{ device },
+    m_queue_family_index{ queue_family_index },
+    m_vulkan_window{ vulkan_window },
     m_vertex_buffer(physical_device, device),
     m_uniform_view_buffer(physical_device, device),
     m_uniform_model_buffer(physical_device, device),
@@ -19,16 +22,16 @@ bool Application::init()
 
     struct VertexInputData
     {
-        float3    position;
-        float4    color;
+        float3 position;
+        float4 color;
     };
 
     // Counter-clockwise triangle using normalized device coordinates having a red, green and blue edge.
 
     std::vector<VertexInputData> vertex_buffer_data{
-        {{ -0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }},
-        {{ -0.5f, +0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }},
-        {{ +0.5f, +0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }}
+        { { -0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
+        { { -0.5f, +0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+        { { +0.5f, +0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
     };
 
     // Create vertex buffer using template method
@@ -52,7 +55,7 @@ bool Application::init()
 
     // Create UniformBlocks from shader reflection
     VulkanSpirvQuery spirv_query{ shaders };
-    
+
     m_uniform_view_block = std::make_shared<UniformBlock>(spirv_query, "UniformViewData");
     m_uniform_model_block = std::make_shared<UniformBlock>(spirv_query, "UniformModelData");
 
@@ -104,7 +107,7 @@ bool Application::init()
     //
 
     VulkanPipelineLayoutFactory pipeline_layout_factory{ m_device, 0u };
-    
+
     // Need to create a descriptor set layout for the pipeline layout
     auto descriptor_set_layout_bindings = spirv_query.gatherDescriptorSetLayoutBindings();
 
@@ -122,10 +125,10 @@ bool Application::init()
 
     pipeline_layout_factory.addDescriptorSetLayout(descriptor_set_layout);
     m_pipeline_layout = pipeline_layout_factory.create();
-    
+
     // Clean up temporary descriptor set layout
     vkDestroyDescriptorSetLayout(m_device, descriptor_set_layout, nullptr);
-    
+
     if (m_pipeline_layout == VK_NULL_HANDLE)
     {
         return false;

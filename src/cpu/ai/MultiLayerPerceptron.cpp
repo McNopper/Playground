@@ -4,11 +4,12 @@
 #include <memory>
 
 #include "core/math/RandomGenerator.h"
-
 #include "loss_functions.h"
 
 MultiLayerPerceptron::MultiLayerPerceptron(std::size_t number_inputs, bool use_bias, float mean) :
-    m_number_inputs{ number_inputs }, m_use_bias{ use_bias }, m_mean{ mean }
+    m_number_inputs{ number_inputs },
+    m_use_bias{ use_bias },
+    m_mean{ mean }
 {
 }
 
@@ -87,7 +88,7 @@ bool MultiLayerPerceptron::reset(InitializationMethod initialization_method, flo
 
             if (m_use_bias)
             {
-                neuron.bias    = bias_value;
+                neuron.bias = bias_value;
             }
 
             // Change seed every loop.
@@ -196,7 +197,7 @@ std::optional<float> MultiLayerPerceptron::backwardPropagation(const std::vector
             }
 
             neuron.delta *= layer.af.derivative(neuron.output);
-            
+
             current_neurons_deltas[neuron_index] = neuron.delta;
         }
 
@@ -209,7 +210,7 @@ std::optional<float> MultiLayerPerceptron::backwardPropagation(const std::vector
     for (auto& layer : m_layers)
     {
         std::vector<float> current_outputs(layer.neurons.size());
-        
+
         for (std::size_t neuron_index = 0u; neuron_index < layer.neurons.size(); neuron_index++)
         {
             auto& neuron{ layer.neurons[neuron_index] };

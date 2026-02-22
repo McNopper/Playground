@@ -1,10 +1,11 @@
 #include "TriangleMesh.h"
 
-#include "engine/renderer/backend/common/buffer/VertexBuffer.h"
 #include "engine/renderer/backend/common/buffer/IndexBuffer.h"
+#include "engine/renderer/backend/common/buffer/VertexBuffer.h"
 
 TriangleMesh::TriangleMesh(VkPhysicalDevice physical_device, VkDevice device) :
-    m_physical_device{ physical_device }, m_device{ device }
+    m_physical_device{ physical_device },
+    m_device{ device }
 {
 }
 
@@ -115,8 +116,7 @@ void TriangleMesh::bind(VkCommandBuffer command_buffer) const
             0u, // First binding
             static_cast<uint32_t>(buffers.size()),
             buffers.data(),
-            offsets.data()
-        );
+            offsets.data());
     }
 
     // Bind index buffer if present
@@ -126,8 +126,7 @@ void TriangleMesh::bind(VkCommandBuffer command_buffer) const
             command_buffer,
             m_index_buffer->getBuffer(),
             0u,
-            m_index_type
-        );
+            m_index_type);
     }
 }
 
@@ -182,4 +181,3 @@ bool TriangleMesh::isValid() const
 
     return true;
 }
-

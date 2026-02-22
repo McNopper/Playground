@@ -19,7 +19,6 @@ public:
     virtual ~ARandomGenerator() = default;
 
     virtual float generate() = 0;
-
 };
 
 class NoRandomGenerator : public ARandomGenerator
@@ -38,7 +37,6 @@ public:
     NoRandomGenerator(float value, std::uint32_t seed);
 
     float generate() override;
-
 };
 
 class UniformRandomGenerator : public ARandomGenerator
@@ -59,7 +57,6 @@ public:
     UniformRandomGenerator(float min_value, float max_value, std::uint32_t seed);
 
     float generate() override;
-
 };
 
 class NormalRandomGenerator : public ARandomGenerator
@@ -80,7 +77,6 @@ public:
     NormalRandomGenerator(float mean, float std_dev, std::uint32_t seed);
 
     float generate() override;
-
 };
 
 #endif /* CORE_MATH_RANDOMGENERATOR_H_ */

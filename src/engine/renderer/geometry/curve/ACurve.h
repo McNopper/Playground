@@ -9,7 +9,6 @@ class ACurve : public AGeometry
 public:
 
     virtual ~ACurve() = default;
-
 };
 
 #endif /* RENDERER_GEOMETRY_CURVE_ACURVE_H_ */

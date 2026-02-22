@@ -2,14 +2,14 @@
 
 #include <memory>
 
-#include "engine/renderer/backend/common/image/Texture2D.h"
 #include "engine/renderer/backend/common/image/Sampler.h"
+#include "engine/renderer/backend/common/image/Texture2D.h"
 
 Texture2DSampler::Texture2DSampler(
     const std::shared_ptr<const Texture2D>& texture,
-    const std::shared_ptr<const Sampler>& sampler
-) :
-    m_texture{ texture }, m_sampler{ sampler }
+    const std::shared_ptr<const Sampler>& sampler) :
+    m_texture{ texture },
+    m_sampler{ sampler }
 {
 }
 
@@ -39,7 +39,7 @@ std::unique_ptr<Sampler> Texture2DSampler::createLinearSampler(VkDevice device)
     sampler->setMagFilter(VK_FILTER_LINEAR);
     sampler->setMinFilter(VK_FILTER_LINEAR);
     sampler->setAddressMode(VK_SAMPLER_ADDRESS_MODE_REPEAT);
-    
+
     if (!sampler->create())
     {
         return nullptr;
@@ -54,7 +54,7 @@ std::unique_ptr<Sampler> Texture2DSampler::createNearestSampler(VkDevice device)
     sampler->setMagFilter(VK_FILTER_NEAREST);
     sampler->setMinFilter(VK_FILTER_NEAREST);
     sampler->setAddressMode(VK_SAMPLER_ADDRESS_MODE_REPEAT);
-    
+
     if (!sampler->create())
     {
         return nullptr;
@@ -69,7 +69,7 @@ std::unique_ptr<Sampler> Texture2DSampler::createLinearClampSampler(VkDevice dev
     sampler->setMagFilter(VK_FILTER_LINEAR);
     sampler->setMinFilter(VK_FILTER_LINEAR);
     sampler->setAddressMode(VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE);
-    
+
     if (!sampler->create())
     {
         return nullptr;

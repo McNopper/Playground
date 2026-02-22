@@ -3,7 +3,8 @@
 #include "gpu/gpu.h"
 
 Texture::Texture(VkPhysicalDevice physical_device, VkDevice device) :
-    m_physical_device{ physical_device }, m_device{ device }
+    m_physical_device{ physical_device },
+    m_device{ device }
 {
 }
 
@@ -133,8 +134,8 @@ uint32_t Texture::getArrayLayers() const
 
 bool Texture::isValid() const
 {
-    return m_image_resource.image != VK_NULL_HANDLE && 
-           m_image_resource.device_memory != VK_NULL_HANDLE && 
+    return m_image_resource.image != VK_NULL_HANDLE &&
+           m_image_resource.device_memory != VK_NULL_HANDLE &&
            m_image_resource.image_view != VK_NULL_HANDLE;
 }
 

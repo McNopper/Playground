@@ -21,7 +21,6 @@ public:
     PhysicalDeviceTypePriorityFilter(std::initializer_list<VkPhysicalDeviceType> physical_device_types);
 
     void algorithm() override;
-
 };
 
 //
@@ -38,7 +37,6 @@ public:
     explicit PhysicalDeviceTypeFilter(VkPhysicalDeviceType physical_device_type);
 
     void algorithm() override;
-
 };
 
 //
@@ -55,7 +53,6 @@ public:
     PhysicalDeviceExtensionNameFilter(std::initializer_list<const char*> extension_names);
 
     void algorithm() override;
-
 };
 
 //
@@ -72,9 +69,8 @@ private:
 public:
 
     QueueFamilyIndexFlagsFilter(VkQueueFlags queue_flags, const std::vector<VkQueueFamilyProperties2>& queue_family_properties2);
-    
-    void algorithm() override;
 
+    void algorithm() override;
 };
 
 class QueueFamilyIndexSurfaceFilter : public Filter<uint32_t>
@@ -91,7 +87,6 @@ public:
     QueueFamilyIndexSurfaceFilter(VkPhysicalDevice physical_device, VkSurfaceKHR surface);
 
     void algorithm() override;
-
 };
 
 class MemoryTypeIndexBitsFilter : public Filter<uint32_t>
@@ -106,7 +101,6 @@ public:
     explicit MemoryTypeIndexBitsFilter(uint32_t memory_type_bits);
 
     void algorithm() override;
-
 };
 
 class MemoryTypeIndexPropertyFlagsFilter : public Filter<uint32_t>
@@ -123,9 +117,7 @@ public:
     MemoryTypeIndexPropertyFlagsFilter(VkMemoryPropertyFlags memory_property_flags, VkPhysicalDeviceMemoryProperties physical_device_memory_properties);
 
     void algorithm() override;
-
 };
-
 
 class FormatImageFilter : public Filter<VkFormat>
 {
@@ -143,7 +135,6 @@ public:
     FormatImageFilter(VkPhysicalDevice physical_device, VkImageTiling image_tiling, VkFormatFeatureFlags format_feature_flags);
 
     void algorithm() override;
-
 };
 
 //
@@ -160,7 +151,6 @@ public:
     explicit SurfaceFormatFilter(VkSurfaceFormatKHR surface_format);
 
     void algorithm() override;
-
 };
 
 class PresentModeFilter : public Filter<VkPresentModeKHR>
@@ -175,7 +165,6 @@ public:
     explicit PresentModeFilter(VkPresentModeKHR present_mode);
 
     void algorithm() override;
-
 };
 
 #endif /* GPU_VULKAN_UTILITY_VULKANFILTER_H_ */

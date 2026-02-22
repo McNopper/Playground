@@ -8,7 +8,7 @@ std::string beforeString(const std::string& source, const std::string& token)
     {
         return source.substr(0, position);
     }
-    
+
     return source;
 }
 
@@ -20,13 +20,13 @@ std::string afterString(const std::string& source, const std::string& token)
     {
         return source.substr(position + token.size());
     }
-    
+
     return source;
 }
 
 std::string replaceAll(const std::string& source, const std::string& from, const std::string& to)
 {
-    std::string result{source};
+    std::string result{ source };
 
     std::size_t start_pos = result.find(from);
     while (start_pos != std::string::npos)

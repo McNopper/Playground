@@ -1,8 +1,8 @@
 #ifndef CORE_MATH_MATRIXCAMERA_H_
 #define CORE_MATH_MATRIXCAMERA_H_
 
-#include "vector.h"
 #include "matrix.h"
+#include "vector.h"
 
 float4x4 lookAt(const float3& eye, const float3& center, const float3& up);
 

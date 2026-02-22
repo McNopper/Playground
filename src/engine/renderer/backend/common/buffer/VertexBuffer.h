@@ -28,7 +28,6 @@ public:
 
     template<typename T>
     bool create(const std::vector<T>& data);
-
 };
 
 template<typename T>

@@ -1,7 +1,8 @@
 #include "VulkanSemaphoreFactory.h"
 
 VulkanSemaphoreFactory::VulkanSemaphoreFactory(VkDevice device, VkSemaphoreCreateFlags semaphore_create_flags) :
-    m_device{ device }, m_semaphore_create_flags{ semaphore_create_flags }
+    m_device{ device },
+    m_semaphore_create_flags{ semaphore_create_flags }
 {
 }
 

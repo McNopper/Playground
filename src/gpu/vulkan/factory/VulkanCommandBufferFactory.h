@@ -23,7 +23,6 @@ public:
     VulkanCommandBufferFactory(VkDevice device, VkCommandPool command_pool, VkCommandBufferLevel command_buffer_level, uint32_t command_buffer_count);
 
     std::vector<VkCommandBuffer> create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANCOMMANDBUFFERFACTORY_H_ */

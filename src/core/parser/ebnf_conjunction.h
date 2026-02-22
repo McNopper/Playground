@@ -7,7 +7,8 @@
 
 #include "ebnf_base.h"
 
-namespace ebnf {
+namespace ebnf
+{
 
 // Sequence operations
 
@@ -39,7 +40,6 @@ public:
 
         return {};
     }
-
 };
 
 class Concatenation : public ASequenceSymbol
@@ -75,11 +75,10 @@ public:
 
         executeOnSuccess(accumulated_value);
 
-        return {.success = true, 
-                .next_position = current_position, 
-                .value = std::move(accumulated_value)};
+        return { .success = true,
+                 .next_position = current_position,
+                 .value = std::move(accumulated_value) };
     }
-
 };
 
 } // namespace ebnf

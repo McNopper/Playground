@@ -1,7 +1,8 @@
 #include "VulkanFrame.h"
 
 VulkanFrame::VulkanFrame(VkImageView color_image_view, const VkRect2D& render_area) :
-    m_color_image_view{ color_image_view }, m_render_area{ render_area }
+    m_color_image_view{ color_image_view },
+    m_render_area{ render_area }
 {
 }
 

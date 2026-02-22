@@ -24,7 +24,6 @@ public:
     void reset();
 
     double tick();
-
 };
 
 #endif /* CORE_UTILITY_DELTATIME_H_ */

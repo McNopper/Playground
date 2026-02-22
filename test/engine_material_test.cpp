@@ -1,14 +1,16 @@
-#include <gtest/gtest.h>
-
 #include <algorithm>
 #include <iostream>
+
+#include <gtest/gtest.h>
 
 #include "engine/engine.h"
 #include "gpu/gpu.h"
 
-namespace {
+namespace
+{
 
-struct VulkanHandles {
+struct VulkanHandles
+{
     VkInstance instance{ VK_NULL_HANDLE };
     VkPhysicalDevice physical_device{ VK_NULL_HANDLE };
     std::uint32_t queue_family_index{ 0u };
@@ -38,7 +40,7 @@ bool initVulkan(VulkanHandles& handles)
     std::vector<std::uint32_t> queue_family_indices(queue_family_properties.size());
     std::generate(queue_family_indices.begin(), queue_family_indices.end(), [index = 0u]() mutable { return index++; });
 
-    queue_family_indices = QueueFamilyIndexFlagsFilter{VK_QUEUE_GRAPHICS_BIT, queue_family_properties} << queue_family_indices;
+    queue_family_indices = QueueFamilyIndexFlagsFilter{ VK_QUEUE_GRAPHICS_BIT, queue_family_properties } << queue_family_indices;
     if (queue_family_indices.empty())
     {
         return false;
@@ -77,7 +79,7 @@ void terminateVulkan(VulkanHandles& handles)
     }
 }
 
-}
+} // namespace
 
 TEST(TestMaterialShader, BuildTexturedQuad)
 {
@@ -105,7 +107,7 @@ TEST(TestMaterialShader, BuildTexturedQuad)
             EXPECT_FALSE(shader.code.empty());
             std::cout << "  Execution model: " << shader.execution_model << '\n';
             std::cout << "  Code size: " << shader.code.size() << " words\n";
-        }// Verify pipeline layout was created via reflection
+        } // Verify pipeline layout was created via reflection
         VkPipelineLayout pipeline_layout = material.getPipelineLayout();
         ASSERT_NE(pipeline_layout, VK_NULL_HANDLE);
         std::cout << "\n=== MaterialShader Pipeline Layout ===\n";
@@ -181,4 +183,3 @@ TEST(TestMaterialShader, BuildFailsWithInvalidShader)
     terminateVulkan(handles);
     vulkan_setup.terminate();
 }
-

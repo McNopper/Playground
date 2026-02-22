@@ -2,23 +2,25 @@
 
 #include <spirv-reflect/spirv_reflect.h>
 
+#include "engine/renderer/backend/common/buffer/DescriptorBufferSet.h"
+#include "engine/renderer/backend/common/buffer/StorageBuffer.h"
+#include "engine/renderer/backend/common/buffer/UniformBuffer.h"
+#include "engine/renderer/backend/common/image/Sampler.h"
+#include "engine/renderer/backend/common/image/Texture.h"
+#include "engine/renderer/backend/common/image/Texture2D.h"
+#include "engine/renderer/material/Texture2DSampler.h"
 #include "gpu/shader/shader.h"
-#include "gpu/vulkan/factory/VulkanShaderModuleFactory.h"
 #include "gpu/vulkan/factory/VulkanDescriptorSetLayoutFactory.h"
 #include "gpu/vulkan/factory/VulkanPipelineLayoutFactory.h"
+#include "gpu/vulkan/factory/VulkanShaderModuleFactory.h"
 #include "gpu/vulkan/spirv/VulkanSpirvQuery.h"
 #include "gpu/vulkan/spirv/vulkan_spirv.h"
 
-#include "engine/renderer/backend/common/buffer/UniformBuffer.h"
-#include "engine/renderer/backend/common/buffer/StorageBuffer.h"
-#include "engine/renderer/backend/common/buffer/DescriptorBufferSet.h"
-#include "engine/renderer/backend/common/image/Texture.h"
-#include "engine/renderer/backend/common/image/Texture2D.h"
-#include "engine/renderer/backend/common/image/Sampler.h"
-#include "engine/renderer/material/Texture2DSampler.h"
-
 MaterialShader::MaterialShader(VkPhysicalDevice physical_device, VkDevice device, const std::string& shader_filename, const std::string& include_path) :
-    m_physical_device{ physical_device }, m_device{ device }, m_shader_filename{ shader_filename }, m_include_path{ include_path }
+    m_physical_device{ physical_device },
+    m_device{ device },
+    m_shader_filename{ shader_filename },
+    m_include_path{ include_path }
 {
 }
 
@@ -75,7 +77,7 @@ bool MaterialShader::build()
 
     // Use SPIR-V reflection to automatically generate pipeline layout
     // We need to handle multiple descriptor sets (set 0, set 1, etc.)
-    
+
     // Build descriptor info list first to know which sets exist
     if (!buildDescriptorInfos())
     {
@@ -92,11 +94,11 @@ bool MaterialShader::build()
     // Create descriptor set layout for each set
     std::vector<VkDescriptorSetLayout> descriptor_set_layouts{};
     VkDescriptorSetLayoutCreateFlags layout_flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT;
-    
+
     for (const auto& [set_index, descriptors] : descriptors_by_set)
     {
         VulkanDescriptorSetLayoutFactory descriptor_set_layout_factory{ m_device, layout_flags };
-        
+
         for (const auto& info : descriptors)
         {
             // Find the stage flags from SPIR-V reflection
@@ -109,10 +111,9 @@ bool MaterialShader::build()
                     // Check if this descriptor exists in this shader stage
                     SpvReflectShaderModule shader_module{};
                     SpvReflectResult result = spvReflectCreateShaderModule(
-                        spirv_data.code.size() * sizeof(uint32_t), 
-                        spirv_data.code.data(), 
-                        &shader_module
-                    );
+                        spirv_data.code.size() * sizeof(uint32_t),
+                        spirv_data.code.data(),
+                        &shader_module);
                     if (result == SPV_REFLECT_RESULT_SUCCESS)
                     {
                         uint32_t count{ 0u };
@@ -154,7 +155,7 @@ bool MaterialShader::build()
             binding.pImmutableSamplers = nullptr;
             descriptor_set_layout_factory.addDescriptorSetLayoutBinding(binding);
         }
-        
+
         VkDescriptorSetLayout descriptor_set_layout = descriptor_set_layout_factory.create();
         if (descriptor_set_layout == VK_NULL_HANDLE)
         {
@@ -221,10 +222,9 @@ bool MaterialShader::setUniformBuffer(const std::string& name, const std::shared
     {
         SpvReflectShaderModule shader_module{};
         SpvReflectResult result = spvReflectCreateShaderModule(
-            spirv_data.code.size() * sizeof(uint32_t), 
-            spirv_data.code.data(), 
-            &shader_module
-        );
+            spirv_data.code.size() * sizeof(uint32_t),
+            spirv_data.code.data(),
+            &shader_module);
         if (result != SPV_REFLECT_RESULT_SUCCESS)
         {
             continue;
@@ -244,7 +244,7 @@ bool MaterialShader::setUniformBuffer(const std::string& name, const std::shared
                     for (uint32_t j = 0u; j < descriptor_sets[i]->binding_count; j++)
                     {
                         const SpvReflectDescriptorBinding* binding = descriptor_sets[i]->bindings[j];
-                        
+
                         // Check if this is a uniform buffer and name matches
                         if (binding->name && name == binding->name)
                         {
@@ -253,7 +253,7 @@ bool MaterialShader::setUniformBuffer(const std::string& name, const std::shared
                             {
                                 uint32_t set = descriptor_sets[i]->set;
                                 uint32_t binding_index = binding->binding;
-                                m_uniform_buffers[{set, binding_index}] = buffer;
+                                m_uniform_buffers[{ set, binding_index }] = buffer;
 
                                 spvReflectDestroyShaderModule(&shader_module);
                                 return true;
@@ -282,10 +282,9 @@ bool MaterialShader::setStorageBuffer(const std::string& name, const std::shared
     {
         SpvReflectShaderModule shader_module{};
         SpvReflectResult result = spvReflectCreateShaderModule(
-            spirv_data.code.size() * sizeof(uint32_t), 
-            spirv_data.code.data(), 
-            &shader_module
-        );
+            spirv_data.code.size() * sizeof(uint32_t),
+            spirv_data.code.data(),
+            &shader_module);
         if (result != SPV_REFLECT_RESULT_SUCCESS)
         {
             continue;
@@ -305,7 +304,7 @@ bool MaterialShader::setStorageBuffer(const std::string& name, const std::shared
                     for (uint32_t j = 0u; j < descriptor_sets[i]->binding_count; j++)
                     {
                         const SpvReflectDescriptorBinding* binding = descriptor_sets[i]->bindings[j];
-                        
+
                         // Check if this is a storage buffer and name matches
                         if (binding->name && name == binding->name)
                         {
@@ -314,7 +313,7 @@ bool MaterialShader::setStorageBuffer(const std::string& name, const std::shared
                             {
                                 uint32_t set = descriptor_sets[i]->set;
                                 uint32_t binding_index = binding->binding;
-                                m_storage_buffers[{set, binding_index}] = buffer;
+                                m_storage_buffers[{ set, binding_index }] = buffer;
 
                                 spvReflectDestroyShaderModule(&shader_module);
                                 return true;
@@ -343,10 +342,9 @@ bool MaterialShader::setTexture(const std::string& name, const std::shared_ptr<c
     {
         SpvReflectShaderModule shader_module{};
         SpvReflectResult result = spvReflectCreateShaderModule(
-            spirv_data.code.size() * sizeof(uint32_t), 
-            spirv_data.code.data(), 
-            &shader_module
-        );
+            spirv_data.code.size() * sizeof(uint32_t),
+            spirv_data.code.data(),
+            &shader_module);
         if (result != SPV_REFLECT_RESULT_SUCCESS)
         {
             continue;
@@ -366,18 +364,18 @@ bool MaterialShader::setTexture(const std::string& name, const std::shared_ptr<c
                     for (uint32_t j = 0u; j < descriptor_sets[i]->binding_count; j++)
                     {
                         const SpvReflectDescriptorBinding* binding = descriptor_sets[i]->bindings[j];
-                        
+
                         // Check if this is a texture/image and name matches
                         if (binding->name && name == binding->name)
                         {
                             VkDescriptorType desc_type = (VkDescriptorType)binding->descriptor_type;
-                            if (desc_type == VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE || 
+                            if (desc_type == VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE ||
                                 desc_type == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER ||
                                 desc_type == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE)
                             {
                                 uint32_t set = descriptor_sets[i]->set;
                                 uint32_t binding_index = binding->binding;
-                                m_textures[{set, binding_index}] = texture;
+                                m_textures[{ set, binding_index }] = texture;
 
                                 spvReflectDestroyShaderModule(&shader_module);
                                 return true;
@@ -406,10 +404,9 @@ bool MaterialShader::setSampler(const std::string& name, const std::shared_ptr<c
     {
         SpvReflectShaderModule shader_module{};
         SpvReflectResult result = spvReflectCreateShaderModule(
-            spirv_data.code.size() * sizeof(uint32_t), 
-            spirv_data.code.data(), 
-            &shader_module
-        );
+            spirv_data.code.size() * sizeof(uint32_t),
+            spirv_data.code.data(),
+            &shader_module);
         if (result != SPV_REFLECT_RESULT_SUCCESS)
         {
             continue;
@@ -429,7 +426,7 @@ bool MaterialShader::setSampler(const std::string& name, const std::shared_ptr<c
                     for (uint32_t j = 0u; j < descriptor_sets[i]->binding_count; j++)
                     {
                         const SpvReflectDescriptorBinding* binding = descriptor_sets[i]->bindings[j];
-                        
+
                         // Check if this is a sampler and name matches
                         if (binding->name && name == binding->name)
                         {
@@ -439,7 +436,7 @@ bool MaterialShader::setSampler(const std::string& name, const std::shared_ptr<c
                             {
                                 uint32_t set = descriptor_sets[i]->set;
                                 uint32_t binding_index = binding->binding;
-                                m_samplers[{set, binding_index}] = sampler;
+                                m_samplers[{ set, binding_index }] = sampler;
 
                                 spvReflectDestroyShaderModule(&shader_module);
                                 return true;
@@ -519,10 +516,9 @@ bool MaterialShader::buildDescriptorInfos()
     {
         SpvReflectShaderModule shader_module{};
         SpvReflectResult result = spvReflectCreateShaderModule(
-            spirv_data.code.size() * sizeof(uint32_t), 
-            spirv_data.code.data(), 
-            &shader_module
-        );
+            spirv_data.code.size() * sizeof(uint32_t),
+            spirv_data.code.data(),
+            &shader_module);
         if (result != SPV_REFLECT_RESULT_SUCCESS)
         {
             // Failed to reflect this shader - this is a critical error
@@ -543,12 +539,12 @@ bool MaterialShader::buildDescriptorInfos()
                     for (uint32_t j = 0u; j < descriptor_sets[i]->binding_count; j++)
                     {
                         const SpvReflectDescriptorBinding* binding = descriptor_sets[i]->bindings[j];
-                        
+
                         DescriptorInfo info{};
                         info.set = descriptor_sets[i]->set;
                         info.binding = binding->binding;
                         info.type = static_cast<VkDescriptorType>(binding->descriptor_type);
-                        
+
                         m_descriptor_infos.push_back(info);
                     }
                 }
@@ -655,4 +651,3 @@ bool MaterialShader::buildDescriptors()
     m_descriptors_built = true;
     return true;
 }
-

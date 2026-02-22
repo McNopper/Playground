@@ -3,9 +3,8 @@
 
 #include <optional>
 
-#include <spirv-reflect/spirv_reflect.h>
-
 #include <volk.h>
+#include <spirv-reflect/spirv_reflect.h>
 
 std::optional<VkShaderStageFlagBits> toVulkanShaderStage(SpvExecutionModel execution_model);
 

@@ -4,8 +4,8 @@
 #include <cstring>
 #include <utility>
 
-#include <slang/slang.h>
 #include <slang/slang-com-ptr.h>
+#include <slang/slang.h>
 
 std::vector<SpirvData> buildSlang(const std::string& filename, const std::map<std::string, std::string>& macros, const std::string& include_path)
 {
@@ -33,39 +33,29 @@ std::vector<SpirvData> buildSlang(const std::string& filename, const std::map<st
     std::vector<slang::CompilerOptionEntry> compiler_options{};
     // Generate SPRIV directly
     compiler_options.push_back(
-        {
-            slang::CompilerOptionName::EmitSpirvDirectly,
-            { slang::CompilerOptionValueKind::Int, 1, 0, nullptr, nullptr }
-        }
-    );
+        { slang::CompilerOptionName::EmitSpirvDirectly,
+          { slang::CompilerOptionValueKind::Int, 1, 0, nullptr, nullptr } });
     // We use column major order as default
     compiler_options.push_back(
         {
             slang::CompilerOptionName::MatrixLayoutColumn,
             { slang::CompilerOptionValueKind::Int, 1, 0, nullptr, nullptr },
-        }
-    );
+        });
 
     // Add macros
     for (const auto& it : macros)
     {
         compiler_options.push_back(
-            {
-                slang::CompilerOptionName::MacroDefine,
-                { slang::CompilerOptionValueKind::String, 0, 0, it.first.c_str(), it.second.c_str() }
-            }
-        );
+            { slang::CompilerOptionName::MacroDefine,
+              { slang::CompilerOptionValueKind::String, 0, 0, it.first.c_str(), it.second.c_str() } });
     }
 
     // Use the resource shaders folder
     if (!include_path.empty())
     {
         compiler_options.push_back(
-            {
-                slang::CompilerOptionName::Include,
-                { slang::CompilerOptionValueKind::String, 0, 0, include_path.c_str(), nullptr }
-            }
-        );
+            { slang::CompilerOptionName::Include,
+              { slang::CompilerOptionValueKind::String, 0, 0, include_path.c_str(), nullptr } });
     }
 
     slang::SessionDesc session_desc{};
@@ -108,7 +98,7 @@ std::vector<SpirvData> buildSlang(const std::string& filename, const std::map<st
     for (const auto& entry_point_check : entry_point_checks)
     {
         Slang::ComPtr<slang::IEntryPoint> entry_point{};
-        
+
         result = module->findEntryPointByName(entry_point_check.first.c_str(), entry_point.writeRef());
         if (SLANG_FAILED(result))
         {
@@ -121,7 +111,7 @@ std::vector<SpirvData> buildSlang(const std::string& filename, const std::map<st
         component_types.push_back(module);
         component_types.push_back(entry_point);
 
-        Slang::ComPtr<slang::IComponentType> composed_program{};        
+        Slang::ComPtr<slang::IComponentType> composed_program{};
         result = session->createCompositeComponentType(component_types.data(), component_types.size(), composed_program.writeRef(), diagnostics_blob.writeRef());
         if (SLANG_FAILED(result))
         {
@@ -158,7 +148,7 @@ std::vector<SpirvData> buildSlang(const std::string& filename, const std::map<st
 
         spirv_data.code.resize(spirv_code->getBufferSize() / sizeof(uint32_t));
         std::memcpy(spirv_data.code.data(), spirv_code->getBufferPointer(), spirv_code->getBufferSize());
-        
+
         shaders.push_back(spirv_data);
     }
 

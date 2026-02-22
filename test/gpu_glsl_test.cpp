@@ -1,10 +1,9 @@
-#include <gtest/gtest.h>
-
 #include <map>
 #include <string>
 
-#include "core/core.h"
+#include <gtest/gtest.h>
 
+#include "core/core.h"
 #include "gpu/gpu.h"
 
 TEST(TestGlsl, Build)
@@ -52,7 +51,7 @@ TEST(TestGlsl, PipelineVertexInputAttributeDescription)
             VulkanSpirvQuery spirv_query{ shaders };
 
             auto vertex_input_attribute_descriptions = spirv_query.gatherVertexInputAttributeDescriptions(0u);
-            
+
             EXPECT_EQ(vertex_input_attribute_descriptions.size(), 3u);
         }
     }

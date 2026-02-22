@@ -37,7 +37,6 @@ public:
     void setFlags(VkImageCreateFlags flags);
 
     VkImage create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANIMAGEFACTORY_H_ */

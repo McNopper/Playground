@@ -11,7 +11,7 @@ class VulkanDescriptorSetLayoutFactory
 private:
 
     VkDevice m_device{ VK_NULL_HANDLE };
-    VkDescriptorSetLayoutCreateFlags  m_flags{};
+    VkDescriptorSetLayoutCreateFlags m_flags{};
 
     std::vector<VkDescriptorSetLayoutBinding> m_descriptor_set_layout_bindings{};
 
@@ -24,7 +24,6 @@ public:
     void addDescriptorSetLayoutBinding(const VkDescriptorSetLayoutBinding& descriptor_set_layout_binding);
 
     VkDescriptorSetLayout create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANDESCRIPTORSETLAYOUTFACTORY_H_ */

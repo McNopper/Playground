@@ -1,19 +1,21 @@
-#include <gtest/gtest.h>
-
 #include <algorithm>
+
+#include <gtest/gtest.h>
 
 #include "core/core.h"
 #include "engine/engine.h"
 #include "gpu/gpu.h"
 
-namespace {
+namespace
+{
 
-struct VulkanHandles {
+struct VulkanHandles
+{
     VkInstance instance{ VK_NULL_HANDLE };
     VkPhysicalDevice physical_device{ VK_NULL_HANDLE };
     std::uint32_t queue_family_index{ 0u };
     VkDevice device{ VK_NULL_HANDLE };
-    VkQueue queue{VK_NULL_HANDLE};
+    VkQueue queue{ VK_NULL_HANDLE };
     VkCommandPool command_pool{ VK_NULL_HANDLE };
 };
 
@@ -39,7 +41,7 @@ bool initVulkan(VulkanHandles& handles)
     std::vector<std::uint32_t> queue_family_indices(queue_family_properties.size());
     std::generate(queue_family_indices.begin(), queue_family_indices.end(), [index = 0u]() mutable { return index++; });
 
-    queue_family_indices = QueueFamilyIndexFlagsFilter{VK_QUEUE_GRAPHICS_BIT, queue_family_properties} << queue_family_indices;
+    queue_family_indices = QueueFamilyIndexFlagsFilter{ VK_QUEUE_GRAPHICS_BIT, queue_family_properties } << queue_family_indices;
     if (queue_family_indices.empty())
     {
         return false;
@@ -91,7 +93,7 @@ void terminateVulkan(VulkanHandles& handles)
     }
 }
 
-}
+} // namespace
 
 TEST(TestTexture2D, CreateOnly)
 {
@@ -107,7 +109,7 @@ TEST(TestTexture2D, CreateOnly)
     texture.setExtent(256u, 256u);
     texture.setFormat(VK_FORMAT_R8G8B8A8_UNORM);
     texture.setUsage(VK_IMAGE_USAGE_SAMPLED_BIT);
-    
+
     result = texture.create();
     EXPECT_TRUE(result) << "Texture2D::create() failed";
     EXPECT_TRUE(texture.isValid()) << "Texture should be valid";
@@ -139,14 +141,14 @@ TEST(TestTexture2D, UploadImageData)
     const std::uint32_t width = 256u;
     const std::uint32_t height = 256u;
     const VkFormat format = VK_FORMAT_R8G8B8A8_SRGB;
-    
-    VulkanImageFactory image_factory{ handles.device, format, {width, height, 1u}, VK_SAMPLE_COUNT_1_BIT, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT };
+
+    VulkanImageFactory image_factory{ handles.device, format, { width, height, 1u }, VK_SAMPLE_COUNT_1_BIT, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT };
     VkImage test_image = image_factory.create();
     ASSERT_NE(test_image, VK_NULL_HANDLE) << "VulkanImageFactory failed to create image";
-    
+
     VkDeviceMemory test_memory = buildImageDeviceMemory(handles.physical_device, handles.device, test_image, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
     ASSERT_NE(test_memory, VK_NULL_HANDLE) << "buildImageDeviceMemory failed";
-    
+
     // Test image view creation
     VkImageSubresourceRange subresource_range{};
     subresource_range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -154,11 +156,11 @@ TEST(TestTexture2D, UploadImageData)
     subresource_range.levelCount = 1u;
     subresource_range.baseArrayLayer = 0u;
     subresource_range.layerCount = 1u;
-    
+
     VulkanImageViewFactory image_view_factory{ handles.device, test_image, VK_IMAGE_VIEW_TYPE_2D, format, subresource_range };
     VkImageView test_image_view = image_view_factory.create();
     ASSERT_NE(test_image_view, VK_NULL_HANDLE) << "VulkanImageViewFactory failed to create image view";
-    
+
     // Cleanup test resources
     vkDestroyImageView(handles.device, test_image_view, nullptr);
     vkFreeMemory(handles.device, test_memory, nullptr);
@@ -172,7 +174,7 @@ TEST(TestTexture2D, UploadImageData)
     image_data.channel_format = ChannelFormat::UNORM;
     image_data.color_space = ColorSpace::SRGB;
     image_data.linear = false;
-    
+
     // Create test pattern
     image_data.pixels.resize(width * height * 4u);
     for (std::uint32_t y = 0u; y < height; y++)
@@ -189,30 +191,30 @@ TEST(TestTexture2D, UploadImageData)
 
     // Create Texture2D
     Texture2D texture(handles.physical_device, handles.device);
-    
+
     texture.setExtent(width, height);
     EXPECT_EQ(texture.getWidth(), width) << "Width not set correctly";
     EXPECT_EQ(texture.getHeight(), height) << "Height not set correctly";
-    
+
     texture.setFormat(VK_FORMAT_R8G8B8A8_SRGB);
     EXPECT_EQ(texture.getFormat(), VK_FORMAT_R8G8B8A8_SRGB) << "Format not set correctly";
-    
+
     texture.setUsage(VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
     EXPECT_NE(texture.getUsage(), 0u) << "Usage not set correctly";
-    
+
     result = texture.create();
     ASSERT_TRUE(result) << "Failed to create Texture2D - check VulkanImageFactory or memory allocation";
-    
+
     EXPECT_TRUE(texture.isValid()) << "Texture should be valid after creation";
     EXPECT_NE(texture.getImage(), VK_NULL_HANDLE) << "VkImage should not be NULL";
-    
+
     // Debug checks before upload
     EXPECT_EQ(image_data.width, texture.getWidth()) << "ImageData width mismatch";
     EXPECT_EQ(image_data.height, texture.getHeight()) << "ImageData height mismatch";
-    
+
     VkFormat expected_format = getVulkanFormat(image_data);
     EXPECT_EQ(expected_format, texture.getFormat()) << "Format mismatch: ImageData format=" << expected_format << ", Texture format=" << texture.getFormat();
-    
+
     // Upload image data
     result = texture.upload(handles.command_pool, handles.queue, image_data);
     ASSERT_TRUE(result) << "Failed to upload image data to Texture2D";

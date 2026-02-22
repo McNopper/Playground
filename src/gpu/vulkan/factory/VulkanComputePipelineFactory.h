@@ -25,7 +25,6 @@ public:
     VulkanComputePipelineFactory(VkDevice device, VkPipelineCreateFlags flags, const VkPipelineShaderStageCreateInfo& stage, VkPipelineLayout layout);
 
     VkPipeline create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANCOMPUTEPIPELINEFACTORY_H_ */

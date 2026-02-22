@@ -23,7 +23,6 @@ public:
     VulkanShaderModuleFactory(VkDevice device, const std::vector<uint32_t>& code);
 
     VkShaderModule create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANSHADERMODULEFACTORY_H_ */

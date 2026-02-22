@@ -23,7 +23,7 @@ static void reserveMeshData(MeshData& mesh, uint32_t vertex_count, uint32_t inde
 // Position: (r_k·cos, y_k, r_k·sin).  Normal: (n_xz·cos, n_y, n_xz·sin).
 // Tangent:  (−sin, 0, cos).            UV: (j/segments, v).
 static void appendRing(MeshData& mesh, float r_k, float y_k,
-    float n_xz, float n_y, float v, uint32_t segments)
+                       float n_xz, float n_y, float v, uint32_t segments)
 {
     const float seg_f{ static_cast<float>(segments) };
     for (uint32_t j{ 0u }; j <= segments; ++j)
@@ -43,7 +43,7 @@ static void appendRing(MeshData& mesh, float r_k, float y_k,
 // vertex_base:   index of the first vertex of strip row 0 (default 0).
 // flip_winding:  false = CCW front face (default), true = CW front face.
 static void appendQuadStripIndices(MeshData& mesh, uint32_t strips,
-    uint32_t segments, uint32_t vertex_base = 0u, bool flip_winding = false)
+                                   uint32_t segments, uint32_t vertex_base = 0u, bool flip_winding = false)
 {
     for (uint32_t i{ 0u }; i < strips; ++i)
     {
@@ -89,7 +89,7 @@ static std::pair<float, float> computeSlopeNormal(float delta_radius, float heig
 // linearly interpolates from top_radius to bottom_radius over the given height.
 // The shape is centred at the origin (top at +half_h, bottom at −half_h).
 static void appendRevolutionRings(MeshData& mesh, float top_radius, float bottom_radius,
-    float height, float n_xz, float n_y, uint32_t stacks, uint32_t segments)
+                                  float height, float n_xz, float n_y, uint32_t stacks, uint32_t segments)
 {
     const float half_h{ height * 0.5f };
     const float dr{ bottom_radius - top_radius };
@@ -105,7 +105,7 @@ static void appendRevolutionRings(MeshData& mesh, float top_radius, float bottom
 // facing_up = true  → normal +Y, CCW from above: (centre, ring_{j+1}, ring_j).
 // facing_up = false → normal −Y, CCW from below: (centre, ring_j,    ring_{j+1}).
 static void appendCircularCap(MeshData& mesh, float y, float radius,
-    const float3& normal, bool facing_up, uint32_t segments)
+                              const float3& normal, bool facing_up, uint32_t segments)
 {
     const float seg_f{ static_cast<float>(segments) };
     for (uint32_t j{ 0u }; j < segments; ++j)
@@ -113,8 +113,10 @@ static void appendCircularCap(MeshData& mesh, float y, float radius,
         const float theta_j{ 2.0f * std::numbers::pi_v<float> * static_cast<float>(j) / seg_f };
         const float theta_k{ 2.0f * std::numbers::pi_v<float> * static_cast<float>(j + 1u) / seg_f };
 
-        const float cos_j{ std::cos(theta_j) }; const float sin_j{ std::sin(theta_j) };
-        const float cos_k{ std::cos(theta_k) }; const float sin_k{ std::sin(theta_k) };
+        const float cos_j{ std::cos(theta_j) };
+        const float sin_j{ std::sin(theta_j) };
+        const float cos_k{ std::cos(theta_k) };
+        const float sin_k{ std::sin(theta_k) };
 
         // Vertex A: ring_{j+1} for +Y cap, ring_j for −Y cap
         const float cos_a{ facing_up ? cos_k : cos_j };
@@ -146,8 +148,6 @@ static void appendCircularCap(MeshData& mesh, float y, float radius,
     }
 }
 
-
-
 // ---------------------------------------------------------------------------
 // createCube
 // ---------------------------------------------------------------------------
@@ -161,20 +161,20 @@ struct FaceDef
 
 MeshData createCuboid(float width, float height, float depth)
 {
-    const float half_w{ width  * 0.5f };
+    const float half_w{ width * 0.5f };
     const float half_h{ height * 0.5f };
-    const float half_d{ depth  * 0.5f };
+    const float half_d{ depth * 0.5f };
 
     // 6 faces: +X, -X, +Y, -Y, +Z, -Z
     // tangent = face-right, bitangent = face-up
-    const std::array<FaceDef, 6> faces{{
-        { { 1,  0,  0}, { 0,  0, -1}, {0, 1, 0} },  // +X
-        { {-1,  0,  0}, { 0,  0,  1}, {0, 1, 0} },  // -X
-        { { 0,  1,  0}, { 1,  0,  0}, {0, 0,-1} },  // +Y
-        { { 0, -1,  0}, { 1,  0,  0}, {0, 0, 1} },  // -Y
-        { { 0,  0,  1}, { 1,  0,  0}, {0, 1, 0} },  // +Z
-        { { 0,  0, -1}, {-1,  0,  0}, {0, 1, 0} },  // -Z
-    }};
+    const std::array<FaceDef, 6> faces{ {
+        { { 1, 0, 0 }, { 0, 0, -1 }, { 0, 1, 0 } },  // +X
+        { { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 } },  // -X
+        { { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } },  // +Y
+        { { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 } },  // -Y
+        { { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 } },   // +Z
+        { { 0, 0, -1 }, { -1, 0, 0 }, { 0, 1, 0 } }, // -Z
+    } };
 
     MeshData mesh{};
     reserveMeshData(mesh, 24u, 36u);
@@ -186,11 +186,10 @@ MeshData createCuboid(float width, float height, float depth)
         const float3 center{ face.normal.x * half_w, face.normal.y * half_h, face.normal.z * half_d };
 
         // Tangent/bitangent are axis-aligned unit vectors; dot with half-extents picks the right extent.
-        const float th{ std::abs(face.tangent.x)   * half_w + std::abs(face.tangent.y)   * half_h + std::abs(face.tangent.z)   * half_d };
+        const float th{ std::abs(face.tangent.x) * half_w + std::abs(face.tangent.y) * half_h + std::abs(face.tangent.z) * half_d };
         const float bh{ std::abs(face.bitangent.x) * half_w + std::abs(face.bitangent.y) * half_h + std::abs(face.bitangent.z) * half_d };
 
-        auto corner = [&](float ru, float bu) -> float3
-        {
+        auto corner = [&](float ru, float bu) -> float3 {
             return {
                 center.x + ru * face.tangent.x * th + bu * face.bitangent.x * bh,
                 center.y + ru * face.tangent.y * th + bu * face.bitangent.y * bh,
@@ -200,9 +199,9 @@ MeshData createCuboid(float width, float height, float depth)
 
         // 4 corners: bl(-1,-1), br(+1,-1), tr(+1,+1), tl(-1,+1)
         mesh.positions.push_back(corner(-1.0f, -1.0f));
-        mesh.positions.push_back(corner( 1.0f, -1.0f));
-        mesh.positions.push_back(corner( 1.0f,  1.0f));
-        mesh.positions.push_back(corner(-1.0f,  1.0f));
+        mesh.positions.push_back(corner(1.0f, -1.0f));
+        mesh.positions.push_back(corner(1.0f, 1.0f));
+        mesh.positions.push_back(corner(-1.0f, 1.0f));
 
         for (uint32_t i{ 0u }; i < 4u; ++i)
         {
@@ -257,22 +256,20 @@ MeshData createEllipsoid(float radius_x, float radius_y, float radius_z,
             const float cos_theta{ std::cos(theta) };
             const float sin_theta{ std::sin(theta) };
 
-            mesh.positions.push_back({
-                radius_x * sin_phi * cos_theta,
-                radius_y * cos_phi,
-                radius_z * sin_phi * sin_theta
-            });
+            mesh.positions.push_back({ radius_x * sin_phi * cos_theta,
+                                       radius_y * cos_phi,
+                                       radius_z * sin_phi * sin_theta });
 
             // Normal = gradient of f = x²/rx² + y²/ry² + z²/rz², normalised.
             const float nx{ sin_phi * cos_theta / radius_x };
-            const float ny{ cos_phi             / radius_y };
+            const float ny{ cos_phi / radius_y };
             const float nz{ sin_phi * sin_theta / radius_z };
             const float nlen{ std::sqrt(nx * nx + ny * ny + nz * nz) };
             mesh.normals.push_back({ nx / nlen, ny / nlen, nz / nlen });
 
             // Tangent = d(pos)/d(theta), normalised; degenerate at poles → use +X.
             const float tx{ -radius_x * sin_theta };
-            const float tz{  radius_z * cos_theta };
+            const float tz{ radius_z * cos_theta };
             const float tlen{ std::sqrt(tx * tx + tz * tz) };
             if (tlen > 1e-6f)
             {
@@ -283,10 +280,8 @@ MeshData createEllipsoid(float radius_x, float radius_y, float radius_z,
                 mesh.tangents.push_back({ 1.0f, 0.0f, 0.0f });
             }
 
-            mesh.uvs.push_back({
-                static_cast<float>(j) / seg_f,
-                static_cast<float>(i) / static_cast<float>(stacks)
-            });
+            mesh.uvs.push_back({ static_cast<float>(j) / seg_f,
+                                 static_cast<float>(i) / static_cast<float>(stacks) });
         }
     }
 
@@ -388,7 +383,7 @@ MeshData createFrustum(float top_radius, float bottom_radius, float height,
     appendRevolutionRings(mesh, top_radius, bottom_radius, height, n_xz, n_y, stacks, segments);
 
     appendQuadStripIndices(mesh, stacks, segments);
-    appendCircularCap(mesh,  half_h, top_radius,    { 0.0f,  1.0f, 0.0f }, true,  segments);
+    appendCircularCap(mesh, half_h, top_radius, { 0.0f, 1.0f, 0.0f }, true, segments);
     appendCircularCap(mesh, -half_h, bottom_radius, { 0.0f, -1.0f, 0.0f }, false, segments);
 
     return mesh;
@@ -399,7 +394,7 @@ MeshData createFrustum(float top_radius, float bottom_radius, float height,
 // ---------------------------------------------------------------------------
 
 MeshData createBluntedPyramid(float top_radius, float bottom_radius,
-                               float height, uint32_t sides)
+                              float height, uint32_t sides)
 {
     return createFrustum(top_radius, bottom_radius, height, sides, 1u);
 }
@@ -409,7 +404,7 @@ MeshData createBluntedPyramid(float top_radius, float bottom_radius,
 // ---------------------------------------------------------------------------
 
 MeshData createBluntedCone(float top_radius, float bottom_radius,
-                            float height, uint32_t segments)
+                           float height, uint32_t segments)
 {
     return createFrustum(top_radius, bottom_radius, height, segments, 1u);
 }
@@ -429,9 +424,9 @@ MeshData createCylinder(float radius, float height, uint32_t segments)
 
 MeshData createWedge(float width, float height, float depth)
 {
-    const float hw{ width  * 0.5f };
+    const float hw{ width * 0.5f };
     const float hh{ height * 0.5f };
-    const float hd{ depth  * 0.5f };
+    const float hd{ depth * 0.5f };
 
     // 2 triangular caps × 3 verts + 3 rectangular faces × 4 verts = 18 verts
     // 2 × 1 tri + 3 × 2 tris = 8 tris = 24 indices
@@ -440,27 +435,35 @@ MeshData createWedge(float width, float height, float depth)
 
     // Slant face normals: (-height, width/2, 0) / slant_len  and  (+height, width/2, 0) / slant_len
     const float slant_len{ std::sqrt(height * height + width * width * 0.25f) };
-    const float3 n_left { -height / slant_len, (width * 0.5f) / slant_len, 0.0f };
-    const float3 n_right{  height / slant_len, (width * 0.5f) / slant_len, 0.0f };
+    const float3 n_left{ -height / slant_len, (width * 0.5f) / slant_len, 0.0f };
+    const float3 n_right{ height / slant_len, (width * 0.5f) / slant_len, 0.0f };
 
     // Emit a triangle with shared flat normal and tangent; advances position list.
     auto emitTri = [&](const float3& p0, const float3& p1, const float3& p2,
                        const float2& uv0, const float2& uv1, const float2& uv2,
-                       const float3& n, const float3& t)
-    {
+                       const float3& n, const float3& t) {
         const uint32_t base{ static_cast<uint32_t>(mesh.positions.size()) };
-        mesh.positions.push_back(p0); mesh.positions.push_back(p1); mesh.positions.push_back(p2);
-        mesh.normals.push_back(n);    mesh.normals.push_back(n);    mesh.normals.push_back(n);
-        mesh.tangents.push_back(t);   mesh.tangents.push_back(t);   mesh.tangents.push_back(t);
-        mesh.uvs.push_back(uv0);      mesh.uvs.push_back(uv1);      mesh.uvs.push_back(uv2);
-        mesh.indices.push_back(base); mesh.indices.push_back(base + 1u); mesh.indices.push_back(base + 2u);
+        mesh.positions.push_back(p0);
+        mesh.positions.push_back(p1);
+        mesh.positions.push_back(p2);
+        mesh.normals.push_back(n);
+        mesh.normals.push_back(n);
+        mesh.normals.push_back(n);
+        mesh.tangents.push_back(t);
+        mesh.tangents.push_back(t);
+        mesh.tangents.push_back(t);
+        mesh.uvs.push_back(uv0);
+        mesh.uvs.push_back(uv1);
+        mesh.uvs.push_back(uv2);
+        mesh.indices.push_back(base);
+        mesh.indices.push_back(base + 1u);
+        mesh.indices.push_back(base + 2u);
     };
 
     // Emit a quad as two triangles: (p0,p1,p2) and (p0,p2,p3).
     auto emitQuad = [&](const float3& p0, const float3& p1, const float3& p2, const float3& p3,
                         const float2& uv0, const float2& uv1, const float2& uv2, const float2& uv3,
-                        const float3& n, const float3& t)
-    {
+                        const float3& n, const float3& t) {
         emitTri(p0, p1, p2, uv0, uv1, uv2, n, t);
         emitTri(p0, p2, p3, uv0, uv2, uv3, n, t); // NOLINT(readability-suspicious-call-argument)
     };
@@ -471,24 +474,24 @@ MeshData createWedge(float width, float height, float depth)
     // E = front-top-centre   (  0,+hh,+hd)    F = back-top-centre    (  0,+hh,-hd)
 
     // Front cap (+Z): A, B, E — CCW from +Z
-    emitTri({-hw,-hh,+hd}, {+hw,-hh,+hd}, {0,+hh,+hd},
-            {0,1},{1,1},{0.5f,0}, {0,0,1}, {1,0,0});
+    emitTri({ -hw, -hh, +hd }, { +hw, -hh, +hd }, { 0, +hh, +hd },
+            { 0, 1 }, { 1, 1 }, { 0.5f, 0 }, { 0, 0, 1 }, { 1, 0, 0 });
 
     // Back cap (−Z): D, F, C — CCW from −Z
-    emitTri({-hw,-hh,-hd}, {0,+hh,-hd}, {+hw,-hh,-hd},
-            {1,1},{0.5f,0},{0,1}, {0,0,-1}, {-1,0,0});
+    emitTri({ -hw, -hh, -hd }, { 0, +hh, -hd }, { +hw, -hh, -hd },
+            { 1, 1 }, { 0.5f, 0 }, { 0, 1 }, { 0, 0, -1 }, { -1, 0, 0 });
 
     // Bottom face (−Y): A, D, C, B — CCW from below; tangent = +X, U along width, V along depth
-    emitQuad({-hw,-hh,+hd}, {-hw,-hh,-hd}, {+hw,-hh,-hd}, {+hw,-hh,+hd},
-             {0,0},{0,1},{1,1},{1,0}, {0,-1,0}, {1,0,0});
+    emitQuad({ -hw, -hh, +hd }, { -hw, -hh, -hd }, { +hw, -hh, -hd }, { +hw, -hh, +hd },
+             { 0, 0 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 0, -1, 0 }, { 1, 0, 0 });
 
     // Left face: A, E, F, D — CCW from left; tangent along depth (0,0,−1), U along depth, V along edge
-    emitQuad({-hw,-hh,+hd}, {0,+hh,+hd}, {0,+hh,-hd}, {-hw,-hh,-hd},
-             {0,1},{0,0},{1,0},{1,1}, n_left, {0,0,-1});
+    emitQuad({ -hw, -hh, +hd }, { 0, +hh, +hd }, { 0, +hh, -hd }, { -hw, -hh, -hd },
+             { 0, 1 }, { 0, 0 }, { 1, 0 }, { 1, 1 }, n_left, { 0, 0, -1 });
 
     // Right face: B, C, F, E — CCW from right; tangent along depth
-    emitQuad({+hw,-hh,+hd}, {+hw,-hh,-hd}, {0,+hh,-hd}, {0,+hh,+hd},
-             {0,1},{1,1},{1,0},{0,0}, n_right, {0,0,-1});
+    emitQuad({ +hw, -hh, +hd }, { +hw, -hh, -hd }, { 0, +hh, -hd }, { 0, +hh, +hd },
+             { 0, 1 }, { 1, 1 }, { 1, 0 }, { 0, 0 }, n_right, { 0, 0, -1 });
 
     return mesh;
 }
@@ -501,22 +504,22 @@ MeshData createTetrahedron(float edge_length)
 {
     // Place vertices at (±1,±1,±1) with an odd number of minus signs.
     // Edge between any two = 2√2; scale to requested edge_length.
-    const float s{ edge_length / (2.0f * std::numbers::sqrt2_v<float>) };
+    const float s{ edge_length / (2.0f * std::numbers::sqrt2_v<float>)};
 
-    const std::array<float3, 4u> v{{
-        { s,  s,  s},  // V0
-        { s, -s, -s},  // V1
-        {-s,  s, -s},  // V2
-        {-s, -s,  s},  // V3
-    }};
+    const std::array<float3, 4u> v{ {
+        { s, s, s },   // V0
+        { s, -s, -s }, // V1
+        { -s, s, -s }, // V2
+        { -s, -s, s }, // V3
+    } };
 
     // Face winding verified CCW from outside (cross-product outward from centroid):
-    const std::array<std::array<uint32_t, 3u>, 4u> faces{{
-        {0u, 1u, 2u},  // normal ( 1, 1,−1)/√3
-        {0u, 3u, 1u},  // normal ( 1,−1, 1)/√3
-        {0u, 2u, 3u},  // normal (−1, 1, 1)/√3
-        {1u, 3u, 2u},  // normal (−1,−1,−1)/√3
-    }};
+    const std::array<std::array<uint32_t, 3u>, 4u> faces{ {
+        { 0u, 1u, 2u }, // normal ( 1, 1,−1)/√3
+        { 0u, 3u, 1u }, // normal ( 1,−1, 1)/√3
+        { 0u, 2u, 3u }, // normal (−1, 1, 1)/√3
+        { 1u, 3u, 2u }, // normal (−1,−1,−1)/√3
+    } };
 
     // UV: equilateral triangle layout — (0,1), (1,1), (0.5, 1−√3/2)
     const float uv_top_v{ 1.0f - std::numbers::sqrt3_v<float> * 0.5f };
@@ -550,8 +553,12 @@ MeshData createTetrahedron(float edge_length)
         mesh.positions.push_back(a);
         mesh.positions.push_back(b);
         mesh.positions.push_back(c);
-        mesh.normals.push_back(normal);  mesh.normals.push_back(normal);  mesh.normals.push_back(normal);
-        mesh.tangents.push_back(tangent); mesh.tangents.push_back(tangent); mesh.tangents.push_back(tangent);
+        mesh.normals.push_back(normal);
+        mesh.normals.push_back(normal);
+        mesh.normals.push_back(normal);
+        mesh.tangents.push_back(tangent);
+        mesh.tangents.push_back(tangent);
+        mesh.tangents.push_back(tangent);
         mesh.uvs.push_back({ 0.0f, 1.0f });
         mesh.uvs.push_back({ 1.0f, 1.0f });
         mesh.uvs.push_back({ 0.5f, uv_top_v });
@@ -694,18 +701,18 @@ MeshData createCapsule(float radius, float height, uint32_t cap_stacks, uint32_t
 
         if (k <= cap_stacks)
         {
-            phi      = pi_half * static_cast<float>(k) / static_cast<float>(cap_stacks);
+            phi = pi_half * static_cast<float>(k) / static_cast<float>(cap_stacks);
             centre_y = half_h;
         }
         else if (k == cap_stacks + 1u)
         {
-            phi      = pi_half;
+            phi = pi_half;
             centre_y = -half_h;
         }
         else
         {
             const uint32_t j{ k - (cap_stacks + 1u) };
-            phi      = pi_half + pi_half * static_cast<float>(j) / static_cast<float>(cap_stacks);
+            phi = pi_half + pi_half * static_cast<float>(j) / static_cast<float>(cap_stacks);
             centre_y = -half_h;
         }
 
@@ -755,10 +762,8 @@ MeshData createTorus(float major_radius, float minor_radius, uint32_t major_segm
             mesh.normals.push_back({ cos_theta * cos_phi, sin_theta, cos_theta * sin_phi });
             // Tangent = d(pos)/d(phi) normalised = (-sin_phi, 0, cos_phi)
             mesh.tangents.push_back({ -sin_phi, 0.0f, cos_phi });
-            mesh.uvs.push_back({
-                static_cast<float>(j) / static_cast<float>(major_segments),
-                static_cast<float>(i) / static_cast<float>(minor_segments)
-            });
+            mesh.uvs.push_back({ static_cast<float>(j) / static_cast<float>(major_segments),
+                                 static_cast<float>(i) / static_cast<float>(minor_segments) });
         }
     }
 
@@ -766,4 +771,3 @@ MeshData createTorus(float major_radius, float minor_radius, uint32_t major_segm
 
     return mesh;
 }
-

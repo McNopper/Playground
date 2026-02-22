@@ -1,10 +1,9 @@
 #include <cstdio>
 
-#include "core/core.h"
-#include "gpu/gpu.h"
-#include "engine/runtime/runtime.h"
-
 #include "Application.h"
+#include "core/core.h"
+#include "engine/runtime/runtime.h"
+#include "gpu/gpu.h"
 
 int main()
 {

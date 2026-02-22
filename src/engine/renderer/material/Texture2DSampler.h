@@ -27,8 +27,7 @@ public:
 
     Texture2DSampler(
         const std::shared_ptr<const Texture2D>& texture,
-        const std::shared_ptr<const Sampler>& sampler
-    );
+        const std::shared_ptr<const Sampler>& sampler);
 
     ~Texture2DSampler() = default;
 
@@ -45,7 +44,6 @@ public:
     static std::unique_ptr<Sampler> createLinearSampler(VkDevice device);
     static std::unique_ptr<Sampler> createNearestSampler(VkDevice device);
     static std::unique_ptr<Sampler> createLinearClampSampler(VkDevice device);
-
 };
 
 #endif /* ENGINE_RENDERER_MATERIAL_TEXTURE2DSAMPLER_H_ */

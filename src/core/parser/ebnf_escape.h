@@ -1,7 +1,8 @@
 #ifndef CORE_PARSER_EBNF_ESCAPE_H_
 #define CORE_PARSER_EBNF_ESCAPE_H_
 
-namespace ebnf {
+namespace ebnf
+{
 
 // Simple escape sequences
 // see https://en.cppreference.com/w/cpp/language/escape

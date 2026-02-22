@@ -1,9 +1,8 @@
 #ifndef CORE_MATH_MATRIXTRANSFORM_H_
 #define CORE_MATH_MATRIXTRANSFORM_H_
 
-#include "vector.h"
-
 #include "matrix.h"
+#include "vector.h"
 
 float4x4 translationMatrix(const float3& t);
 

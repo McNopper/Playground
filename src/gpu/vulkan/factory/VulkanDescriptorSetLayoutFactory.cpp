@@ -1,7 +1,8 @@
 #include "VulkanDescriptorSetLayoutFactory.h"
 
 VulkanDescriptorSetLayoutFactory::VulkanDescriptorSetLayoutFactory(VkDevice device, VkDescriptorSetLayoutCreateFlags flags) :
-    m_device{ device }, m_flags{ flags }
+    m_device{ device },
+    m_flags{ flags }
 {
 }
 

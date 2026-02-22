@@ -7,9 +7,8 @@
 #include <volk.h>
 #include <GLFW/glfw3.h>
 
-#include "gpu/gpu.h"
-
 #include "IApplication.h"
+#include "gpu/gpu.h"
 
 struct GLFWwindow;
 
@@ -110,7 +109,6 @@ public:
     VkFormat getDepthStencilFormat() const;
 
     IVulkanWindow* getVulkanWindow() const;
-
 };
 
 #endif /* ENGINE_RUNTIME_VULKANRUNTIME_H_ */

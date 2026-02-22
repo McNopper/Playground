@@ -11,8 +11,7 @@ protected:
 
     std::vector<T> m_data{};
 
-    virtual void algorithm()
-    {
+    virtual void algorithm() {
     };
 
 public:
@@ -32,7 +31,6 @@ public:
     {
         return m_data;
     }
-
 };
 
 #endif /* CORE_TEMPLATES_FILTER_H_ */

@@ -1,9 +1,9 @@
 #ifndef GPU_VULKAN_PRESENTATION_IVULKANWINDOW_H_
 #define GPU_VULKAN_PRESENTATION_IVULKANWINDOW_H_
 
-#include "core/math/vector.h"
-
 #include <volk.h>
+
+#include "core/math/vector.h"
 
 class IVulkanWindow
 {
@@ -31,7 +31,6 @@ public:
     virtual void beginRendering() const = 0;
 
     virtual void endRendering() const = 0;
-
 };
 
 #endif /* GPU_VULKAN_PRESENTATION_IVULKANWINDOW_H_ */

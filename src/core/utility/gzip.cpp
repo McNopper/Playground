@@ -5,7 +5,7 @@
 
 namespace
 {
-    constexpr std::size_t CHUNK_SIZE = 16384;
+constexpr std::size_t CHUNK_SIZE = 16384;
 }
 
 std::vector<std::uint8_t> gzipCompress(const std::uint8_t* data, std::size_t length, int level)
@@ -103,7 +103,7 @@ std::vector<std::uint8_t> gzipDecompress(const std::uint8_t* data, std::size_t l
         stream.avail_out = CHUNK_SIZE;
 
         result = inflate(&stream, Z_NO_FLUSH);
-        
+
         if (result == Z_STREAM_ERROR || result == Z_DATA_ERROR || result == Z_MEM_ERROR)
         {
             inflateEnd(&stream);

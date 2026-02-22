@@ -7,7 +7,10 @@
 #include "core/core.h"
 
 Application::Application(VkPhysicalDevice physical_device, VkDevice device, uint32_t queue_family_index, IVulkanWindow& vulkan_window) :
-    m_physical_device{ physical_device }, m_device{ device }, m_queue_family_index{ queue_family_index }, m_vulkan_window{ vulkan_window },
+    m_physical_device{ physical_device },
+    m_device{ device },
+    m_queue_family_index{ queue_family_index },
+    m_vulkan_window{ vulkan_window },
     m_vertex_buffer(physical_device, device),
     m_index_buffer(physical_device, device),
     m_uniform_view_buffer(physical_device, device),
@@ -23,64 +26,64 @@ bool Application::init()
 {
     struct VertexInputData
     {
-        float3    position;
-        float2    texCoord;
+        float3 position;
+        float2 texCoord;
     };
 
     // Cube vertices (24 vertices for proper texture mapping per face)
     // UV convention: (0,0) = top-left, (1,1) = bottom-right (Vulkan/glTF standard)
     std::vector<VertexInputData> vertex_buffer_data{
         // Front face (z = +0.5)
-        {{ -0.5f, -0.5f, +0.5f }, { 0.0f, 1.0f }},  // Bottom-left -> UV bottom
-        {{ +0.5f, -0.5f, +0.5f }, { 1.0f, 1.0f }},  // Bottom-right -> UV bottom
-        {{ +0.5f, +0.5f, +0.5f }, { 1.0f, 0.0f }},  // Top-right -> UV top
-        {{ -0.5f, +0.5f, +0.5f }, { 0.0f, 0.0f }},  // Top-left -> UV top
-        
+        { { -0.5f, -0.5f, +0.5f }, { 0.0f, 1.0f } }, // Bottom-left -> UV bottom
+        { { +0.5f, -0.5f, +0.5f }, { 1.0f, 1.0f } }, // Bottom-right -> UV bottom
+        { { +0.5f, +0.5f, +0.5f }, { 1.0f, 0.0f } }, // Top-right -> UV top
+        { { -0.5f, +0.5f, +0.5f }, { 0.0f, 0.0f } }, // Top-left -> UV top
+
         // Back face (z = -0.5)
-        {{ +0.5f, -0.5f, -0.5f }, { 0.0f, 1.0f }},
-        {{ -0.5f, -0.5f, -0.5f }, { 1.0f, 1.0f }},
-        {{ -0.5f, +0.5f, -0.5f }, { 1.0f, 0.0f }},
-        {{ +0.5f, +0.5f, -0.5f }, { 0.0f, 0.0f }},
-        
+        { { +0.5f, -0.5f, -0.5f }, { 0.0f, 1.0f } },
+        { { -0.5f, -0.5f, -0.5f }, { 1.0f, 1.0f } },
+        { { -0.5f, +0.5f, -0.5f }, { 1.0f, 0.0f } },
+        { { +0.5f, +0.5f, -0.5f }, { 0.0f, 0.0f } },
+
         // Left face (x = -0.5)
-        {{ -0.5f, -0.5f, -0.5f }, { 0.0f, 1.0f }},
-        {{ -0.5f, -0.5f, +0.5f }, { 1.0f, 1.0f }},
-        {{ -0.5f, +0.5f, +0.5f }, { 1.0f, 0.0f }},
-        {{ -0.5f, +0.5f, -0.5f }, { 0.0f, 0.0f }},
-        
+        { { -0.5f, -0.5f, -0.5f }, { 0.0f, 1.0f } },
+        { { -0.5f, -0.5f, +0.5f }, { 1.0f, 1.0f } },
+        { { -0.5f, +0.5f, +0.5f }, { 1.0f, 0.0f } },
+        { { -0.5f, +0.5f, -0.5f }, { 0.0f, 0.0f } },
+
         // Right face (x = +0.5)
-        {{ +0.5f, -0.5f, +0.5f }, { 0.0f, 1.0f }},
-        {{ +0.5f, -0.5f, -0.5f }, { 1.0f, 1.0f }},
-        {{ +0.5f, +0.5f, -0.5f }, { 1.0f, 0.0f }},
-        {{ +0.5f, +0.5f, +0.5f }, { 0.0f, 0.0f }},
-        
+        { { +0.5f, -0.5f, +0.5f }, { 0.0f, 1.0f } },
+        { { +0.5f, -0.5f, -0.5f }, { 1.0f, 1.0f } },
+        { { +0.5f, +0.5f, -0.5f }, { 1.0f, 0.0f } },
+        { { +0.5f, +0.5f, +0.5f }, { 0.0f, 0.0f } },
+
         // Top face (y = +0.5) - looking down
-        {{ -0.5f, +0.5f, +0.5f }, { 0.0f, 0.0f }},
-        {{ +0.5f, +0.5f, +0.5f }, { 1.0f, 0.0f }},
-        {{ +0.5f, +0.5f, -0.5f }, { 1.0f, 1.0f }},
-        {{ -0.5f, +0.5f, -0.5f }, { 0.0f, 1.0f }},
-        
+        { { -0.5f, +0.5f, +0.5f }, { 0.0f, 0.0f } },
+        { { +0.5f, +0.5f, +0.5f }, { 1.0f, 0.0f } },
+        { { +0.5f, +0.5f, -0.5f }, { 1.0f, 1.0f } },
+        { { -0.5f, +0.5f, -0.5f }, { 0.0f, 1.0f } },
+
         // Bottom face (y = -0.5) - looking up
-        {{ -0.5f, -0.5f, -0.5f }, { 0.0f, 0.0f }},
-        {{ +0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f }},
-        {{ +0.5f, -0.5f, +0.5f }, { 1.0f, 1.0f }},
-        {{ -0.5f, -0.5f, +0.5f }, { 0.0f, 1.0f }}
+        { { -0.5f, -0.5f, -0.5f }, { 0.0f, 0.0f } },
+        { { +0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f } },
+        { { +0.5f, -0.5f, +0.5f }, { 1.0f, 1.0f } },
+        { { -0.5f, -0.5f, +0.5f }, { 0.0f, 1.0f } }
     };
 
     // Index buffer for cube (6 faces * 2 triangles * 3 indices = 36 indices)
     std::vector<uint16_t> index_buffer_data{
         // Front
-        0, 1, 2,  0, 2, 3,
+        0, 1, 2, 0, 2, 3,
         // Back
-        4, 5, 6,  4, 6, 7,
+        4, 5, 6, 4, 6, 7,
         // Left
-        8, 9, 10,  8, 10, 11,
+        8, 9, 10, 8, 10, 11,
         // Right
-        12, 13, 14,  12, 14, 15,
+        12, 13, 14, 12, 14, 15,
         // Top
-        16, 17, 18,  16, 18, 19,
+        16, 17, 18, 16, 18, 19,
         // Bottom
-        20, 21, 22,  20, 22, 23
+        20, 21, 22, 20, 22, 23
     };
 
     if (!m_vertex_buffer.create(vertex_buffer_data))
@@ -102,7 +105,7 @@ bool Application::init()
 
     // Create UniformBlocks from shader reflection
     VulkanSpirvQuery spirv_query{ shaders };
-    
+
     m_uniform_view_block = std::make_shared<UniformBlock>(spirv_query, "UniformViewData");
     m_uniform_model_block = std::make_shared<UniformBlock>(spirv_query, "UniformModelData");
 
@@ -119,7 +122,7 @@ bool Application::init()
 
     m_descriptor_set0.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
     m_descriptor_set0.addBinding(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
-    
+
     if (!m_descriptor_set0.create())
     {
         return false;
@@ -196,7 +199,7 @@ bool Application::init()
 
     m_descriptor_set1.addBinding(0, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE);
     m_descriptor_set1.addBinding(1, VK_DESCRIPTOR_TYPE_SAMPLER);
-    
+
     if (!m_descriptor_set1.create())
     {
         return false;
@@ -223,11 +226,11 @@ bool Application::init()
     }
 
     VulkanPipelineLayoutFactory pipeline_layout_factory{ m_device, 0u };
-    
+
     VkDescriptorSetLayoutCreateFlags layout_flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_DESCRIPTOR_BUFFER_BIT_EXT;
-    
+
     VulkanDescriptorSetLayoutFactory descriptor_set_layout_factory_0{ m_device, layout_flags };
-    
+
     VkDescriptorSetLayoutBinding uniform_view_binding{};
     uniform_view_binding.binding = 0;
     uniform_view_binding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -235,7 +238,7 @@ bool Application::init()
     uniform_view_binding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
     uniform_view_binding.pImmutableSamplers = nullptr;
     descriptor_set_layout_factory_0.addDescriptorSetLayoutBinding(uniform_view_binding);
-    
+
     VkDescriptorSetLayoutBinding uniform_model_binding{};
     uniform_model_binding.binding = 1;
     uniform_model_binding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -243,15 +246,15 @@ bool Application::init()
     uniform_model_binding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
     uniform_model_binding.pImmutableSamplers = nullptr;
     descriptor_set_layout_factory_0.addDescriptorSetLayoutBinding(uniform_model_binding);
-    
+
     VkDescriptorSetLayout descriptor_set_layout_0 = descriptor_set_layout_factory_0.create();
     if (descriptor_set_layout_0 == VK_NULL_HANDLE)
     {
         return false;
     }
-    
+
     VulkanDescriptorSetLayoutFactory descriptor_set_layout_factory_1{ m_device, layout_flags };
-    
+
     VkDescriptorSetLayoutBinding texture_binding{};
     texture_binding.binding = 0;
     texture_binding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
@@ -259,7 +262,7 @@ bool Application::init()
     texture_binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
     texture_binding.pImmutableSamplers = nullptr;
     descriptor_set_layout_factory_1.addDescriptorSetLayoutBinding(texture_binding);
-    
+
     VkDescriptorSetLayoutBinding sampler_binding{};
     sampler_binding.binding = 1;
     sampler_binding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
@@ -267,7 +270,7 @@ bool Application::init()
     sampler_binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
     sampler_binding.pImmutableSamplers = nullptr;
     descriptor_set_layout_factory_1.addDescriptorSetLayoutBinding(sampler_binding);
-    
+
     VkDescriptorSetLayout descriptor_set_layout_1 = descriptor_set_layout_factory_1.create();
     if (descriptor_set_layout_1 == VK_NULL_HANDLE)
     {
@@ -278,10 +281,10 @@ bool Application::init()
     pipeline_layout_factory.addDescriptorSetLayout(descriptor_set_layout_0);
     pipeline_layout_factory.addDescriptorSetLayout(descriptor_set_layout_1);
     m_pipeline_layout = pipeline_layout_factory.create();
-    
+
     vkDestroyDescriptorSetLayout(m_device, descriptor_set_layout_0, nullptr);
     vkDestroyDescriptorSetLayout(m_device, descriptor_set_layout_1, nullptr);
-    
+
     if (m_pipeline_layout == VK_NULL_HANDLE)
     {
         return false;
@@ -321,7 +324,7 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
     float aspect = (float)m_vulkan_window.getCurrentExtent().width / (float)m_vulkan_window.getCurrentExtent().height;
     float4x4 projection_matrix = perspective(45.0f, aspect, 0.1f, 100.0f);
     float4x4 view_matrix = lookAt(float3{ 0.0f, 1.0f, 3.0f }, float3{ 0.0f, 0.0f, 0.0f }, float3{ 0.0f, 1.0f, 0.0f });
-    
+
     m_uniform_view_block->setMember("u_projectionMatrix", projection_matrix);
     m_uniform_view_block->setMember("u_viewMatrix", view_matrix);
 
@@ -332,7 +335,7 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
 
     quaternion rot_y = rotateRyQuaternion((float)m_rotation_angle);
     float4x4 world_matrix = rot_y;
-    
+
     m_uniform_model_block->setMember("u_worldMatrix", world_matrix);
 
     if (!m_uniform_model_buffer.update(0u, m_uniform_model_block->getData()))
@@ -345,11 +348,11 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
     vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline);
 
     VkDescriptorBufferBindingInfoEXT descriptor_buffer_bindings[2]{};
-    
+
     descriptor_buffer_bindings[0].sType = VK_STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT;
     descriptor_buffer_bindings[0].address = m_descriptor_set0.getDeviceAddress();
     descriptor_buffer_bindings[0].usage = m_descriptor_set0.getUsageFlags();
-    
+
     descriptor_buffer_bindings[1].sType = VK_STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT;
     descriptor_buffer_bindings[1].address = m_descriptor_set1.getDeviceAddress();
     descriptor_buffer_bindings[1].usage = m_descriptor_set1.getUsageFlags();
@@ -359,7 +362,7 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
     uint32_t buffer_index_set0 = 0;
     VkDeviceSize descriptor_offset_set0 = 0;
     vkCmdSetDescriptorBufferOffsetsEXT(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout, 0, 1, &buffer_index_set0, &descriptor_offset_set0);
-    
+
     uint32_t buffer_index_set1 = 1;
     VkDeviceSize descriptor_offset_set1 = 0;
     vkCmdSetDescriptorBufferOffsetsEXT(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout, 1, 1, &buffer_index_set1, &descriptor_offset_set1);

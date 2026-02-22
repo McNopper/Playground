@@ -1,7 +1,8 @@
 #include "VulkanPipelineLayoutFactory.h"
 
 VulkanPipelineLayoutFactory::VulkanPipelineLayoutFactory(VkDevice device, VkPipelineLayoutCreateFlags flags) :
-    m_device{ device }, m_flags{ flags }
+    m_device{ device },
+    m_flags{ flags }
 {
 }
 

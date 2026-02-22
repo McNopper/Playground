@@ -10,15 +10,17 @@
 #include <string_view>
 #include <vector>
 
-namespace ebnf {
+namespace ebnf
+{
 
 // Parse result structure
 
-struct ParseResult {
-    bool success{false};
-    std::size_t next_position{0};
+struct ParseResult
+{
+    bool success{ false };
+    std::size_t next_position{ 0 };
     std::string value{};
-    
+
     // C++20: Spaceship operator for comparisons
     auto operator<=>(const ParseResult&) const = default;
 };
@@ -47,7 +49,7 @@ public:
     ASymbol() = default;
 
     virtual ~ASymbol() = default;
-    
+
     // C++20: Prevent copying, allow moving
     ASymbol(const ASymbol&) = delete;
     ASymbol& operator=(const ASymbol&) = delete;
@@ -60,7 +62,6 @@ public:
     {
         m_on_success = std::move(on_success);
     }
-
 };
 
 class ASingleSymbol : public ASymbol
@@ -75,10 +76,9 @@ public:
     ASingleSymbol() = delete;
 
     explicit ASingleSymbol(std::shared_ptr<ASymbol> symbol) :
-        m_symbol{std::move(symbol)}
+        m_symbol{ std::move(symbol) }
     {
     }
-
 };
 
 class ASequenceSymbol : public ASymbol
@@ -96,7 +96,7 @@ public:
     {
         m_symbols.push_back(std::move(symbol));
     }
-    
+
     // C++20: Add range-based initialization
     template<std::ranges::range R>
         requires std::convertible_to<std::ranges::range_value_t<R>, std::shared_ptr<ASymbol>>
@@ -104,7 +104,6 @@ public:
     {
         std::ranges::copy(std::forward<R>(symbols), std::back_inserter(m_symbols));
     }
-
 };
 
 } // namespace ebnf

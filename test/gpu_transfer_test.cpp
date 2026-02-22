@@ -1,18 +1,20 @@
-#include <gtest/gtest.h>
-
 #include <algorithm>
 #include <vector>
 
+#include <gtest/gtest.h>
+
 #include "gpu/gpu.h"
 
-namespace {
+namespace
+{
 
-struct VulkanHandles {
+struct VulkanHandles
+{
     VkInstance instance{ VK_NULL_HANDLE };
     VkPhysicalDevice physical_device{ VK_NULL_HANDLE };
     std::uint32_t queue_family_index{ 0u };
     VkDevice device{ VK_NULL_HANDLE };
-    VkQueue queue{VK_NULL_HANDLE};
+    VkQueue queue{ VK_NULL_HANDLE };
     VkCommandPool command_pool{ VK_NULL_HANDLE };
 };
 
@@ -38,7 +40,7 @@ bool initVulkan(VulkanHandles& handles)
     std::vector<std::uint32_t> queue_family_indices(queue_family_properties.size());
     std::generate(queue_family_indices.begin(), queue_family_indices.end(), [index = 0u]() mutable { return index++; });
 
-    queue_family_indices = QueueFamilyIndexFlagsFilter{VK_QUEUE_GRAPHICS_BIT, queue_family_properties} << queue_family_indices;
+    queue_family_indices = QueueFamilyIndexFlagsFilter{ VK_QUEUE_GRAPHICS_BIT, queue_family_properties } << queue_family_indices;
     if (queue_family_indices.empty())
     {
         return false;
@@ -90,7 +92,7 @@ void terminateVulkan(VulkanHandles& handles)
     }
 }
 
-}
+} // namespace
 
 TEST(TestTransfer, BufferToImageToBufferRoundTrip)
 {
@@ -136,7 +138,7 @@ TEST(TestTransfer, BufferToImageToBufferRoundTrip)
     result = hostToDevice(handles.device, staging_buffer_upload->device_memory, 0u, buffer_size, original_data);
     EXPECT_TRUE(result);
 
-    VulkanImageFactory image_factory{ handles.device, format, {width, height, 1u}, VK_SAMPLE_COUNT_1_BIT, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT };
+    VulkanImageFactory image_factory{ handles.device, format, { width, height, 1u }, VK_SAMPLE_COUNT_1_BIT, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT };
     VkImage image = image_factory.create();
     EXPECT_NE(image, VK_NULL_HANDLE);
     if (image == VK_NULL_HANDLE)
@@ -182,9 +184,9 @@ TEST(TestTransfer, BufferToImageToBufferRoundTrip)
     EXPECT_EQ(result, VK_SUCCESS);
 
     transitionImageLayout(command_buffer, image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-    copyBufferToImage(command_buffer, staging_buffer_upload->buffer, image, {width, height, 1u});
+    copyBufferToImage(command_buffer, staging_buffer_upload->buffer, image, { width, height, 1u });
     transitionImageLayout(command_buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-    copyImageToBuffer(command_buffer, image, staging_buffer_download->buffer, {width, height, 1u});
+    copyImageToBuffer(command_buffer, image, staging_buffer_download->buffer, { width, height, 1u });
 
     result = vkEndCommandBuffer(command_buffer);
     EXPECT_EQ(result, VK_SUCCESS);

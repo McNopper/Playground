@@ -9,7 +9,6 @@ class AVolume : public AGeometry
 public:
 
     virtual ~AVolume() = default;
-
 };
 
 #endif /* RENDERER_GEOMETRY_VOLUME_AVOLUME_H_ */

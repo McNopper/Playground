@@ -5,13 +5,13 @@
 #include <string>
 #include <vector>
 
-#include <spirv-reflect/spirv_reflect.h>
-
 #include <volk.h>
+#include <spirv-reflect/spirv_reflect.h>
 
 #include "gpu/shader/spirv/spirv_data.h"
 
-struct DescriptorBufferInfo {
+struct DescriptorBufferInfo
+{
     VkDeviceSize offset{ 0u };
     VkDeviceSize range{ 0u };
 };
@@ -52,7 +52,6 @@ public:
     std::vector<VkVertexInputAttributeDescription> gatherVertexInputAttributeDescriptions(uint32_t binding) const;
 
     std::vector<std::string> gatherVertexInputNames() const;
-
 };
 
 #endif /* GPU_VULKAN_SPIRV_VULKANSPIRVQUERY_H_ */

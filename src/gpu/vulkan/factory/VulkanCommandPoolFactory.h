@@ -21,7 +21,6 @@ public:
     VulkanCommandPoolFactory(VkDevice device, VkCommandPoolCreateFlags command_pool_create_flags, uint32_t queue_family_index);
 
     VkCommandPool create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANCOMMANDPOOLFACTORY_H_ */

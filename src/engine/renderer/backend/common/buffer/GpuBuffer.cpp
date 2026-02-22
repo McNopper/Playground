@@ -3,7 +3,12 @@
 #include "gpu/gpu.h"
 
 GpuBuffer::GpuBuffer(VkPhysicalDevice physical_device, VkDevice device, bool host_visible, bool enable_readback) :
-    m_physical_device{ physical_device }, m_device{ device }, m_buffer_resource{}, m_device_size{ 0u }, m_host_visible{ host_visible }, m_readback_enabled{ enable_readback }
+    m_physical_device{ physical_device },
+    m_device{ device },
+    m_buffer_resource{},
+    m_device_size{ 0u },
+    m_host_visible{ host_visible },
+    m_readback_enabled{ enable_readback }
 {
 }
 
@@ -30,7 +35,7 @@ bool GpuBuffer::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage)
     }
 
     VkMemoryAllocateFlags allocate_flags = (usage & VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT) ? VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT : 0;
-    
+
     VkMemoryPropertyFlags memory_flags;
     if (m_host_visible)
     {

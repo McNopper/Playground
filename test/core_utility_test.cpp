@@ -1,8 +1,8 @@
-#include <gtest/gtest.h>
-
 #include <cstdint>
 #include <string>
 #include <vector>
+
+#include <gtest/gtest.h>
 
 #include "core/core.h"
 
@@ -46,19 +46,13 @@ TEST(TestUtility, Interleave)
 
     std::vector<RawData> raw_data{};
     raw_data.push_back(
-        {
-            (const std::uint8_t*)a.data(),
-            a.size() * sizeof(std::uint32_t),
-            sizeof(std::uint32_t) 
-        }
-    );
+        { (const std::uint8_t*)a.data(),
+          a.size() * sizeof(std::uint32_t),
+          sizeof(std::uint32_t) });
     raw_data.push_back(
-        {
-            (const std::uint8_t*)b.data(),
-            b.size() * sizeof(double),
-            sizeof(double)
-        }
-    );
+        { (const std::uint8_t*)b.data(),
+          b.size() * sizeof(double),
+          sizeof(double) });
 
     std::size_t stride{ 0u };
     std::vector<std::uint8_t> interleaved = interleaveData(raw_data, stride);
@@ -132,10 +126,10 @@ TEST(TestUtility, Base64EncodeAllCharacters)
     {
         data.push_back(i);
     }
-    
+
     std::string encoded = base64Encode(data);
     std::vector<std::uint8_t> decoded = base64Decode(encoded);
-    
+
     EXPECT_EQ(decoded, data);
 }
 
@@ -151,10 +145,10 @@ TEST(TestUtility, Base64RoundTripString)
 {
     std::string text = "Hello, World! This is a base64 encoding test.";
     std::vector<std::uint8_t> data{ text.begin(), text.end() };
-    
+
     std::string encoded = base64Encode(data);
     std::vector<std::uint8_t> decoded = base64Decode(encoded);
-    
+
     std::string result{ decoded.begin(), decoded.end() };
     EXPECT_EQ(result, text);
 }
@@ -201,7 +195,7 @@ TEST(TestUtility, GzipCompressSimple)
 {
     std::string text = "Hello, World!";
     std::vector<std::uint8_t> data{ text.begin(), text.end() };
-    
+
     std::vector<std::uint8_t> compressed = gzipCompress(data);
     EXPECT_FALSE(compressed.empty());
     EXPECT_LT(compressed.size(), 100u);
@@ -211,10 +205,10 @@ TEST(TestUtility, GzipRoundTripSimple)
 {
     std::string text = "Hello, World!";
     std::vector<std::uint8_t> original{ text.begin(), text.end() };
-    
+
     std::vector<std::uint8_t> compressed = gzipCompress(original);
     std::vector<std::uint8_t> decompressed = gzipDecompress(compressed);
-    
+
     EXPECT_EQ(decompressed, original);
 }
 
@@ -226,10 +220,10 @@ TEST(TestUtility, GzipRoundTripLarge)
     {
         original.push_back(static_cast<std::uint8_t>(i % 256));
     }
-    
+
     std::vector<std::uint8_t> compressed = gzipCompress(original);
     std::vector<std::uint8_t> decompressed = gzipDecompress(compressed);
-    
+
     EXPECT_EQ(decompressed.size(), original.size());
     EXPECT_EQ(decompressed, original);
 }
@@ -237,10 +231,10 @@ TEST(TestUtility, GzipRoundTripLarge)
 TEST(TestUtility, GzipRoundTripBinary)
 {
     std::vector<std::uint8_t> original{ 0x00, 0xFF, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0 };
-    
+
     std::vector<std::uint8_t> compressed = gzipCompress(original);
     std::vector<std::uint8_t> decompressed = gzipDecompress(compressed);
-    
+
     EXPECT_EQ(decompressed, original);
 }
 
@@ -253,17 +247,17 @@ TEST(TestUtility, GzipCompressionLevels)
         repeated += text;
     }
     std::vector<std::uint8_t> data{ repeated.begin(), repeated.end() };
-    
+
     std::vector<std::uint8_t> fast = gzipCompress(data, 1);
     std::vector<std::uint8_t> best = gzipCompress(data, 9);
-    
+
     EXPECT_FALSE(fast.empty());
     EXPECT_FALSE(best.empty());
     EXPECT_LE(best.size(), fast.size());
-    
+
     std::vector<std::uint8_t> decompressed_fast = gzipDecompress(fast);
     std::vector<std::uint8_t> decompressed_best = gzipDecompress(best);
-    
+
     EXPECT_EQ(decompressed_fast, data);
     EXPECT_EQ(decompressed_best, data);
 }
@@ -273,7 +267,7 @@ TEST(TestUtility, GzipCompressPointer)
     const std::uint8_t data[] = { 'T', 'e', 's', 't' };
     std::vector<std::uint8_t> compressed = gzipCompress(data, 4);
     EXPECT_FALSE(compressed.empty());
-    
+
     std::vector<std::uint8_t> decompressed = gzipDecompress(compressed);
     std::vector<std::uint8_t> expected{ 'T', 'e', 's', 't' };
     EXPECT_EQ(decompressed, expected);
@@ -300,11 +294,11 @@ TEST(TestUtility, GzipCompressHighlyCompressible)
     {
         repetitive.push_back('A');
     }
-    
+
     std::vector<std::uint8_t> compressed = gzipCompress(repetitive);
-    
+
     EXPECT_LT(compressed.size(), repetitive.size() / 10);
-    
+
     std::vector<std::uint8_t> decompressed = gzipDecompress(compressed);
     EXPECT_EQ(decompressed, repetitive);
 }

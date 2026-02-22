@@ -6,7 +6,7 @@
 
 #include <volk.h>
 
-template <class T>
+template<class T>
 bool deviceToHost(VkDevice device, VkDeviceMemory device_memory, VkDeviceSize offset, VkDeviceSize size, std::vector<T>& content)
 {
     if (size % sizeof(T) != 0u)
@@ -40,7 +40,7 @@ bool deviceToHost(VkDevice device, VkDeviceMemory device_memory, VkDeviceSize of
     return true;
 }
 
-template <class T>
+template<class T>
 bool deviceToHost(VkDevice device, VkDeviceMemory device_memory, VkDeviceSize offset, VkDeviceSize size, T& content)
 {
     if (size != sizeof(T))
@@ -74,7 +74,7 @@ bool deviceToHost(VkDevice device, VkDeviceMemory device_memory, VkDeviceSize of
 
 bool deviceToHost(VkDevice device, VkDeviceMemory device_memory, VkDeviceSize offset, VkDeviceSize size, void* data);
 
-template <class T>
+template<class T>
 bool hostToDevice(VkDevice device, VkDeviceMemory device_memory, VkDeviceSize offset, VkDeviceSize size, const std::vector<T>& content)
 {
     if (size < content.size() * sizeof(T))
@@ -106,7 +106,7 @@ bool hostToDevice(VkDevice device, VkDeviceMemory device_memory, VkDeviceSize of
     return true;
 }
 
-template <class T>
+template<class T>
 bool hostToDevice(VkDevice device, VkDeviceMemory device_memory, VkDeviceSize offset, VkDeviceSize size, const T& content)
 {
     if (size < sizeof(T))

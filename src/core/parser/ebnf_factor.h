@@ -8,7 +8,8 @@
 
 #include "ebnf_base.h"
 
-namespace ebnf {
+namespace ebnf
+{
 
 // Factors
 
@@ -41,9 +42,8 @@ public:
 
         // C++20: Designated initializers
         executeOnSuccess("");
-        return {.success = true, .next_position = position, .value = ""};
+        return { .success = true, .next_position = position, .value = "" };
     }
-
 };
 
 class ZeroManyFactor : public ASingleSymbol
@@ -69,8 +69,8 @@ public:
         std::size_t current_position = position;
 
         // Match while possible
-        for (auto result = m_symbol->parse(text, current_position); 
-             result.success; 
+        for (auto result = m_symbol->parse(text, current_position);
+             result.success;
              result = m_symbol->parse(text, current_position))
         {
             accumulated_value += result.value;
@@ -79,11 +79,10 @@ public:
 
         executeOnSuccess(accumulated_value);
 
-        return {.success = true, 
-                .next_position = current_position, 
-                .value = std::move(accumulated_value)};
+        return { .success = true,
+                 .next_position = current_position,
+                 .value = std::move(accumulated_value) };
     }
-
 };
 
 class OneManyFactor : public ASingleSymbol
@@ -116,8 +115,8 @@ public:
         std::size_t current_position = first_result.next_position;
 
         // Continue matching while possible
-        for (auto result = m_symbol->parse(text, current_position); 
-             result.success; 
+        for (auto result = m_symbol->parse(text, current_position);
+             result.success;
              result = m_symbol->parse(text, current_position))
         {
             accumulated_value += result.value;
@@ -126,11 +125,10 @@ public:
 
         executeOnSuccess(accumulated_value);
 
-        return {.success = true, 
-                .next_position = current_position, 
-                .value = std::move(accumulated_value)};
+        return { .success = true,
+                 .next_position = current_position,
+                 .value = std::move(accumulated_value) };
     }
-
 };
 
 } // namespace ebnf

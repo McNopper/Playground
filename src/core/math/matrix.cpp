@@ -288,126 +288,126 @@ float7x7::float7x7(const float7x7& other)
 float2x2 operator*(float s, const float2x2& x)
 {
     return float2x2{
-        {s * x[0][0], s * x[0][1]},
-        {s * x[1][0], s * x[1][1]}
+        { s * x[0][0], s * x[0][1] },
+        { s * x[1][0], s * x[1][1] }
     };
 }
 
 float2x2 operator*(const float2x2& x, float s)
 {
     return float2x2{
-        {x[0][0] * s, x[0][1] * s},
-        {x[1][0] * s, x[1][1] * s}
+        { x[0][0] * s, x[0][1] * s },
+        { x[1][0] * s, x[1][1] * s }
     };
 }
 
 float3x3 operator*(float s, const float3x3& x)
 {
     return float3x3{
-        {s * x[0][0], s * x[0][1], s * x[0][2]},
-        {s * x[1][0], s * x[1][1], s * x[1][2]},
-        {s * x[2][0], s * x[2][1], s * x[2][2]}
+        { s * x[0][0], s * x[0][1], s * x[0][2] },
+        { s * x[1][0], s * x[1][1], s * x[1][2] },
+        { s * x[2][0], s * x[2][1], s * x[2][2] }
     };
 }
 
 float3x3 operator*(const float3x3& x, float s)
 {
     return float3x3{
-        {x[0][0] * s, x[0][1] * s, x[0][2] * s},
-        {x[1][0] * s, x[1][1] * s, x[1][2] * s},
-        {x[2][0] * s, x[2][1] * s, x[2][2] * s}
+        { x[0][0] * s, x[0][1] * s, x[0][2] * s },
+        { x[1][0] * s, x[1][1] * s, x[1][2] * s },
+        { x[2][0] * s, x[2][1] * s, x[2][2] * s }
     };
 }
 
 float4x4 operator*(float s, const float4x4& x)
 {
     return float4x4{
-        {s * x[0][0], s * x[0][1], s * x[0][2], s * x[0][3]},
-        {s * x[1][0], s * x[1][1], s * x[1][2], s * x[1][3]},
-        {s * x[2][0], s * x[2][1], s * x[2][2], s * x[2][3]},
-        {s * x[3][0], s * x[3][1], s * x[3][2], s * x[3][3]}
+        { s * x[0][0], s * x[0][1], s * x[0][2], s * x[0][3] },
+        { s * x[1][0], s * x[1][1], s * x[1][2], s * x[1][3] },
+        { s * x[2][0], s * x[2][1], s * x[2][2], s * x[2][3] },
+        { s * x[3][0], s * x[3][1], s * x[3][2], s * x[3][3] }
     };
 }
 
 float4x4 operator*(const float4x4& x, float s)
 {
     return float4x4{
-        {x[0][0] * s, x[0][1] * s, x[0][2] * s, x[0][3] * s},
-        {x[1][0] * s, x[1][1] * s, x[1][2] * s, x[1][3] * s},
-        {x[2][0] * s, x[2][1] * s, x[2][2] * s, x[2][3] * s},
-        {x[3][0] * s, x[3][1] * s, x[3][2] * s, x[3][3] * s}
+        { x[0][0] * s, x[0][1] * s, x[0][2] * s, x[0][3] * s },
+        { x[1][0] * s, x[1][1] * s, x[1][2] * s, x[1][3] * s },
+        { x[2][0] * s, x[2][1] * s, x[2][2] * s, x[2][3] * s },
+        { x[3][0] * s, x[3][1] * s, x[3][2] * s, x[3][3] * s }
     };
 }
 
 float5x5 operator*(float s, const float5x5& x)
 {
     return float5x5{
-        {s * x[0][0], s * x[0][1], s * x[0][2], s * x[0][3], s * x[0][4]},
-        {s * x[1][0], s * x[1][1], s * x[1][2], s * x[1][3], s * x[1][4]},
-        {s * x[2][0], s * x[2][1], s * x[2][2], s * x[2][3], s * x[2][4]},
-        {s * x[3][0], s * x[3][1], s * x[3][2], s * x[3][3], s * x[3][4]},
-        {s * x[4][0], s * x[4][1], s * x[4][2], s * x[4][3], s * x[4][4]}
+        { s * x[0][0], s * x[0][1], s * x[0][2], s * x[0][3], s * x[0][4] },
+        { s * x[1][0], s * x[1][1], s * x[1][2], s * x[1][3], s * x[1][4] },
+        { s * x[2][0], s * x[2][1], s * x[2][2], s * x[2][3], s * x[2][4] },
+        { s * x[3][0], s * x[3][1], s * x[3][2], s * x[3][3], s * x[3][4] },
+        { s * x[4][0], s * x[4][1], s * x[4][2], s * x[4][3], s * x[4][4] }
     };
 }
 
 float5x5 operator*(const float5x5& x, float s)
 {
     return float5x5{
-        {x[0][0] * s, x[0][1] * s, x[0][2] * s, x[0][3] * s, x[0][4] * s},
-        {x[1][0] * s, x[1][1] * s, x[1][2] * s, x[1][3] * s, x[1][4] * s},
-        {x[2][0] * s, x[2][1] * s, x[2][2] * s, x[2][3] * s, x[2][4] * s},
-        {x[3][0] * s, x[3][1] * s, x[3][2] * s, x[3][3] * s, x[3][4] * s},
-        {x[4][0] * s, x[4][1] * s, x[4][2] * s, x[4][3] * s, x[4][4] * s}
+        { x[0][0] * s, x[0][1] * s, x[0][2] * s, x[0][3] * s, x[0][4] * s },
+        { x[1][0] * s, x[1][1] * s, x[1][2] * s, x[1][3] * s, x[1][4] * s },
+        { x[2][0] * s, x[2][1] * s, x[2][2] * s, x[2][3] * s, x[2][4] * s },
+        { x[3][0] * s, x[3][1] * s, x[3][2] * s, x[3][3] * s, x[3][4] * s },
+        { x[4][0] * s, x[4][1] * s, x[4][2] * s, x[4][3] * s, x[4][4] * s }
     };
 }
 
 float6x6 operator*(float s, const float6x6& x)
 {
     return float6x6{
-        {s * x[0][0], s * x[0][1], s * x[0][2], s * x[0][3], s * x[0][4], s * x[0][5]},
-        {s * x[1][0], s * x[1][1], s * x[1][2], s * x[1][3], s * x[1][4], s * x[1][5]},
-        {s * x[2][0], s * x[2][1], s * x[2][2], s * x[2][3], s * x[2][4], s * x[2][5]},
-        {s * x[3][0], s * x[3][1], s * x[3][2], s * x[3][3], s * x[3][4], s * x[3][5]},
-        {s * x[4][0], s * x[4][1], s * x[4][2], s * x[4][3], s * x[4][4], s * x[4][5]},
-        {s * x[5][0], s * x[5][1], s * x[5][2], s * x[5][3], s * x[5][4], s * x[5][5]}
+        { s * x[0][0], s * x[0][1], s * x[0][2], s * x[0][3], s * x[0][4], s * x[0][5] },
+        { s * x[1][0], s * x[1][1], s * x[1][2], s * x[1][3], s * x[1][4], s * x[1][5] },
+        { s * x[2][0], s * x[2][1], s * x[2][2], s * x[2][3], s * x[2][4], s * x[2][5] },
+        { s * x[3][0], s * x[3][1], s * x[3][2], s * x[3][3], s * x[3][4], s * x[3][5] },
+        { s * x[4][0], s * x[4][1], s * x[4][2], s * x[4][3], s * x[4][4], s * x[4][5] },
+        { s * x[5][0], s * x[5][1], s * x[5][2], s * x[5][3], s * x[5][4], s * x[5][5] }
     };
 }
 
 float6x6 operator*(const float6x6& x, float s)
 {
     return float6x6{
-        {x[0][0] * s, x[0][1] * s, x[0][2] * s, x[0][3] * s, x[0][4] * s, x[0][5] * s},
-        {x[1][0] * s, x[1][1] * s, x[1][2] * s, x[1][3] * s, x[1][4] * s, x[1][5] * s},
-        {x[2][0] * s, x[2][1] * s, x[2][2] * s, x[2][3] * s, x[2][4] * s, x[2][5] * s},
-        {x[3][0] * s, x[3][1] * s, x[3][2] * s, x[3][3] * s, x[3][4] * s, x[3][5] * s},
-        {x[4][0] * s, x[4][1] * s, x[4][2] * s, x[4][3] * s, x[4][4] * s, x[4][5] * s},
-        {x[5][0] * s, x[5][1] * s, x[5][2] * s, x[5][3] * s, x[5][4] * s, x[5][5] * s}
+        { x[0][0] * s, x[0][1] * s, x[0][2] * s, x[0][3] * s, x[0][4] * s, x[0][5] * s },
+        { x[1][0] * s, x[1][1] * s, x[1][2] * s, x[1][3] * s, x[1][4] * s, x[1][5] * s },
+        { x[2][0] * s, x[2][1] * s, x[2][2] * s, x[2][3] * s, x[2][4] * s, x[2][5] * s },
+        { x[3][0] * s, x[3][1] * s, x[3][2] * s, x[3][3] * s, x[3][4] * s, x[3][5] * s },
+        { x[4][0] * s, x[4][1] * s, x[4][2] * s, x[4][3] * s, x[4][4] * s, x[4][5] * s },
+        { x[5][0] * s, x[5][1] * s, x[5][2] * s, x[5][3] * s, x[5][4] * s, x[5][5] * s }
     };
 }
 
 float7x7 operator*(float s, const float7x7& x)
 {
     return float7x7{
-        {s * x[0][0], s * x[0][1], s * x[0][2], s * x[0][3], s * x[0][4], s * x[0][5], s * x[0][6]},
-        {s * x[1][0], s * x[1][1], s * x[1][2], s * x[1][3], s * x[1][4], s * x[1][5], s * x[1][6]},
-        {s * x[2][0], s * x[2][1], s * x[2][2], s * x[2][3], s * x[2][4], s * x[2][5], s * x[2][6]},
-        {s * x[3][0], s * x[3][1], s * x[3][2], s * x[3][3], s * x[3][4], s * x[3][5], s * x[3][6]},
-        {s * x[4][0], s * x[4][1], s * x[4][2], s * x[4][3], s * x[4][4], s * x[4][5], s * x[4][6]},
-        {s * x[5][0], s * x[5][1], s * x[5][2], s * x[5][3], s * x[5][4], s * x[5][5], s * x[5][6]},
-        {s * x[6][0], s * x[6][1], s * x[6][2], s * x[6][3], s * x[6][4], s * x[6][5], s * x[6][6]}
+        { s * x[0][0], s * x[0][1], s * x[0][2], s * x[0][3], s * x[0][4], s * x[0][5], s * x[0][6] },
+        { s * x[1][0], s * x[1][1], s * x[1][2], s * x[1][3], s * x[1][4], s * x[1][5], s * x[1][6] },
+        { s * x[2][0], s * x[2][1], s * x[2][2], s * x[2][3], s * x[2][4], s * x[2][5], s * x[2][6] },
+        { s * x[3][0], s * x[3][1], s * x[3][2], s * x[3][3], s * x[3][4], s * x[3][5], s * x[3][6] },
+        { s * x[4][0], s * x[4][1], s * x[4][2], s * x[4][3], s * x[4][4], s * x[4][5], s * x[4][6] },
+        { s * x[5][0], s * x[5][1], s * x[5][2], s * x[5][3], s * x[5][4], s * x[5][5], s * x[5][6] },
+        { s * x[6][0], s * x[6][1], s * x[6][2], s * x[6][3], s * x[6][4], s * x[6][5], s * x[6][6] }
     };
 }
 
 float7x7 operator*(const float7x7& x, float s)
 {
     return float7x7{
-        {x[0][0] * s, x[0][1] * s, x[0][2] * s, x[0][3] * s, x[0][4] * s, x[0][5] * s, x[0][6] * s},
-        {x[1][0] * s, x[1][1] * s, x[1][2] * s, x[1][3] * s, x[1][4] * s, x[1][5] * s, x[1][6] * s},
-        {x[2][0] * s, x[2][1] * s, x[2][2] * s, x[2][3] * s, x[2][4] * s, x[2][5] * s, x[2][6] * s},
-        {x[3][0] * s, x[3][1] * s, x[3][2] * s, x[3][3] * s, x[3][4] * s, x[3][5] * s, x[3][6] * s},
-        {x[4][0] * s, x[4][1] * s, x[4][2] * s, x[4][3] * s, x[4][4] * s, x[4][5] * s, x[4][6] * s},
-        {x[5][0] * s, x[5][1] * s, x[5][2] * s, x[5][3] * s, x[5][4] * s, x[5][5] * s, x[5][6] * s},
-        {x[6][0] * s, x[6][1] * s, x[6][2] * s, x[6][3] * s, x[6][4] * s, x[6][5] * s, x[6][6] * s}
+        { x[0][0] * s, x[0][1] * s, x[0][2] * s, x[0][3] * s, x[0][4] * s, x[0][5] * s, x[0][6] * s },
+        { x[1][0] * s, x[1][1] * s, x[1][2] * s, x[1][3] * s, x[1][4] * s, x[1][5] * s, x[1][6] * s },
+        { x[2][0] * s, x[2][1] * s, x[2][2] * s, x[2][3] * s, x[2][4] * s, x[2][5] * s, x[2][6] * s },
+        { x[3][0] * s, x[3][1] * s, x[3][2] * s, x[3][3] * s, x[3][4] * s, x[3][5] * s, x[3][6] * s },
+        { x[4][0] * s, x[4][1] * s, x[4][2] * s, x[4][3] * s, x[4][4] * s, x[4][5] * s, x[4][6] * s },
+        { x[5][0] * s, x[5][1] * s, x[5][2] * s, x[5][3] * s, x[5][4] * s, x[5][5] * s, x[5][6] * s },
+        { x[6][0] * s, x[6][1] * s, x[6][2] * s, x[6][3] * s, x[6][4] * s, x[6][5] * s, x[6][6] * s }
     };
 }
 
@@ -858,40 +858,22 @@ float determinant(const float3x3& x)
 
 float determinant(const float4x4& x)
 {
-    return x[0][0] * determinant(submatrix(x, 0, 0))
-        - x[0][1] * determinant(submatrix(x, 0, 1))
-        + x[0][2] * determinant(submatrix(x, 0, 2))
-        - x[0][3] * determinant(submatrix(x, 0, 3));
+    return x[0][0] * determinant(submatrix(x, 0, 0)) - x[0][1] * determinant(submatrix(x, 0, 1)) + x[0][2] * determinant(submatrix(x, 0, 2)) - x[0][3] * determinant(submatrix(x, 0, 3));
 }
 
 float determinant(const float5x5& x)
 {
-    return x[0][0] * determinant(submatrix(x, 0, 0))
-        - x[0][1] * determinant(submatrix(x, 0, 1))
-        + x[0][2] * determinant(submatrix(x, 0, 2))
-        - x[0][3] * determinant(submatrix(x, 0, 3))
-        + x[0][4] * determinant(submatrix(x, 0, 4));
+    return x[0][0] * determinant(submatrix(x, 0, 0)) - x[0][1] * determinant(submatrix(x, 0, 1)) + x[0][2] * determinant(submatrix(x, 0, 2)) - x[0][3] * determinant(submatrix(x, 0, 3)) + x[0][4] * determinant(submatrix(x, 0, 4));
 }
 
 float determinant(const float6x6& x)
 {
-    return x[0][0] * determinant(submatrix(x, 0, 0))
-        - x[0][1] * determinant(submatrix(x, 0, 1))
-        + x[0][2] * determinant(submatrix(x, 0, 2))
-        - x[0][3] * determinant(submatrix(x, 0, 3))
-        + x[0][4] * determinant(submatrix(x, 0, 4))
-        - x[0][5] * determinant(submatrix(x, 0, 5));
+    return x[0][0] * determinant(submatrix(x, 0, 0)) - x[0][1] * determinant(submatrix(x, 0, 1)) + x[0][2] * determinant(submatrix(x, 0, 2)) - x[0][3] * determinant(submatrix(x, 0, 3)) + x[0][4] * determinant(submatrix(x, 0, 4)) - x[0][5] * determinant(submatrix(x, 0, 5));
 }
 
 float determinant(const float7x7& x)
 {
-    return x[0][0] * determinant(submatrix(x, 0, 0))
-        - x[0][1] * determinant(submatrix(x, 0, 1))
-        + x[0][2] * determinant(submatrix(x, 0, 2))
-        - x[0][3] * determinant(submatrix(x, 0, 3))
-        + x[0][4] * determinant(submatrix(x, 0, 4))
-        - x[0][5] * determinant(submatrix(x, 0, 5))
-        + x[0][6] * determinant(submatrix(x, 0, 6));
+    return x[0][0] * determinant(submatrix(x, 0, 0)) - x[0][1] * determinant(submatrix(x, 0, 1)) + x[0][2] * determinant(submatrix(x, 0, 2)) - x[0][3] * determinant(submatrix(x, 0, 3)) + x[0][4] * determinant(submatrix(x, 0, 4)) - x[0][5] * determinant(submatrix(x, 0, 5)) + x[0][6] * determinant(submatrix(x, 0, 6));
 }
 
 float minor(const float2x2& x, std::uint32_t col, std::uint32_t row)
@@ -927,63 +909,63 @@ float minor(const float7x7& x, std::uint32_t col, std::uint32_t row)
 float2x2 transpose(const float2x2& x)
 {
     return float2x2{
-      {x[0][0], x[1][0]},
-      {x[0][1], x[1][1]}
+        { x[0][0], x[1][0] },
+        { x[0][1], x[1][1] }
     };
 }
 
 float3x3 transpose(const float3x3& x)
 {
     return float3x3{
-      {x[0][0], x[1][0], x[2][0]},
-      {x[0][1], x[1][1], x[2][1]},
-      {x[0][2], x[1][2], x[2][2]}
+        { x[0][0], x[1][0], x[2][0] },
+        { x[0][1], x[1][1], x[2][1] },
+        { x[0][2], x[1][2], x[2][2] }
     };
 }
 
 float4x4 transpose(const float4x4& x)
 {
     return float4x4{
-      {x[0][0], x[1][0], x[2][0], x[3][0]},
-      {x[0][1], x[1][1], x[2][1], x[3][1]},
-      {x[0][2], x[1][2], x[2][2], x[3][2]},
-      {x[0][3], x[1][3], x[2][3], x[3][3]}
+        { x[0][0], x[1][0], x[2][0], x[3][0] },
+        { x[0][1], x[1][1], x[2][1], x[3][1] },
+        { x[0][2], x[1][2], x[2][2], x[3][2] },
+        { x[0][3], x[1][3], x[2][3], x[3][3] }
     };
 }
 
 float5x5 transpose(const float5x5& x)
 {
     return float5x5{
-      {x[0][0], x[1][0], x[2][0], x[3][0], x[4][0]},
-      {x[0][1], x[1][1], x[2][1], x[3][1], x[4][1]},
-      {x[0][2], x[1][2], x[2][2], x[3][2], x[4][2]},
-      {x[0][3], x[1][3], x[2][3], x[3][3], x[4][3]},
-      {x[0][4], x[1][4], x[2][4], x[3][4], x[4][4]}
+        { x[0][0], x[1][0], x[2][0], x[3][0], x[4][0] },
+        { x[0][1], x[1][1], x[2][1], x[3][1], x[4][1] },
+        { x[0][2], x[1][2], x[2][2], x[3][2], x[4][2] },
+        { x[0][3], x[1][3], x[2][3], x[3][3], x[4][3] },
+        { x[0][4], x[1][4], x[2][4], x[3][4], x[4][4] }
     };
 }
 
 float6x6 transpose(const float6x6& x)
 {
     return float6x6{
-      {x[0][0], x[1][0], x[2][0], x[3][0], x[4][0], x[5][0]},
-      {x[0][1], x[1][1], x[2][1], x[3][1], x[4][1], x[5][1]},
-      {x[0][2], x[1][2], x[2][2], x[3][2], x[4][2], x[5][2]},
-      {x[0][3], x[1][3], x[2][3], x[3][3], x[4][3], x[5][3]},
-      {x[0][4], x[1][4], x[2][4], x[3][4], x[4][4], x[5][4]},
-      {x[0][5], x[1][5], x[2][5], x[3][5], x[4][5], x[5][5]}
+        { x[0][0], x[1][0], x[2][0], x[3][0], x[4][0], x[5][0] },
+        { x[0][1], x[1][1], x[2][1], x[3][1], x[4][1], x[5][1] },
+        { x[0][2], x[1][2], x[2][2], x[3][2], x[4][2], x[5][2] },
+        { x[0][3], x[1][3], x[2][3], x[3][3], x[4][3], x[5][3] },
+        { x[0][4], x[1][4], x[2][4], x[3][4], x[4][4], x[5][4] },
+        { x[0][5], x[1][5], x[2][5], x[3][5], x[4][5], x[5][5] }
     };
 }
 
 float7x7 transpose(const float7x7& x)
 {
     return float7x7{
-      {x[0][0], x[1][0], x[2][0], x[3][0], x[4][0], x[5][0], x[6][0]},
-      {x[0][1], x[1][1], x[2][1], x[3][1], x[4][1], x[5][1], x[6][1]},
-      {x[0][2], x[1][2], x[2][2], x[3][2], x[4][2], x[5][2], x[6][2]},
-      {x[0][3], x[1][3], x[2][3], x[3][3], x[4][3], x[5][3], x[6][3]},
-      {x[0][4], x[1][4], x[2][4], x[3][4], x[4][4], x[5][4], x[6][4]},
-      {x[0][5], x[1][5], x[2][5], x[3][5], x[4][5], x[5][5], x[6][5]},
-      {x[0][6], x[1][6], x[2][6], x[3][6], x[4][6], x[5][6], x[6][6]}
+        { x[0][0], x[1][0], x[2][0], x[3][0], x[4][0], x[5][0], x[6][0] },
+        { x[0][1], x[1][1], x[2][1], x[3][1], x[4][1], x[5][1], x[6][1] },
+        { x[0][2], x[1][2], x[2][2], x[3][2], x[4][2], x[5][2], x[6][2] },
+        { x[0][3], x[1][3], x[2][3], x[3][3], x[4][3], x[5][3], x[6][3] },
+        { x[0][4], x[1][4], x[2][4], x[3][4], x[4][4], x[5][4], x[6][4] },
+        { x[0][5], x[1][5], x[2][5], x[3][5], x[4][5], x[5][5], x[6][5] },
+        { x[0][6], x[1][6], x[2][6], x[3][6], x[4][6], x[5][6], x[6][6] }
     };
 }
 

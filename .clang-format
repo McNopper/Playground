@@ -1,0 +1,83 @@
+---
+# Based on Microsoft style with project-specific overrides
+BasedOnStyle: Microsoft
+
+# Access modifiers at column 0 (4-space indent, offset -4)
+AccessModifierOffset: -4
+
+# Pointer/reference: left-aligned (Type& var, Type* var)
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+# Braced initialization: spaces inside ({ value } not {value})
+Cpp11BracedListStyle: false
+
+# No column limit - do not reformat long lines
+ColumnLimit: 0
+
+# Constructor initializers: colon on same line, pack on current line
+BreakConstructorInitializers: AfterColon
+PackConstructorInitializers: CurrentLine
+
+# Inheritance list: colon on same line
+BreakInheritanceList: AfterColon
+
+# No space after template keyword: template<T> not template <T>
+SpaceAfterTemplateKeyword: false
+
+# Access modifier blank lines
+EmptyLineAfterAccessModifier: Always
+EmptyLineBeforeAccessModifier: Always
+
+# Case labels indented within switch
+IndentCaseLabels: true
+
+# Allow short case labels on single line (case 1: return x;)
+AllowShortCaseLabelsOnASingleLine: true
+
+# Braces: Allman for everything except lambdas
+BraceWrapping:
+    AfterCaseLabel: true
+    AfterClass: true
+    AfterControlStatement: Always
+    AfterEnum: true
+    AfterExternBlock: true
+    AfterFunction: true
+    AfterNamespace: true
+    AfterStruct: true
+    AfterUnion: true
+    BeforeCatch: true
+    BeforeElse: true
+    BeforeLambdaBody: false
+    BeforeWhile: false
+    IndentBraces: false
+    SplitEmptyFunction: true
+    SplitEmptyRecord: true
+    SplitEmptyNamespace: true
+
+# Include order: 4 groups separated by blank lines
+# volk.h must be included before GLFW and other Vulkan headers
+SortIncludes: CaseSensitive
+IncludeBlocks: Regroup
+IncludeCategories:
+    # Group 2: Standard C/C++ library headers
+    - Regex: '^<(assert|ctype|errno|fenv|float|inttypes|limits|locale|math|setjmp|signal|stdarg|stddef|stdint|stdio|stdlib|string|tgmath|time|uchar|wchar|wctype|cstd|c(assert|complex|ctype|errno|fenv|float|inttypes|iso646|limits|locale|math|setjmp|signal|stdalign|stdarg|stdbool|stddef|stdint|stdio|stdlib|string|tgmath|time|uchar|wchar|wctype)|algorithm|any|array|atomic|barrier|bit|bitset|charconv|chrono|codecvt|compare|complex|concepts|condition_variable|coroutine|deque|exception|execution|expected|filesystem|format|forward_list|fstream|functional|future|generator|initializer_list|iomanip|ios|iosfwd|iostream|istream|iterator|latch|limits|list|locale|map|mdspan|memory|memory_resource|mutex|new|numbers|numeric|optional|ostream|print|queue|random|ranges|ratio|regex|scoped_allocator|semaphore|set|shared_mutex|source_location|span|spanstream|sstream|stack|stacktrace|stdexcept|stop_token|streambuf|string|string_view|strstream|syncstream|system_error|thread|tuple|type_traits|typeindex|typeinfo|unordered_map|unordered_set|utility|valarray|variant|vector|version)>'
+      Priority: 2
+      SortPriority: 2
+    # Group 3: Third-party headers - volk.h first (must precede GLFW/Vulkan)
+    - Regex: '^<volk\.h>'
+      Priority: 3
+      SortPriority: 3
+    - Regex: '^<'
+      Priority: 3
+      SortPriority: 4
+    # Group 4: Project headers (quoted)
+    - Regex: '^"'
+      Priority: 5
+      SortPriority: 5
+
+# Do not reflow comments (preserve manual formatting)
+ReflowComments: false
+
+# Insert newline at end of file
+InsertNewlineAtEOF: true

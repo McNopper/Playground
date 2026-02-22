@@ -24,7 +24,6 @@ public:
     VulkanImageViewFactory(VkDevice device, VkImage image, VkImageViewType image_view_type, VkFormat format, const VkImageSubresourceRange& image_subresource_range);
 
     VkImageView create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANIMAGEVIEWFACTORY_H_ */

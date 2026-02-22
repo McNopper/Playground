@@ -5,7 +5,10 @@
 #include "core/core.h"
 
 Application::Application(VkPhysicalDevice physical_device, VkDevice device, uint32_t queue_family_index, IVulkanWindow& vulkan_window) :
-    m_physical_device{ physical_device }, m_device{ device }, m_queue_family_index{ queue_family_index }, m_vulkan_window{ vulkan_window }
+    m_physical_device{ physical_device },
+    m_device{ device },
+    m_queue_family_index{ queue_family_index },
+    m_vulkan_window{ vulkan_window }
 {
 }
 
@@ -13,58 +16,58 @@ bool Application::init()
 {
     struct VertexInputData
     {
-        float3    position;
-        float2    texCoord;
+        float3 position;
+        float2 texCoord;
     };
 
     // Cube vertices (24 vertices for proper texture mapping per face)
     // UV convention: (0,0) = top-left, (1,1) = bottom-right (Vulkan/glTF standard)
     std::vector<VertexInputData> vertex_buffer_data{
         // Front face (z = +0.5)
-        {{ -0.5f, -0.5f, +0.5f }, { 0.0f, 1.0f }},
-        {{ +0.5f, -0.5f, +0.5f }, { 1.0f, 1.0f }},
-        {{ +0.5f, +0.5f, +0.5f }, { 1.0f, 0.0f }},
-        {{ -0.5f, +0.5f, +0.5f }, { 0.0f, 0.0f }},
-        
+        { { -0.5f, -0.5f, +0.5f }, { 0.0f, 1.0f } },
+        { { +0.5f, -0.5f, +0.5f }, { 1.0f, 1.0f } },
+        { { +0.5f, +0.5f, +0.5f }, { 1.0f, 0.0f } },
+        { { -0.5f, +0.5f, +0.5f }, { 0.0f, 0.0f } },
+
         // Back face (z = -0.5)
-        {{ +0.5f, -0.5f, -0.5f }, { 0.0f, 1.0f }},
-        {{ -0.5f, -0.5f, -0.5f }, { 1.0f, 1.0f }},
-        {{ -0.5f, +0.5f, -0.5f }, { 1.0f, 0.0f }},
-        {{ +0.5f, +0.5f, -0.5f }, { 0.0f, 0.0f }},
-        
+        { { +0.5f, -0.5f, -0.5f }, { 0.0f, 1.0f } },
+        { { -0.5f, -0.5f, -0.5f }, { 1.0f, 1.0f } },
+        { { -0.5f, +0.5f, -0.5f }, { 1.0f, 0.0f } },
+        { { +0.5f, +0.5f, -0.5f }, { 0.0f, 0.0f } },
+
         // Left face (x = -0.5)
-        {{ -0.5f, -0.5f, -0.5f }, { 0.0f, 1.0f }},
-        {{ -0.5f, -0.5f, +0.5f }, { 1.0f, 1.0f }},
-        {{ -0.5f, +0.5f, +0.5f }, { 1.0f, 0.0f }},
-        {{ -0.5f, +0.5f, -0.5f }, { 0.0f, 0.0f }},
-        
+        { { -0.5f, -0.5f, -0.5f }, { 0.0f, 1.0f } },
+        { { -0.5f, -0.5f, +0.5f }, { 1.0f, 1.0f } },
+        { { -0.5f, +0.5f, +0.5f }, { 1.0f, 0.0f } },
+        { { -0.5f, +0.5f, -0.5f }, { 0.0f, 0.0f } },
+
         // Right face (x = +0.5)
-        {{ +0.5f, -0.5f, +0.5f }, { 0.0f, 1.0f }},
-        {{ +0.5f, -0.5f, -0.5f }, { 1.0f, 1.0f }},
-        {{ +0.5f, +0.5f, -0.5f }, { 1.0f, 0.0f }},
-        {{ +0.5f, +0.5f, +0.5f }, { 0.0f, 0.0f }},
-        
+        { { +0.5f, -0.5f, +0.5f }, { 0.0f, 1.0f } },
+        { { +0.5f, -0.5f, -0.5f }, { 1.0f, 1.0f } },
+        { { +0.5f, +0.5f, -0.5f }, { 1.0f, 0.0f } },
+        { { +0.5f, +0.5f, +0.5f }, { 0.0f, 0.0f } },
+
         // Top face (y = +0.5)
-        {{ -0.5f, +0.5f, +0.5f }, { 0.0f, 0.0f }},
-        {{ +0.5f, +0.5f, +0.5f }, { 1.0f, 0.0f }},
-        {{ +0.5f, +0.5f, -0.5f }, { 1.0f, 1.0f }},
-        {{ -0.5f, +0.5f, -0.5f }, { 0.0f, 1.0f }},
-        
+        { { -0.5f, +0.5f, +0.5f }, { 0.0f, 0.0f } },
+        { { +0.5f, +0.5f, +0.5f }, { 1.0f, 0.0f } },
+        { { +0.5f, +0.5f, -0.5f }, { 1.0f, 1.0f } },
+        { { -0.5f, +0.5f, -0.5f }, { 0.0f, 1.0f } },
+
         // Bottom face (y = -0.5)
-        {{ -0.5f, -0.5f, -0.5f }, { 0.0f, 0.0f }},
-        {{ +0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f }},
-        {{ +0.5f, -0.5f, +0.5f }, { 1.0f, 1.0f }},
-        {{ -0.5f, -0.5f, +0.5f }, { 0.0f, 1.0f }}
+        { { -0.5f, -0.5f, -0.5f }, { 0.0f, 0.0f } },
+        { { +0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f } },
+        { { +0.5f, -0.5f, +0.5f }, { 1.0f, 1.0f } },
+        { { -0.5f, -0.5f, +0.5f }, { 0.0f, 1.0f } }
     };
 
     // Index buffer for cube (6 faces * 2 triangles * 3 indices = 36 indices)
     std::vector<uint16_t> index_buffer_data{
-        0, 1, 2,  0, 2, 3,    // Front
-        4, 5, 6,  4, 6, 7,    // Back
-        8, 9, 10,  8, 10, 11, // Left
-        12, 13, 14,  12, 14, 15, // Right
-        16, 17, 18,  16, 18, 19, // Top
-        20, 21, 22,  20, 22, 23  // Bottom
+        0, 1, 2, 0, 2, 3,       // Front
+        4, 5, 6, 4, 6, 7,       // Back
+        8, 9, 10, 8, 10, 11,    // Left
+        12, 13, 14, 12, 14, 15, // Right
+        16, 17, 18, 16, 18, 19, // Top
+        20, 21, 22, 20, 22, 23  // Bottom
     };
 
     // Create vertex buffer
@@ -131,7 +134,7 @@ bool Application::init()
     m_sampler->setMagFilter(VK_FILTER_LINEAR);
     m_sampler->setMinFilter(VK_FILTER_LINEAR);
     m_sampler->setAddressMode(VK_SAMPLER_ADDRESS_MODE_REPEAT);
-    
+
     if (!m_sampler->create())
     {
         return false;
@@ -142,7 +145,7 @@ bool Application::init()
 
     // Create MaterialShader - handles shader compilation and descriptor management
     auto material = std::make_shared<MaterialShader>(m_physical_device, m_device, "textured_quad.slang", "../resources/shaders/");
-    
+
     if (!material->build())
     {
         return false;
@@ -211,7 +214,7 @@ bool Application::init()
     // Create Renderable - combines geometry, material, and transform
     // Renderable owns and manages its own UniformModelData buffer
     m_renderable = std::make_shared<Renderable>(m_physical_device, m_device, mesh, material, float4x4(1.0f));
-    
+
     // Initialize renderable (creates uniform buffer and binds to material)
     if (!m_renderable->init())
     {
@@ -237,7 +240,7 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
     float aspect = (float)m_vulkan_window.getCurrentExtent().width / (float)m_vulkan_window.getCurrentExtent().height;
     float4x4 projection_matrix = perspective(45.0f, aspect, 0.1f, 100.0f);
     float4x4 view_matrix = lookAt(float3{ 0.0f, 1.0f, 3.0f }, float3{ 0.0f, 0.0f, 0.0f }, float3{ 0.0f, 1.0f, 0.0f });
-    
+
     m_uniform_view_block->setMember("u_projectionMatrix", projection_matrix);
     m_uniform_view_block->setMember("u_viewMatrix", view_matrix);
 
@@ -253,10 +256,10 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
     // Note: For shaders with additional uniforms beyond u_worldMatrix,
     // you can access the UniformBlock directly for introspection and updates:
     //   auto uniform_block = m_renderable->getUniformBlock();
-    //   
+    //
     //   // List all available uniform members
     //   auto member_names = uniform_block->getMemberNames();
-    //   
+    //
     //   // Set custom members
     //   uniform_block->setMember("u_customData", custom_value);
     //   uniform_block->setMember("u_lightPosition", light_pos);
@@ -308,30 +311,29 @@ void Application::terminate()
     // Clean up scene object and shared resources
     m_renderable.reset();
     m_texture_sampler.reset();
-    
+
     if (m_sampler)
     {
         m_sampler->destroy();
     }
-    
+
     if (m_texture)
     {
         m_texture->destroy();
     }
-    
+
     if (m_uniform_view_buffer)
     {
         m_uniform_view_buffer->destroy();
     }
-    
+
     if (m_index_buffer)
     {
         m_index_buffer->destroy();
     }
-    
+
     if (m_vertex_buffer)
     {
         m_vertex_buffer->destroy();
     }
 }
-

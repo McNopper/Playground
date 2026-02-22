@@ -1,7 +1,9 @@
 #include "VulkanDeviceMemoryFactory.h"
 
 VulkanDeviceMemoryFactory::VulkanDeviceMemoryFactory(VkDevice device, VkDeviceSize allocation_size, uint32_t memory_type_index) :
-    m_device{ device }, m_allocation_size{ allocation_size }, m_memory_type_index{ memory_type_index }
+    m_device{ device },
+    m_allocation_size{ allocation_size },
+    m_memory_type_index{ memory_type_index }
 {
 }
 

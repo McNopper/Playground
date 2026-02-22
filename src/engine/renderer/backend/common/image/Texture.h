@@ -3,8 +3,8 @@
 
 #include <volk.h>
 
-#include "gpu/vulkan/builder/vulkan_resource.h"
 #include "core/image/image_data.h"
+#include "gpu/vulkan/builder/vulkan_resource.h"
 
 /**
  * Texture - Abstract base class for Vulkan image resources
@@ -69,7 +69,6 @@ public:
     bool isValid() const;
 
     virtual void destroy();
-
 };
 
 #endif /* RENDERER_BACKEND_COMMON_IMAGE_TEXTURE_H_ */

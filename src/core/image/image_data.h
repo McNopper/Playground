@@ -14,14 +14,16 @@
 // - File format: First row = top of image (PNG/JPEG standard)
 // - Everything is consistent - no flipping needed anywhere
 
-enum class ChannelFormat {
+enum class ChannelFormat
+{
     UNDEFINED,
     UNORM,
     SHALF,
     SFLOAT
 };
 
-struct ImageData {
+struct ImageData
+{
     uint32_t width{ 0u };
     uint32_t height{ 0u };
 

@@ -10,7 +10,8 @@
 
 class VulkanSpirvQuery;
 
-struct UniformMemberInfo {
+struct UniformMemberInfo
+{
     std::string name{};
     VkDeviceSize offset{ 0u };
     VkDeviceSize size{ 0u };
@@ -38,7 +39,6 @@ public:
 
     template<typename T>
     bool setMember(const std::string& name, const T& value);
-
 };
 
 template<typename T>

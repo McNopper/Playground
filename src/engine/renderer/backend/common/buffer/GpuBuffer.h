@@ -61,7 +61,6 @@ public:
     bool isReadbackEnabled() const;
 
     void destroy();
-
 };
 
 template<typename T>

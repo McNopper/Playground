@@ -5,11 +5,9 @@
 
 #include <volk.h>
 
-#include "core/math/vector.h"
-
-#include "gpu/vulkan/builder/vulkan_resource.h"
-
 #include "IVulkanWindow.h"
+#include "core/math/vector.h"
+#include "gpu/vulkan/builder/vulkan_resource.h"
 
 struct VulkanSwapchainImageResource
 {
@@ -53,7 +51,7 @@ private:
 
     VkFormat m_depth_stencil_format{ VK_FORMAT_UNDEFINED };
     VulkanImageResource m_depth_stencil_image_resource{};
-    int32_t m_depth_stencil_image_barrier_index{-1};
+    int32_t m_depth_stencil_image_barrier_index{ -1 };
 
     VkSwapchainKHR m_swapchain{ VK_NULL_HANDLE };
 
@@ -125,7 +123,6 @@ public:
     uint64_t getPresentId() const;
 
     VkResult waitForPresent(uint64_t present_id, uint64_t timeout = UINT64_MAX) const;
-
 };
 
 #endif /* GPU_VULKAN_PRESENTATION_VULKANWINDOW_H_ */

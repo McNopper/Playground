@@ -24,7 +24,6 @@ public:
     void setMemoryAllocateFlags(VkMemoryAllocateFlags flags);
 
     VkDeviceMemory create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANDEVICEMEMORYFACTORY_H_ */

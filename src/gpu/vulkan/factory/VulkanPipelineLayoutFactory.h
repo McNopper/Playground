@@ -27,7 +27,6 @@ public:
     void addPushConstantRange(const VkPushConstantRange& push_constant_range);
 
     VkPipelineLayout create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANPIPELINELAYOUTFACTORY_H_ */

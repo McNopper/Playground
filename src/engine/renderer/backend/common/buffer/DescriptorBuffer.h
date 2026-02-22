@@ -9,7 +9,7 @@
 
 // DescriptorBuffer implements VK_EXT_descriptor_buffer extension.
 // Descriptors are stored in a GPU buffer instead of traditional descriptor sets.
-// 
+//
 // Requirements for buffers used with descriptor buffers:
 // - Uniform/Storage buffers: Must have VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
 // - Images: Must have appropriate image usage flags
@@ -53,7 +53,6 @@ public:
     VkDeviceAddress getDeviceAddress() const;
     VkDeviceSize getDescriptorSize() const;
     VkDescriptorType getDescriptorType() const;
-
 };
 
 #endif /* RENDERER_BACKEND_COMMON_BUFFER_DESCRIPTORBUFFER_H_ */

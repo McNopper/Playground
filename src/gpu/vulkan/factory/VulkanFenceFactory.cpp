@@ -1,7 +1,8 @@
 #include "VulkanFenceFactory.h"
 
 VulkanFenceFactory::VulkanFenceFactory(VkDevice device, VkFenceCreateFlags fence_create_flags) :
-    m_device{ device }, m_fence_create_flags{ fence_create_flags }
+    m_device{ device },
+    m_fence_create_flags{ fence_create_flags }
 {
 }
 

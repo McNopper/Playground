@@ -15,7 +15,7 @@ private:
 
     VkDeviceSize m_size{ 0u };
     VkBufferCreateFlags m_flags{ 0u };
-    VkBufferUsageFlags  m_usage{ 0u };
+    VkBufferUsageFlags m_usage{ 0u };
     VkSharingMode m_sharing_mode{ VK_SHARING_MODE_EXCLUSIVE };
     std::vector<uint32_t> m_queue_family_indices{};
 
@@ -26,7 +26,6 @@ public:
     VulkanBufferFactory(VkDevice device, VkDeviceSize size, VkBufferUsageFlags usage);
 
     VkBuffer create() const;
-
 };
 
 #endif /* GPU_VULKAN_FACTORY_VULKANBUFFERFACTORY_H_ */

@@ -27,10 +27,10 @@ private:
     // Vertex buffer metadata for each named attribute
     struct VertexAttribute
     {
-        std::shared_ptr<VertexBuffer> buffer{};  // Pointer to vertex buffer
-        uint32_t binding{ 0u };            // Vulkan binding index
-        uint32_t offset{ 0u };             // Offset in bytes within buffer (for interleaved)
-        uint32_t stride{ 0u };             // Stride in bytes (0 = tightly packed)
+        std::shared_ptr<VertexBuffer> buffer{}; // Pointer to vertex buffer
+        uint32_t binding{ 0u };                 // Vulkan binding index
+        uint32_t offset{ 0u };                  // Offset in bytes within buffer (for interleaved)
+        uint32_t stride{ 0u };                  // Stride in bytes (0 = tightly packed)
         VkFormat format{ VK_FORMAT_UNDEFINED }; // Vulkan format (e.g., VK_FORMAT_R32G32B32_SFLOAT)
     };
 
@@ -68,8 +68,7 @@ public:
         uint32_t binding,
         VkFormat format,
         uint32_t offset = 0u,
-        uint32_t stride = 0u
-    );
+        uint32_t stride = 0u);
 
     // Set index buffer
     void setIndexBuffer(const std::shared_ptr<IndexBuffer>& buffer, VkIndexType index_type, uint32_t count);
@@ -96,7 +95,6 @@ public:
     void draw(VkCommandBuffer command_buffer) const;
 
     bool isValid() const;
-
 };
 
 #endif /* RENDERER_GEOMETRY_SURFACE_TRIANGLEMESH_H_ */

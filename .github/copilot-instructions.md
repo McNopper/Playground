@@ -201,10 +201,20 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 - Space after keywords: `if (`, `while (`
 - No space after function names: `create()`
 - Space around operators: `x = y + z`
-- Constructor initializer lists: Colon on same line as closing paren, all initializers on single line
+- Constructor initializer lists: Colon on same line as closing paren, pack initializers on current line if they fit, otherwise one per line
   ```cpp
+  // Short initializer list - pack on single line
   ClassName::ClassName(Type param1, Type param2) :
       m_member1{ param1 }, m_member2{ param2 }, m_member3{}
+  {
+  }
+
+  // Long initializer list - one per line
+  ClassName::ClassName(Type param1, Type param2, Type param3, Type param4) :
+      m_member1{ param1 },
+      m_member2{ param2 },
+      m_member3{ param3 },
+      m_member4{ param4 }
   {
   }
   ```

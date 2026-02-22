@@ -1,7 +1,10 @@
 #include "VulkanComputePipelineFactory.h"
 
 VulkanComputePipelineFactory::VulkanComputePipelineFactory(VkDevice device, VkPipelineCreateFlags flags, const VkPipelineShaderStageCreateInfo& stage, VkPipelineLayout layout) :
-    m_device{ device }, m_flags{ flags }, m_stage{ stage }, m_layout{ layout }
+    m_device{ device },
+    m_flags{ flags },
+    m_stage{ stage },
+    m_layout{ layout }
 {
 }
 

@@ -1,8 +1,8 @@
-#include <gtest/gtest.h>
-
 #include <iostream>
 #include <map>
 #include <string>
+
+#include <gtest/gtest.h>
 
 #include "gpu/gpu.h"
 #include "gpu/vulkan/spirv/VulkanSpirvQuery.h"
@@ -49,7 +49,7 @@ TEST(TestSpirv, ReflectTexturedQuad)
     for (const auto& name : block_names)
     {
         std::cout << "  " << name << '\n';
-        
+
         // Print buffer info for block
         auto buffer_info = query.gatherDescriptorSetBufferInfo(name);
         if (buffer_info.has_value())
@@ -123,7 +123,7 @@ TEST(TestSpirv, ReflectTexturedQuad)
     }
 
     std::cout << '\n';
-    
+
     EXPECT_GT(descriptor_bindings.size(), 0u);
     EXPECT_GT(vertex_input_names.size(), 0u);
 }

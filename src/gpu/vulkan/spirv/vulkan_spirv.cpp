@@ -17,7 +17,7 @@ std::optional<VkShaderStageFlagBits> toVulkanShaderStage(SpvExecutionModel execu
             return VK_SHADER_STAGE_FRAGMENT_BIT;
         case SpvExecutionModelGLCompute:
             return VK_SHADER_STAGE_COMPUTE_BIT;
-        
+
         default:
             break;
     }
@@ -30,21 +30,21 @@ std::optional<VkShaderStageFlagBits> toVulkanShaderStage(SpvReflectShaderStageFl
     // Current execution models, which can be extended.
     switch (execution_model)
     {
-    case SPV_REFLECT_SHADER_STAGE_VERTEX_BIT:
-        return VK_SHADER_STAGE_VERTEX_BIT;
-    case SPV_REFLECT_SHADER_STAGE_TESSELLATION_CONTROL_BIT:
-        return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-    case SPV_REFLECT_SHADER_STAGE_TESSELLATION_EVALUATION_BIT:
-        return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
-    case SPV_REFLECT_SHADER_STAGE_GEOMETRY_BIT:
-        return VK_SHADER_STAGE_GEOMETRY_BIT;
-    case SPV_REFLECT_SHADER_STAGE_FRAGMENT_BIT:
-        return VK_SHADER_STAGE_FRAGMENT_BIT;
-    case SPV_REFLECT_SHADER_STAGE_COMPUTE_BIT:
-        return VK_SHADER_STAGE_COMPUTE_BIT;
+        case SPV_REFLECT_SHADER_STAGE_VERTEX_BIT:
+            return VK_SHADER_STAGE_VERTEX_BIT;
+        case SPV_REFLECT_SHADER_STAGE_TESSELLATION_CONTROL_BIT:
+            return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+        case SPV_REFLECT_SHADER_STAGE_TESSELLATION_EVALUATION_BIT:
+            return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+        case SPV_REFLECT_SHADER_STAGE_GEOMETRY_BIT:
+            return VK_SHADER_STAGE_GEOMETRY_BIT;
+        case SPV_REFLECT_SHADER_STAGE_FRAGMENT_BIT:
+            return VK_SHADER_STAGE_FRAGMENT_BIT;
+        case SPV_REFLECT_SHADER_STAGE_COMPUTE_BIT:
+            return VK_SHADER_STAGE_COMPUTE_BIT;
 
-    default:
-        break;
+        default:
+            break;
     }
 
     return {};

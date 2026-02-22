@@ -18,9 +18,9 @@ float3x3 toXYZ(const ChromaticityCoordinates& c)
     const float RY = 1.0f - GY - BY;
 
     return {
-        {(RY / c.R.y) * c.R.x, (GY / c.G.y) * c.G.x, (BY / c.B.y) * c.B.x},
-        {RY, GY, BY},
-        {(RY / c.R.y) * (1.0f - c.R.x - c.R.y), (GY / c.G.y) * (1.0f - c.G.x - c.G.y), (BY / c.B.y) * (1.0f - c.B.x - c.B.y)}
+        { (RY / c.R.y) * c.R.x, (GY / c.G.y) * c.G.x, (BY / c.B.y) * c.B.x },
+        { RY, GY, BY },
+        { (RY / c.R.y) * (1.0f - c.R.x - c.R.y), (GY / c.G.y) * (1.0f - c.G.x - c.G.y), (BY / c.B.y) * (1.0f - c.B.x - c.B.y) }
     };
 }
 

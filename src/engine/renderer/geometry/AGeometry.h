@@ -15,7 +15,6 @@ public:
 
     // Issue draw call
     virtual void draw(VkCommandBuffer command_buffer) const = 0;
-
 };
 
 #endif /* RENDERER_GEOMETRY_AGEOMETRY_H_ */

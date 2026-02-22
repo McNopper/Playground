@@ -8,7 +8,8 @@
 
 #include "ebnf_base.h"
 
-namespace ebnf {
+namespace ebnf
+{
 
 // Exclude (aka. exception)
 
@@ -24,7 +25,8 @@ public:
     Exclude() = delete;
 
     Exclude(std::shared_ptr<ASymbol> symbol, std::shared_ptr<ASymbol> exclude_symbol) :
-        ASingleSymbol(std::move(symbol)), m_exclude_symbol{std::move(exclude_symbol)}
+        ASingleSymbol(std::move(symbol)),
+        m_exclude_symbol{ std::move(exclude_symbol) }
     {
     }
 

@@ -3,13 +3,15 @@
 
 #include <volk.h>
 
-struct VulkanImageResource {
+struct VulkanImageResource
+{
     VkImage image{ VK_NULL_HANDLE };
     VkDeviceMemory device_memory{ VK_NULL_HANDLE };
     VkImageView image_view{ VK_NULL_HANDLE };
 };
 
-struct VulkanBufferResource {
+struct VulkanBufferResource
+{
     VkBuffer buffer{ VK_NULL_HANDLE };
     VkDeviceMemory device_memory{ VK_NULL_HANDLE };
 };

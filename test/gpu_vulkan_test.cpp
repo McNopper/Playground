@@ -1,17 +1,19 @@
-#include <gtest/gtest.h>
-
 #include <algorithm>
+
+#include <gtest/gtest.h>
 
 #include "gpu/gpu.h"
 
-namespace {
+namespace
+{
 
-struct VulkanHandles {
+struct VulkanHandles
+{
     VkInstance instance{ VK_NULL_HANDLE };
     VkPhysicalDevice physical_device{ VK_NULL_HANDLE };
     std::uint32_t queue_family_index{ 0u };
     VkDevice device{ VK_NULL_HANDLE };
-    VkQueue queue{VK_NULL_HANDLE};
+    VkQueue queue{ VK_NULL_HANDLE };
 };
 
 bool initVulkan(VulkanHandles& handles)
@@ -36,7 +38,7 @@ bool initVulkan(VulkanHandles& handles)
     std::vector<std::uint32_t> queue_family_indices(queue_family_properties.size());
     std::generate(queue_family_indices.begin(), queue_family_indices.end(), [index = 0u]() mutable { return index++; });
 
-    queue_family_indices = QueueFamilyIndexFlagsFilter{VK_QUEUE_GRAPHICS_BIT, queue_family_properties} << queue_family_indices;
+    queue_family_indices = QueueFamilyIndexFlagsFilter{ VK_QUEUE_GRAPHICS_BIT, queue_family_properties } << queue_family_indices;
     if (queue_family_indices.empty())
     {
         return false;
@@ -78,7 +80,7 @@ void terminateVulkan(VulkanHandles& handles)
     }
 }
 
-}
+} // namespace
 
 TEST(TestVulkan, InitTerminate)
 {
@@ -90,7 +92,7 @@ TEST(TestVulkan, InitTerminate)
     {
         return;
     }
-        
+
     VulkanHandles handles{};
 
     result = initVulkan(handles);
@@ -111,5 +113,5 @@ TEST(TestVulkan, InitTerminate)
     EXPECT_EQ(handles.device, VK_NULL_HANDLE);
     EXPECT_EQ(handles.queue, VK_NULL_HANDLE);
 
-    vulkan_setup.terminate();    
+    vulkan_setup.terminate();
 }

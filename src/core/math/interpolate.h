@@ -1,9 +1,8 @@
 #ifndef CORE_MATH_INTERPOLATE_H_
 #define CORE_MATH_INTERPOLATE_H_
 
-#include "vector.h"
-
 #include "quaternion.h"
+#include "vector.h"
 
 float min(float x, float y);
 float2 min(const float2& x, const float2& y);

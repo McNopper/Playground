@@ -41,8 +41,7 @@ public:
         VkDevice device,
         std::shared_ptr<AGeometry> geometry,
         std::shared_ptr<MaterialShader> material,
-        const float4x4& world_matrix = float4x4(1.0f)
-    );
+        const float4x4& world_matrix = float4x4(1.0f));
 
     ~Renderable();
 
@@ -61,7 +60,6 @@ public:
 
     // Setter for world matrix (can be updated per frame)
     void setWorldMatrix(const float4x4& world_matrix);
-
 };
 
 #endif /* ENGINE_RENDERER_SCENE_RENDERABLE_H_ */

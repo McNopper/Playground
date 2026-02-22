@@ -46,7 +46,7 @@ MeshData createPyramid(float base_radius = 1.0f, float height = 2.0f, uint32_t s
 // height:        total height.
 // sides:         number of polygon sides (default 4 = square; 3 = triangular).
 MeshData createBluntedPyramid(float top_radius = 0.5f, float bottom_radius = 1.0f,
-                               float height = 2.0f, uint32_t sides = 4u);
+                              float height = 2.0f, uint32_t sides = 4u);
 
 // ---- 3D primitives — curved (smooth normals) ----------------------------
 
@@ -89,7 +89,7 @@ MeshData createFrustum(float top_radius = 0.5f, float bottom_radius = 1.0f, floa
 // height:        total height.
 // segments:      subdivisions around the circumference (default 32).
 MeshData createBluntedCone(float top_radius = 0.5f, float bottom_radius = 1.0f,
-                            float height = 2.0f, uint32_t segments = 32u);
+                           float height = 2.0f, uint32_t segments = 32u);
 
 // Cylinder centred at the origin (top cap at +Y, bottom cap at −Y).
 // Delegates to createFrustum with equal top and bottom radii.
@@ -112,11 +112,10 @@ MeshData createCapsule(float radius = 0.5f, float height = 1.0f, uint32_t cap_st
 // major_segments: subdivisions around the torus ring (default 32).
 // minor_segments: subdivisions around the tube cross-section (default 16).
 MeshData createTorus(
-    float    major_radius   = 1.0f,
-    float    minor_radius   = 0.25f,
+    float major_radius = 1.0f,
+    float minor_radius = 0.25f,
     uint32_t major_segments = 32u,
-    uint32_t minor_segments = 16u
-);
+    uint32_t minor_segments = 16u);
 
 // ---- 2D primitives — flat -----------------------------------------------
 
