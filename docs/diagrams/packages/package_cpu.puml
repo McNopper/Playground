@@ -4,6 +4,8 @@ package cpu {
 
   package ai {}
 
+  package geometry {}
+
 }
 
 @enduml

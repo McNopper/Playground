@@ -7,4 +7,7 @@
 
 #include "ai/MultiLayerPerceptron.h"
 
+#include "geometry/MeshData.h"
+#include "geometry/mesh_generator.h"
+
 #endif /* CPU_H_ */

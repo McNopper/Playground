@@ -56,6 +56,7 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 
 2. **cpu/** - CPU-side implementations and algorithms
    - `ai/` - AI/ML components (activation functions, loss functions, MLP)
+   - `geometry/` - Procedural mesh generation (cube, sphere, cone, torus)
 
 3. **gpu/** - GPU abstraction layer
    - `shader/` - Multi-language shader compilation (GLSL, SPIR-V, Slang)
