@@ -108,8 +108,27 @@ public float3 lambertianDiffuse(float3 albedo)
 }
 
 // ============================================================================
-// Importance Sampling
+// IBL Sampling
 // ============================================================================
+
+// Samples a preconvolved diffuse irradiance cube map
+public float3 sampleIBLDiffuse(TextureCube<float4> irradiance_map, SamplerState sampler_state, float3 normal)
+{
+    return irradiance_map.Sample(sampler_state, normal).rgb;
+}
+
+// Samples a prefiltered specular environment cube map at the roughness mip level
+public float3 sampleIBLSpecular(TextureCube<float4> prefiltered_map, SamplerState sampler_state, float3 r, float roughness, float mip_count)
+{
+    float mip_level = roughness * (mip_count - 1.0);
+    return prefiltered_map.SampleLevel(sampler_state, r, mip_level).rgb;
+}
+
+// Samples the BRDF integration LUT for the split-sum ambient specular
+public float2 sampleBRDFLUT(Texture2D<float4> brdf_lut, SamplerState sampler_state, float n_dot_v, float roughness)
+{
+    return brdf_lut.Sample(sampler_state, float2(n_dot_v, roughness)).rg;
+}
 
 // Van der Corput radical inverse for Hammersley sequence
 public float radicalInverseVdC(uint bits)

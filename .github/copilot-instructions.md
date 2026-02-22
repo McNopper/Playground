@@ -70,13 +70,20 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 4. **engine/** - High-level rendering framework
    - `asset/` - Asset loading and parsing (future: glTF, materials, etc.)
    - `renderer/` - Rendering abstractions
-     - `geometry/` - Mesh and primitive data structures
+     - `geometry/` - Abstract geometry base and primitive types
+       - `curve/` - Curve primitives
+       - `point/` - Point primitives
+       - `surface/` - Surface primitives (e.g., TriangleMesh)
+       - `volume/` - Volume primitives
      - `material/` - Material definitions (inspired by OpenUSD/MaterialX)
-       - `Shader` - Base class for shader materials (can be instantiated)
-       - `pbr/` - PBR material implementations
-       - `splat/` - Splatting shader implementations (Gaussian, EWA)
+       - `pbr/` - PBR material implementations (future)
+       - `splat/` - Splatting shader implementations (future)
      - `scene/` - Scene objects (Renderable combines geometry + material + transform)
      - `backend/` - Backend-specific implementations
+       - `common/buffer/` - GPU buffer abstractions (uniform, vertex, index, storage, descriptor)
+       - `common/image/` - Texture abstractions (Texture2D, TextureCube, Sampler)
+       - `rasterizer/` - Rasterizer backend (future)
+       - `raytracer/` - Raytracer backend (future)
    - `runtime/` - Application framework and main loop
 
 **Umbrella Headers:** Each module has a master header (`core/core.h`, `gpu/gpu.h`, `engine/engine.h`) that includes all public headers for that module.

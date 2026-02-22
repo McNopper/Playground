@@ -9,7 +9,7 @@ Texture::Texture(VkPhysicalDevice physical_device, VkDevice device) :
 
 Texture::~Texture()
 {
-	destroy();
+	Texture::destroy();
 }
 
 void Texture::setFormat(VkFormat format)
@@ -25,6 +25,11 @@ void Texture::setUsage(VkImageUsageFlags usage)
 void Texture::setMipLevels(uint32_t mip_levels)
 {
 	m_mip_levels = mip_levels;
+}
+
+void Texture::setImageCreateFlags(VkImageCreateFlags flags)
+{
+	m_image_create_flags = flags;
 }
 
 bool Texture::createImage()
@@ -50,6 +55,8 @@ bool Texture::createImage()
 
 	VulkanImageFactory image_factory{ m_device, m_format, m_extent, VK_SAMPLE_COUNT_1_BIT, usage };
 	image_factory.setMipLevels(m_mip_levels);
+	image_factory.setArrayLayers(m_array_layers);
+	image_factory.setFlags(m_image_create_flags);
 	m_image_resource.image = image_factory.create();
 	if (m_image_resource.image == VK_NULL_HANDLE)
 	{

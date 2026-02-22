@@ -33,6 +33,8 @@ public:
     VulkanImageFactory(VkDevice device, VkFormat format, const VkExtent3D& extent, VkSampleCountFlagBits samples, VkImageUsageFlags usage);
 
     void setMipLevels(uint32_t mip_levels);
+    void setArrayLayers(uint32_t array_layers);
+    void setFlags(VkImageCreateFlags flags);
 
     VkImage create() const;
 

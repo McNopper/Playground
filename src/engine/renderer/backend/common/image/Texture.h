@@ -14,7 +14,8 @@
  * 
  * Architecture:
  *   Texture (base)
- *   └── Texture2D
+ *   ├── Texture2D
+ *   └── TextureCube
  */
 
 class Texture {
@@ -32,6 +33,7 @@ protected:
 	VkImageUsageFlags m_usage{ 0u };
 	uint32_t m_mip_levels{ 1u };
 	uint32_t m_array_layers{ 1u };
+	VkImageCreateFlags m_image_create_flags{};
 
 	bool createImage();
 
@@ -49,6 +51,7 @@ public:
 	void setFormat(VkFormat format);
 	void setUsage(VkImageUsageFlags usage);
 	void setMipLevels(uint32_t mip_levels);
+	void setImageCreateFlags(VkImageCreateFlags flags);
 
 	virtual bool create() = 0;
 
@@ -64,7 +67,7 @@ public:
 
 	bool isValid() const;
 
-	void destroy();
+	virtual void destroy();
 
 };
 

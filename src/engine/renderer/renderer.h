@@ -43,6 +43,7 @@
 #include "engine/renderer/backend/common/buffer/DescriptorBufferSet.h"
 #include "engine/renderer/backend/common/image/Texture.h"
 #include "engine/renderer/backend/common/image/Texture2D.h"
+#include "engine/renderer/backend/common/image/TextureCube.h"
 #include "engine/renderer/backend/common/image/Sampler.h"
 
 #endif /* RENDERER_H_ */

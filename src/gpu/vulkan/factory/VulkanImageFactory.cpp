@@ -10,6 +10,16 @@ void VulkanImageFactory::setMipLevels(uint32_t mip_levels)
     m_mip_levels = mip_levels;
 }
 
+void VulkanImageFactory::setArrayLayers(uint32_t array_layers)
+{
+    m_array_layers = array_layers;
+}
+
+void VulkanImageFactory::setFlags(VkImageCreateFlags flags)
+{
+    m_flags = flags;
+}
+
 VkImage VulkanImageFactory::create() const
 {
 	VkImageCreateInfo image_create_info{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
