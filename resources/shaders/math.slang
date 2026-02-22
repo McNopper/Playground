@@ -33,3 +33,23 @@ public float2x2 operator *(float2x2 a, float2x2 b)
 {
     return mul(a, b);
 }
+
+// Converts a unit quaternion (x, y, z, w) to a 3x3 rotation matrix
+public float3x3 quaternionToMatrix(float4 q)
+{
+    float xx = q.x * q.x;
+    float yy = q.y * q.y;
+    float zz = q.z * q.z;
+    float xy = q.x * q.y;
+    float xz = q.x * q.z;
+    float yz = q.y * q.z;
+    float wx = q.w * q.x;
+    float wy = q.w * q.y;
+    float wz = q.w * q.z;
+
+    return float3x3(
+        1.0 - 2.0 * (yy + zz),  2.0 * (xy - wz),         2.0 * (xz + wy),
+        2.0 * (xy + wz),         1.0 - 2.0 * (xx + zz),  2.0 * (yz - wx),
+        2.0 * (xz - wy),         2.0 * (yz + wx),         1.0 - 2.0 * (xx + yy)
+    );
+}
