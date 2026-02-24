@@ -79,7 +79,7 @@ bool VulkanWindow::init()
     image_memory_barrier2.srcStageMask = VK_PIPELINE_STAGE_2_NONE;
     image_memory_barrier2.srcAccessMask = 0u;
     image_memory_barrier2.dstStageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT;
-    image_memory_barrier2.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    image_memory_barrier2.dstAccessMask = VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT;
     image_memory_barrier2.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     image_memory_barrier2.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
     m_render_image_memory_barriers.push_back(image_memory_barrier2);
@@ -164,7 +164,7 @@ bool VulkanWindow::init()
         image_memory_barrier2.srcStageMask = VK_PIPELINE_STAGE_2_NONE;
         image_memory_barrier2.srcAccessMask = 0u;
         image_memory_barrier2.dstStageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT;
-        image_memory_barrier2.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        image_memory_barrier2.dstAccessMask = VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT;
         image_memory_barrier2.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
         image_memory_barrier2.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
         m_render_image_memory_barriers.push_back(image_memory_barrier2);
