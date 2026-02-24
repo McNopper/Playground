@@ -19,7 +19,7 @@ bool DescriptorBufferSet::queryDescriptorSizes()
     // Query and store sizes for each binding
     for (auto& [binding_index, binding] : m_bindings)
     {
-        binding.size = getDescriptorSize(binding.type);
+        binding.size = getDescriptorSize(binding.type, descriptor_buffer_properties);
         if (binding.size == 0u)
         {
             return false;
@@ -29,32 +29,30 @@ bool DescriptorBufferSet::queryDescriptorSizes()
     return true;
 }
 
-VkDeviceSize DescriptorBufferSet::getDescriptorSize(VkDescriptorType type) const
+VkDeviceSize DescriptorBufferSet::getDescriptorSize(VkDescriptorType type, const VkPhysicalDeviceDescriptorBufferPropertiesEXT& props)
 {
-    auto descriptor_buffer_properties = gatherPhysicalDeviceDescriptorBufferPropertiesEXT(m_physical_device);
-
     switch (type)
     {
         case VK_DESCRIPTOR_TYPE_SAMPLER:
-            return descriptor_buffer_properties.samplerDescriptorSize;
+            return props.samplerDescriptorSize;
         case VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
-            return descriptor_buffer_properties.combinedImageSamplerDescriptorSize;
+            return props.combinedImageSamplerDescriptorSize;
         case VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE:
-            return descriptor_buffer_properties.sampledImageDescriptorSize;
+            return props.sampledImageDescriptorSize;
         case VK_DESCRIPTOR_TYPE_STORAGE_IMAGE:
-            return descriptor_buffer_properties.storageImageDescriptorSize;
+            return props.storageImageDescriptorSize;
         case VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER:
-            return descriptor_buffer_properties.uniformTexelBufferDescriptorSize;
+            return props.uniformTexelBufferDescriptorSize;
         case VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER:
-            return descriptor_buffer_properties.storageTexelBufferDescriptorSize;
+            return props.storageTexelBufferDescriptorSize;
         case VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
-            return descriptor_buffer_properties.uniformBufferDescriptorSize;
+            return props.uniformBufferDescriptorSize;
         case VK_DESCRIPTOR_TYPE_STORAGE_BUFFER:
-            return descriptor_buffer_properties.storageBufferDescriptorSize;
+            return props.storageBufferDescriptorSize;
         case VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT:
-            return descriptor_buffer_properties.inputAttachmentDescriptorSize;
+            return props.inputAttachmentDescriptorSize;
         case VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR:
-            return descriptor_buffer_properties.accelerationStructureDescriptorSize;
+            return props.accelerationStructureDescriptorSize;
         default:
             return 0u;
     }

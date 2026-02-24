@@ -82,7 +82,7 @@ void transitionImageLayout(VkCommandBuffer command_buffer, VkImage image, VkImag
     switch (old_layout)
     {
         case VK_IMAGE_LAYOUT_UNDEFINED:
-            image_memory_barrier.srcStageMask = VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT;
+            image_memory_barrier.srcStageMask = VK_PIPELINE_STAGE_2_NONE;
             image_memory_barrier.srcAccessMask = 0u;
             break;
         case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
@@ -130,7 +130,7 @@ void transitionImageLayout(VkCommandBuffer command_buffer, VkImage image, VkImag
             image_memory_barrier.dstAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
             break;
         case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
-            image_memory_barrier.dstStageMask = VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT;
+            image_memory_barrier.dstStageMask = VK_PIPELINE_STAGE_2_NONE;
             image_memory_barrier.dstAccessMask = 0u;
             break;
         default:
@@ -163,4 +163,15 @@ void copyHostToImage(VkDevice device, const void* src_data, uint32_t src_row_len
     copy_info.pRegions = &memory_to_image_copy;
 
     vkCopyMemoryToImage(device, &copy_info);
+}
+
+void hostTransitionImageLayout(VkDevice device, VkImage image, VkImageLayout old_layout, VkImageLayout new_layout, VkImageAspectFlags aspect_mask, uint32_t base_mip_level, uint32_t level_count, uint32_t layer_count)
+{
+    VkHostImageLayoutTransitionInfo transition{ VK_STRUCTURE_TYPE_HOST_IMAGE_LAYOUT_TRANSITION_INFO };
+    transition.image = image;
+    transition.oldLayout = old_layout;
+    transition.newLayout = new_layout;
+    transition.subresourceRange = { aspect_mask, base_mip_level, level_count, 0u, layer_count };
+
+    vkTransitionImageLayout(device, 1u, &transition);
 }

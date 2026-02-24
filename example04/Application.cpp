@@ -110,24 +110,10 @@ bool Application::init()
         return false;
     }
 
-    // Create temporary command pool for texture upload
-    VulkanCommandPoolFactory command_pool_factory{ m_device, VK_COMMAND_POOL_CREATE_TRANSIENT_BIT, m_queue_family_index };
-    VkCommandPool command_pool = command_pool_factory.create();
-    if (command_pool == VK_NULL_HANDLE)
+    if (!m_texture.upload(image_data.value()))
     {
         return false;
     }
-
-    VkQueue queue = VK_NULL_HANDLE;
-    vkGetDeviceQueue(m_device, m_queue_family_index, 0, &queue);
-
-    if (!m_texture.upload(command_pool, queue, image_data.value()))
-    {
-        vkDestroyCommandPool(m_device, command_pool, nullptr);
-        return false;
-    }
-
-    vkDestroyCommandPool(m_device, command_pool, nullptr);
 
     // Create sampler
     m_sampler.setMagFilter(VK_FILTER_LINEAR);

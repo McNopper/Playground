@@ -48,7 +48,7 @@ private:
     VkBufferUsageFlags m_usage{ 0u };
 
     bool queryDescriptorSizes();
-    VkDeviceSize getDescriptorSize(VkDescriptorType type) const;
+    static VkDeviceSize getDescriptorSize(VkDescriptorType type, const VkPhysicalDeviceDescriptorBufferPropertiesEXT& props);
     VkDeviceSize alignOffset(VkDeviceSize offset) const;
 
 public:

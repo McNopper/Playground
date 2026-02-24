@@ -289,7 +289,7 @@ TEST(TestTexture2D, UploadImageData)
     EXPECT_EQ(expected_format, texture.getFormat()) << "Format mismatch: ImageData format=" << expected_format << ", Texture format=" << texture.getFormat();
 
     // Upload image data
-    result = texture.upload(handles.command_pool, handles.queue, image_data);
+    result = texture.upload(image_data);
     ASSERT_TRUE(result) << "Failed to upload image data to Texture2D";
 
     // Verify texture is valid

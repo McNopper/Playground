@@ -36,7 +36,7 @@ bool Texture2D::create()
     return createImage();
 }
 
-bool Texture2D::upload(VkCommandPool command_pool, VkQueue queue, const ImageData& image_data, uint32_t mip_level)
+bool Texture2D::upload(const ImageData& image_data, uint32_t mip_level)
 {
     if (!isValid())
     {
@@ -61,92 +61,15 @@ bool Texture2D::upload(VkCommandPool command_pool, VkQueue queue, const ImageDat
         return false;
     }
 
-    // Calculate buffer size
-    VkDeviceSize buffer_size = static_cast<VkDeviceSize>(image_data.pixels.size());
-
-    // Create staging buffer
-    auto staging_buffer = createStagingBuffer(m_physical_device, m_device, buffer_size);
-    if (!staging_buffer.has_value())
-    {
-        return false;
-    }
-
-    // Copy image data to staging buffer
-    if (!hostToDevice(m_device, staging_buffer->device_memory, 0u, buffer_size, image_data.pixels))
-    {
-        destroyResource(m_device, *staging_buffer);
-        return false;
-    }
-
-    // Create command buffer
-    VulkanCommandBufferFactory command_buffer_factory{ m_device, command_pool, VK_COMMAND_BUFFER_LEVEL_PRIMARY, 1u };
-    auto command_buffers = command_buffer_factory.create();
-    if (command_buffers.empty())
-    {
-        destroyResource(m_device, *staging_buffer);
-        return false;
-    }
-    VkCommandBuffer command_buffer = command_buffers[0];
-
-    // Begin command buffer
-    VkCommandBufferBeginInfo begin_info{ VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO };
-    begin_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-    VkResult result = vkBeginCommandBuffer(command_buffer, &begin_info);
-    if (result != VK_SUCCESS)
-    {
-        destroyResource(m_device, *staging_buffer);
-        return false;
-    }
-
-    // Transition mip level: UNDEFINED -> TRANSFER_DST_OPTIMAL
-    transitionImageLayout(command_buffer, m_image_resource.image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT, mip_level, 1u);
-
-    // Copy buffer to image
     VkImageSubresourceLayers subresource_layers{};
     subresource_layers.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     subresource_layers.mipLevel = mip_level;
     subresource_layers.baseArrayLayer = 0u;
     subresource_layers.layerCount = 1u;
 
-    VkExtent3D mip_extent{ expected_width, expected_height, 1u };
-    copyBufferToImage(command_buffer, staging_buffer->buffer, m_image_resource.image, mip_extent, subresource_layers);
-
-    // Transition mip level: TRANSFER_DST_OPTIMAL -> SHADER_READ_ONLY_OPTIMAL
-    transitionImageLayout(command_buffer, m_image_resource.image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT, mip_level, 1u);
-
-    result = vkEndCommandBuffer(command_buffer);
-    if (result != VK_SUCCESS)
-    {
-        destroyResource(m_device, *staging_buffer);
-        return false;
-    }
-
-    // Submit command buffer (Vulkan 1.3)
-    VkCommandBufferSubmitInfo cmd_buffer_info{ VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO };
-    cmd_buffer_info.commandBuffer = command_buffer;
-
-    VkSubmitInfo2 submit_info{ VK_STRUCTURE_TYPE_SUBMIT_INFO_2 };
-    submit_info.commandBufferInfoCount = 1u;
-    submit_info.pCommandBufferInfos = &cmd_buffer_info;
-
-    result = vkQueueSubmit2(queue, 1u, &submit_info, VK_NULL_HANDLE);
-    if (result != VK_SUCCESS)
-    {
-        destroyResource(m_device, *staging_buffer);
-        return false;
-    }
-
-    // Wait for queue to finish
-    result = vkQueueWaitIdle(queue);
-    if (result != VK_SUCCESS)
-    {
-        destroyResource(m_device, *staging_buffer);
-        return false;
-    }
-
-    // Cleanup staging buffer
-    destroyResource(m_device, *staging_buffer);
+    hostTransitionImageLayout(m_device, m_image_resource.image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT, mip_level, 1u);
+    copyHostToImage(m_device, image_data.pixels.data(), 0u, 0u, m_image_resource.image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, { expected_width, expected_height, 1u }, subresource_layers);
+    hostTransitionImageLayout(m_device, m_image_resource.image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT, mip_level, 1u);
 
     return true;
 }
@@ -161,7 +84,7 @@ uint32_t Texture2D::getHeight() const
     return m_extent.height;
 }
 
-bool Texture2D::uploadMipMaps(VkCommandPool command_pool, VkQueue queue, const std::vector<ImageData>& mip_levels)
+bool Texture2D::uploadMipMaps(const std::vector<ImageData>& mip_levels)
 {
     if (static_cast<uint32_t>(mip_levels.size()) != m_mip_levels)
     {
@@ -170,7 +93,7 @@ bool Texture2D::uploadMipMaps(VkCommandPool command_pool, VkQueue queue, const s
 
     for (uint32_t i{ 0u }; i < static_cast<uint32_t>(mip_levels.size()); ++i)
     {
-        if (!upload(command_pool, queue, mip_levels[i], i))
+        if (!upload(mip_levels[i], i))
         {
             return false;
         }

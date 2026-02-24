@@ -263,6 +263,28 @@ cppcheck src --check-level=exhaustive --quiet --std=c++20 --enable=style,perform
 
 See `docs/coordinate_system.md` for complete details.
 
+### Vulkan Version Strategy
+
+This SDK targets **Vulkan 1.4** and follows the [Vulkan Roadmap 2022](https://www.khronos.org/blog/vulkan-roadmap-2022), [Roadmap 2024](https://www.khronos.org/blog/vulkan-roadmap-2024), and [Roadmap 2026](https://www.khronos.org/blog/vulkan-introduces-roadmap-2026-and-new-descriptor-heap-extension) profiles (`VP_KHR_roadmap_2022` → `VP_KHR_roadmap_2024` → `VP_KHR_roadmap_2026`) as the primary guide for API choices. Roadmap 2026 requires Vulkan 1.4 and mandates `hostImageCopy`, `VK_KHR_fragment_shading_rate`, `VK_KHR_shader_clock`, `VK_KHR_compute_shader_derivatives`, `VK_KHR_cooperative_matrix`, and swapchain improvements (`VK_KHR_present_mode_fifo_latest_ready`, `VK_KHR_present_id2`, `VK_KHR_present_wait2`). The new `VK_EXT_descriptor_heap` extension (introduced alongside Roadmap 2026) is the future full replacement for all descriptor set/pool/buffer mechanisms — watch for its KHR promotion.
+
+**Core principle:** When a modern Vulkan 1.4 (or promoted-to-core) API exists **and is available in current drivers**, use it exclusively and remove the legacy approach entirely. Do not keep both paths. Do not implement features that are not yet in shipping drivers even if published in the spec.
+
+Examples of preferred modern APIs (available in current drivers):
+- `vkCopyMemoryToImage` / `vkCopyImageToMemory` (host image copy, Vulkan 1.4 core) instead of staging buffers for texture upload
+- `vkCmdPipelineBarrier2` / `VkImageMemoryBarrier2` (synchronization2, Vulkan 1.3 core) instead of `vkCmdPipelineBarrier`
+- `VK_EXT_descriptor_buffer` instead of descriptor pools and `vkUpdateDescriptorSets`
+- `vkCmdBeginRendering` (dynamic rendering, Vulkan 1.3 core) instead of `VkRenderPass` / `VkFramebuffer`
+- `VkPhysicalDeviceVulkan1xFeatures` structs instead of extension-specific feature structs where promoted to core
+
+**On the horizon (not yet in drivers — do not implement yet):**
+- `VK_EXT_descriptor_heap` — full replacement for the descriptor system (introduced Jan 2026, EXT, seeking developer feedback before KHR promotion; replace `VK_EXT_descriptor_buffer` with this once it has broad driver support)
+
+**When reviewing or adding Vulkan code:**
+1. Check whether the API was promoted to Vulkan 1.2, 1.3, or 1.4 core — prefer the core version
+2. Remove old code paths once the modern replacement is in place
+3. Only use extensions/features that are available in the installed Vulkan SDK and shipping drivers
+4. Validate against the Vulkan spec and Roadmap profile guarantees, not just validation layer silence
+
 ### Vulkan Patterns
 
 - Use volk for dynamic Vulkan loading (not static linking)

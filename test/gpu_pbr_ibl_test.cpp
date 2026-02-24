@@ -227,7 +227,7 @@ TEST(TestIBL, GenerateDiffuseIrradiance)
     env_texture.setFormat(getVulkanFormat(env_image));
     env_texture.setUsage(VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
     ASSERT_TRUE(env_texture.create());
-    ASSERT_TRUE(env_texture.upload(handles.command_pool, handles.queue, env_image));
+    ASSERT_TRUE(env_texture.upload(env_image));
 
     // Create sampler
     VulkanSamplerFactory sampler_factory{ handles.device, 0u };
@@ -436,7 +436,7 @@ TEST(TestIBL, GenerateSpecularPrefilter)
     env_texture.setFormat(getVulkanFormat(env_image));
     env_texture.setUsage(VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
     ASSERT_TRUE(env_texture.create());
-    ASSERT_TRUE(env_texture.upload(handles.command_pool, handles.queue, env_image));
+    ASSERT_TRUE(env_texture.upload(env_image));
 
     // Create sampler
     VulkanSamplerFactory sampler_factory{ handles.device, 0u };
