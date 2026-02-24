@@ -4,6 +4,7 @@
 module pbr;
 
 import math;
+import sampling;
 
 // ============================================================================
 // Fresnel
@@ -130,42 +131,4 @@ public float2 sampleBRDFLUT(Texture2D<float4> brdf_lut, SamplerState sampler_sta
     return brdf_lut.Sample(sampler_state, float2(n_dot_v, roughness)).rg;
 }
 
-// Van der Corput radical inverse for Hammersley sequence
-public float radicalInverseVdC(uint bits)
-{
-    bits = (bits << 16u) | (bits >> 16u);
-    bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
-    bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
-    bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
-    bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
-    return float(bits) * 2.3283064365386963e-10; // / 0x100000000
-}
 
-// Hammersley low-discrepancy sequence point i of N
-public float2 hammersley(uint i, uint n)
-{
-    return float2(float(i) / float(n), radicalInverseVdC(i));
-}
-
-// GGX importance sampling — returns a half-vector in world space
-public float3 importanceSampleGGX(float2 xi, float3 n, float roughness)
-{
-    float a = roughness * roughness;
-
-    float phi = TWO_PI * xi.x;
-    float cos_theta = sqrt((1.0 - xi.y) / (1.0 + (a * a - 1.0) * xi.y));
-    float sin_theta = sqrt(1.0 - cos_theta * cos_theta);
-
-    float3 h;
-    h.x = cos(phi) * sin_theta;
-    h.y = sin(phi) * sin_theta;
-    h.z = cos_theta;
-
-    // Tangent space to world space
-    float3 up = abs(n.z) < 0.999 ? float3(0.0, 0.0, 1.0) : float3(1.0, 0.0, 0.0);
-    float3 tangent = normalize(cross(up, n));
-    float3 bitangent = cross(n, tangent);
-
-    float3 sample_vec = tangent * h.x + bitangent * h.y + n * h.z;
-    return normalize(sample_vec);
-}

@@ -6,6 +6,7 @@
 // threadId.z selects the cube face (Vulkan convention: 0=+X .. 5=-Z)
 
 import pbr;
+import sampling;
 import geometry;
 
 Texture2D<float4> u_env_map;

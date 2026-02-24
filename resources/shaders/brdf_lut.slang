@@ -10,6 +10,7 @@
 
 import math;
 import pbr;
+import sampling;
 
 RWTexture2D<float4> output_texture;
 
