@@ -490,3 +490,127 @@ TEST(TestMath, FrustumAABBNotVisible)
     AABB behind{ { -0.5f, -0.5f, 5.0f }, { 0.5f, 0.5f, 10.0f } };
     EXPECT_FALSE(isVisible(f, behind));
 }
+
+// ============================================================================
+// Ray
+// ============================================================================
+
+TEST(TestMath, RayPlaneHit)
+{
+    // XY plane at origin, normal +Z
+    Plane p = createPlane({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f });
+    Ray ray{ { 0.0f, 0.0f, 5.0f }, { 0.0f, 0.0f, -1.0f } };
+
+    auto t = intersect(ray, p);
+    ASSERT_TRUE(t.has_value());
+    EXPECT_NEAR(*t, 5.0f, 0.000001f);
+}
+
+TEST(TestMath, RayPlaneMiss)
+{
+    // Ray parallel to XY plane — no intersection
+    Plane p = createPlane({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f });
+    Ray ray{ { 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } };
+
+    EXPECT_FALSE(intersect(ray, p).has_value());
+}
+
+TEST(TestMath, RayPlaneBehind)
+{
+    // Ray pointing away from plane
+    Plane p = createPlane({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f });
+    Ray ray{ { 0.0f, 0.0f, 5.0f }, { 0.0f, 0.0f, 1.0f } };
+
+    EXPECT_FALSE(intersect(ray, p).has_value());
+}
+
+TEST(TestMath, RaySphereHit)
+{
+    Sphere s{ { 0.0f, 0.0f, 0.0f }, 1.0f };
+    Ray ray{ { 0.0f, 0.0f, 5.0f }, { 0.0f, 0.0f, -1.0f } };
+
+    auto t = intersect(ray, s);
+    ASSERT_TRUE(t.has_value());
+    EXPECT_NEAR(*t, 4.0f, 0.000001f); // hits front surface at z=1
+}
+
+TEST(TestMath, RaySphereInsideHit)
+{
+    // Ray origin inside sphere — returns exit point
+    Sphere s{ { 0.0f, 0.0f, 0.0f }, 2.0f };
+    Ray ray{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } };
+
+    auto t = intersect(ray, s);
+    ASSERT_TRUE(t.has_value());
+    EXPECT_NEAR(*t, 2.0f, 0.000001f);
+}
+
+TEST(TestMath, RaySphereMiss)
+{
+    Sphere s{ { 0.0f, 0.0f, 0.0f }, 1.0f };
+    Ray ray{ { 0.0f, 5.0f, 5.0f }, { 0.0f, 0.0f, -1.0f } };
+
+    EXPECT_FALSE(intersect(ray, s).has_value());
+}
+
+TEST(TestMath, RayAABBHit)
+{
+    AABB box{ { -1.0f, -1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f } };
+    Ray ray{ { 0.0f, 0.0f, 5.0f }, { 0.0f, 0.0f, -1.0f } };
+
+    auto t = intersect(ray, box);
+    ASSERT_TRUE(t.has_value());
+    EXPECT_NEAR(*t, 4.0f, 0.000001f); // hits front face at z=1
+}
+
+TEST(TestMath, RayAABBInsideHit)
+{
+    // Ray origin inside AABB — t = 0 (entry)
+    AABB box{ { -1.0f, -1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f } };
+    Ray ray{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } };
+
+    auto t = intersect(ray, box);
+    ASSERT_TRUE(t.has_value());
+    EXPECT_NEAR(*t, 0.0f, 0.000001f);
+}
+
+TEST(TestMath, RayAABBMiss)
+{
+    AABB box{ { -1.0f, -1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f } };
+    Ray ray{ { 0.0f, 5.0f, 5.0f }, { 0.0f, 0.0f, -1.0f } };
+
+    EXPECT_FALSE(intersect(ray, box).has_value());
+}
+
+TEST(TestMath, RayTriangleHit)
+{
+    // Triangle in XY plane at z=0
+    float3 v0{ -1.0f, -1.0f, 0.0f };
+    float3 v1{  1.0f, -1.0f, 0.0f };
+    float3 v2{  0.0f,  1.0f, 0.0f };
+    Ray ray{ { 0.0f, 0.0f, 5.0f }, { 0.0f, 0.0f, -1.0f } };
+
+    auto t = intersect(ray, v0, v1, v2);
+    ASSERT_TRUE(t.has_value());
+    EXPECT_NEAR(*t, 5.0f, 0.000001f);
+}
+
+TEST(TestMath, RayTriangleMissOutside)
+{
+    float3 v0{ -1.0f, -1.0f, 0.0f };
+    float3 v1{  1.0f, -1.0f, 0.0f };
+    float3 v2{  0.0f,  1.0f, 0.0f };
+    Ray ray{ { 5.0f, 0.0f, 5.0f }, { 0.0f, 0.0f, -1.0f } };
+
+    EXPECT_FALSE(intersect(ray, v0, v1, v2).has_value());
+}
+
+TEST(TestMath, RayTriangleMissBehind)
+{
+    float3 v0{ -1.0f, -1.0f, 0.0f };
+    float3 v1{  1.0f, -1.0f, 0.0f };
+    float3 v2{  0.0f,  1.0f, 0.0f };
+    Ray ray{ { 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, -1.0f } };
+
+    EXPECT_FALSE(intersect(ray, v0, v1, v2).has_value());
+}

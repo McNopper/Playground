@@ -27,6 +27,7 @@
 #include "math/plane.h"
 #include "math/quaternion.h"
 #include "math/quaternion_transform.h"
+#include "math/ray.h"
 #include "math/real_spherical_harmonics.h"
 #include "math/rsh_rotation.h"
 #include "math/sphere.h"
