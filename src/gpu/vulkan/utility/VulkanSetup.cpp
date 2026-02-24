@@ -41,7 +41,6 @@ bool VulkanSetup::init()
     m_initialized = true;
 
     return true;
-    ;
 }
 
 void VulkanSetup::terminate()
