@@ -39,6 +39,57 @@ public float2x2 operator *(float2x2 a, float2x2 b)
     return mul(a, b);
 }
 
+// ============================================================================
+// Spherical coordinates — Y-up convention
+// theta: azimuth around Y axis in XZ plane [0, 2*PI]
+// phi:   polar angle from +Y axis          [0, PI]
+// r:     radius                            [0, inf)
+// ============================================================================
+
+public struct SphericalCoordinate
+{
+    public float theta;
+    public float phi;
+    public float r;
+};
+
+// Converts a Cartesian direction/position to spherical coordinates.
+public SphericalCoordinate toSpherical(float3 cartesian)
+{
+    SphericalCoordinate s;
+    s.r = length(cartesian);
+    if (s.r == 0.0)
+    {
+        s.theta = 0.0;
+        s.phi = 0.0;
+        return s;
+    }
+    s.phi = acos(clamp(cartesian.y / s.r, -1.0, 1.0));
+    s.theta = atan2(cartesian.z, cartesian.x);
+    if (s.theta < 0.0)
+    {
+        s.theta += TWO_PI;
+    }
+    return s;
+}
+
+// Converts spherical coordinates to a Cartesian position.
+public float3 toCartesian(SphericalCoordinate s)
+{
+    float sin_phi = sin(s.phi);
+    return float3(s.r * sin_phi * cos(s.theta), s.r * cos(s.phi), s.r * sin_phi * sin(s.theta));
+}
+
+// Projects spherical coordinates onto the unit sphere (r = 1).
+public SphericalCoordinate normalize(SphericalCoordinate s)
+{
+    SphericalCoordinate result;
+    result.theta = s.theta;
+    result.phi = s.phi;
+    result.r = 1.0;
+    return result;
+}
+
 // Converts a unit quaternion (x, y, z, w) to a 3x3 rotation matrix
 public float3x3 quaternionToMatrix(float4 q)
 {

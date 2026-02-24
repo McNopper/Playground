@@ -30,6 +30,7 @@
 #include "math/real_spherical_harmonics.h"
 #include "math/rsh_rotation.h"
 #include "math/sphere.h"
+#include "math/spherical_coordinate.h"
 #include "math/vector.h"
 
 // utility
