@@ -94,6 +94,10 @@ public:
 
     void setRasterizationSamples(VkSampleCountFlagBits rasterization_samples);
 
+    void setCullMode(VkCullModeFlags cull_mode);
+
+    void setFrontFace(VkFrontFace front_face);
+
     void setDepthTestEnable(VkBool32 enable);
     void setDepthWriteEnable(VkBool32 enable);
     void setDepthCompareOp(VkCompareOp compare_op);

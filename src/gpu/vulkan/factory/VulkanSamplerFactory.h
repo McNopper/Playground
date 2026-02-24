@@ -47,6 +47,10 @@ public:
 
     void setMaxAnisotropy(float max_anisotropy);
 
+    void setMinLod(float min_lod);
+
+    void setMaxLod(float max_lod);
+
     VkSampler create() const;
 };
 

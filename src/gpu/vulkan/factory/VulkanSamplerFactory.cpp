@@ -42,6 +42,16 @@ void VulkanSamplerFactory::setMaxAnisotropy(float max_anisotropy)
     m_max_anisotropy = max_anisotropy;
 }
 
+void VulkanSamplerFactory::setMinLod(float min_lod)
+{
+    m_min_lod = min_lod;
+}
+
+void VulkanSamplerFactory::setMaxLod(float max_lod)
+{
+    m_max_lod = max_lod;
+}
+
 VkSampler VulkanSamplerFactory::create() const
 {
     VkSamplerCreateInfo sampler_create_info{ VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO };

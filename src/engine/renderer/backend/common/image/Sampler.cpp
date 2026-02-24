@@ -49,6 +49,21 @@ void Sampler::setMaxAnisotropy(float max_anisotropy)
     m_max_anisotropy = max_anisotropy;
 }
 
+void Sampler::setMipmapMode(VkSamplerMipmapMode mode)
+{
+    m_mipmap_mode = mode;
+}
+
+void Sampler::setMinLod(float min_lod)
+{
+    m_min_lod = min_lod;
+}
+
+void Sampler::setMaxLod(float max_lod)
+{
+    m_max_lod = max_lod;
+}
+
 bool Sampler::create()
 {
     destroy();
@@ -56,9 +71,12 @@ bool Sampler::create()
     VulkanSamplerFactory sampler_factory{ m_device, 0u };
     sampler_factory.setMagFilter(m_mag_filter);
     sampler_factory.setMinFilter(m_min_filter);
+    sampler_factory.setSamplerMipmapMode(m_mipmap_mode);
     sampler_factory.setSamplerAddressModeU(m_address_mode_u);
     sampler_factory.setSamplerAddressModeV(m_address_mode_v);
     sampler_factory.setSamplerAddressModeW(m_address_mode_w);
+    sampler_factory.setMinLod(m_min_lod);
+    sampler_factory.setMaxLod(m_max_lod);
     if (m_max_anisotropy > 0.0f)
     {
         sampler_factory.setMaxAnisotropy(m_max_anisotropy);

@@ -40,6 +40,16 @@ void VulkanGraphicsPipelineBuilder::setRasterizationSamples(VkSampleCountFlagBit
     m_rasterization_samples = rasterization_samples;
 }
 
+void VulkanGraphicsPipelineBuilder::setCullMode(VkCullModeFlags cull_mode)
+{
+    m_cull_mode = cull_mode;
+}
+
+void VulkanGraphicsPipelineBuilder::setFrontFace(VkFrontFace front_face)
+{
+    m_front_face = front_face;
+}
+
 void VulkanGraphicsPipelineBuilder::setDepthTestEnable(VkBool32 enable)
 {
     m_depth_test_enable = enable;
