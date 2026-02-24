@@ -16,16 +16,20 @@
 // math
 
 #include "math/RandomGenerator.h"
+#include "math/aabb.h"
 #include "math/debug.h"
+#include "math/frustum.h"
 #include "math/helper.h"
 #include "math/interpolate.h"
 #include "math/matrix.h"
 #include "math/matrix_camera.h"
 #include "math/matrix_transform.h"
+#include "math/plane.h"
 #include "math/quaternion.h"
 #include "math/quaternion_transform.h"
 #include "math/real_spherical_harmonics.h"
 #include "math/rsh_rotation.h"
+#include "math/sphere.h"
 #include "math/vector.h"
 
 // utility

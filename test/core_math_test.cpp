@@ -302,3 +302,191 @@ TEST(TestMath, SphericalHarmonicsL2)
     float z_axis_n = sh.Yln(2, 2, 0.0f, 0.0f, 1.0f);
     EXPECT_NEAR(z_axis_n, 0.630784f, 0.000001f);
 }
+
+// ============================================================================
+// Plane
+// ============================================================================
+
+TEST(TestMath, PlaneCreateFromPointNormal)
+{
+    // XY plane: point at origin, normal pointing +Z
+    Plane p = createPlane({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f });
+
+    EXPECT_FLOAT_EQ(p.x, 0.0f);
+    EXPECT_FLOAT_EQ(p.y, 0.0f);
+    EXPECT_FLOAT_EQ(p.z, 1.0f);
+    EXPECT_FLOAT_EQ(p.w, 0.0f); // d = 0 since point is at origin
+}
+
+TEST(TestMath, PlaneSignedDistance)
+{
+    // XY plane at origin with +Z normal
+    Plane p = createPlane({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f });
+
+    // Point in front of plane (positive side)
+    EXPECT_NEAR(signedDistance(p, { 0.0f, 0.0f, 3.0f }), 3.0f, 0.000001f);
+
+    // Point behind plane (negative side)
+    EXPECT_NEAR(signedDistance(p, { 0.0f, 0.0f, -2.0f }), -2.0f, 0.000001f);
+
+    // Point on plane
+    EXPECT_NEAR(signedDistance(p, { 1.0f, 1.0f, 0.0f }), 0.0f, 0.000001f);
+}
+
+TEST(TestMath, PlaneNormalize)
+{
+    // Un-normalized plane: normal (0, 0, 2), d = 4 → normalized: (0, 0, 1), d = 2
+    Plane p = normalize(Plane{ 0.0f, 0.0f, 2.0f, 4.0f });
+
+    EXPECT_NEAR(p.x, 0.0f, 0.000001f);
+    EXPECT_NEAR(p.y, 0.0f, 0.000001f);
+    EXPECT_NEAR(p.z, 1.0f, 0.000001f);
+    EXPECT_NEAR(p.w, 2.0f, 0.000001f);
+}
+
+// ============================================================================
+// Sphere
+// ============================================================================
+
+TEST(TestMath, SphereContains)
+{
+    Sphere s{ { 0.0f, 0.0f, 0.0f }, 1.0f };
+
+    EXPECT_TRUE(contains(s, { 0.0f, 0.0f, 0.0f }));   // center
+    EXPECT_TRUE(contains(s, { 0.0f, 0.0f, 1.0f }));   // on surface
+    EXPECT_FALSE(contains(s, { 0.0f, 0.0f, 2.0f }));  // outside
+}
+
+TEST(TestMath, SphereSignedDistance)
+{
+    Sphere s{ { 0.0f, 0.0f, 0.0f }, 1.0f };
+
+    // Point 2 units out along Z: surface is at 1, so distance = 1
+    EXPECT_NEAR(signedDistance(s, { 0.0f, 0.0f, 2.0f }), 1.0f, 0.000001f);
+
+    // Center: distance = -radius
+    EXPECT_NEAR(signedDistance(s, { 0.0f, 0.0f, 0.0f }), -1.0f, 0.000001f);
+}
+
+// ============================================================================
+// AABB
+// ============================================================================
+
+TEST(TestMath, AABBContains)
+{
+    AABB box{ { -1.0f, -1.0f, -1.0f }, { 1.0f, 1.0f, 1.0f } };
+
+    EXPECT_TRUE(contains(box, { 0.0f, 0.0f, 0.0f }));   // center
+    EXPECT_TRUE(contains(box, { 1.0f, 1.0f, 1.0f }));   // corner
+    EXPECT_FALSE(contains(box, { 2.0f, 0.0f, 0.0f }));  // outside on X
+    EXPECT_FALSE(contains(box, { 0.0f, 0.0f, -2.0f })); // outside on Z
+}
+
+TEST(TestMath, AABBCreateFromCenterHalfExtents)
+{
+    AABB box = createAABB({ 1.0f, 2.0f, 3.0f }, { 0.5f, 1.0f, 1.5f });
+
+    EXPECT_NEAR(box.min_point.x, 0.5f, 0.000001f);
+    EXPECT_NEAR(box.min_point.y, 1.0f, 0.000001f);
+    EXPECT_NEAR(box.min_point.z, 1.5f, 0.000001f);
+    EXPECT_NEAR(box.max_point.x, 1.5f, 0.000001f);
+    EXPECT_NEAR(box.max_point.y, 3.0f, 0.000001f);
+    EXPECT_NEAR(box.max_point.z, 4.5f, 0.000001f);
+}
+
+TEST(TestMath, AABBCenter)
+{
+    AABB box{ { -2.0f, -4.0f, 0.0f }, { 4.0f, 2.0f, 6.0f } };
+    float3 c = center(box);
+
+    EXPECT_NEAR(c.x, 1.0f, 0.000001f);
+    EXPECT_NEAR(c.y, -1.0f, 0.000001f);
+    EXPECT_NEAR(c.z, 3.0f, 0.000001f);
+}
+
+TEST(TestMath, AABBMerge)
+{
+    AABB a{ { -1.0f, -1.0f, -1.0f }, { 0.0f, 0.0f, 0.0f } };
+    AABB b{ { 0.0f, 0.0f, 0.0f }, { 2.0f, 3.0f, 4.0f } };
+    AABB merged = merge(a, b);
+
+    EXPECT_NEAR(merged.min_point.x, -1.0f, 0.000001f);
+    EXPECT_NEAR(merged.min_point.y, -1.0f, 0.000001f);
+    EXPECT_NEAR(merged.min_point.z, -1.0f, 0.000001f);
+    EXPECT_NEAR(merged.max_point.x, 2.0f, 0.000001f);
+    EXPECT_NEAR(merged.max_point.y, 3.0f, 0.000001f);
+    EXPECT_NEAR(merged.max_point.z, 4.0f, 0.000001f);
+}
+
+// ============================================================================
+// Frustum
+// ============================================================================
+
+namespace
+{
+
+// Camera at origin looking down -Z, 90° FOV, aspect 1:1, near=1, far=100.
+Frustum makeFrustum()
+{
+    float4x4 view = lookAt({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f }, { 0.0f, 1.0f, 0.0f });
+    float4x4 proj = perspective(90.0f, 1.0f, 1.0f, 100.0f);
+    return { view, proj };
+}
+
+} // namespace
+
+TEST(TestMath, FrustumPointVisible)
+{
+    Frustum f = makeFrustum();
+
+    EXPECT_TRUE(isVisible(f, { 0.0f, 0.0f, -5.0f }));  // center of frustum
+    EXPECT_TRUE(isVisible(f, { 0.0f, 0.0f, -1.0f }));  // on near plane
+    EXPECT_TRUE(isVisible(f, { 0.0f, 0.0f, -100.0f })); // on far plane
+}
+
+TEST(TestMath, FrustumPointNotVisible)
+{
+    Frustum f = makeFrustum();
+
+    EXPECT_FALSE(isVisible(f, { 0.0f, 0.0f, 5.0f }));   // behind camera
+    EXPECT_FALSE(isVisible(f, { 0.0f, 0.0f, -200.0f })); // beyond far plane
+    EXPECT_FALSE(isVisible(f, { 0.0f, 0.0f, -0.5f }));   // before near plane
+}
+
+TEST(TestMath, FrustumSphereVisible)
+{
+    Frustum f = makeFrustum();
+
+    EXPECT_TRUE(isVisible(f, Sphere{ { 0.0f, 0.0f, -5.0f }, 1.0f }));   // inside
+    EXPECT_TRUE(isVisible(f, Sphere{ { 0.0f, 0.0f, -200.0f }, 150.0f })); // large sphere crossing far plane
+}
+
+TEST(TestMath, FrustumSphereNotVisible)
+{
+    Frustum f = makeFrustum();
+
+    EXPECT_FALSE(isVisible(f, Sphere{ { 0.0f, 0.0f, -200.0f }, 1.0f })); // beyond far plane
+    EXPECT_FALSE(isVisible(f, Sphere{ { 0.0f, 0.0f, 5.0f }, 1.0f }));    // behind camera
+}
+
+TEST(TestMath, FrustumAABBVisible)
+{
+    Frustum f = makeFrustum();
+
+    // Small box around z=-5
+    AABB inside{ { -0.5f, -0.5f, -5.5f }, { 0.5f, 0.5f, -4.5f } };
+    EXPECT_TRUE(isVisible(f, inside));
+}
+
+TEST(TestMath, FrustumAABBNotVisible)
+{
+    Frustum f = makeFrustum();
+
+    // Box entirely beyond far plane
+    AABB beyond_far{ { -0.5f, -0.5f, -201.0f }, { 0.5f, 0.5f, -150.0f } };
+    EXPECT_FALSE(isVisible(f, beyond_far));
+
+    // Box entirely behind camera
+    AABB behind{ { -0.5f, -0.5f, 5.0f }, { 0.5f, 0.5f, 10.0f } };
+    EXPECT_FALSE(isVisible(f, behind));
+}
