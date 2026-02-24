@@ -14,11 +14,7 @@ TextureCube::TextureCube(VkPhysicalDevice physical_device, VkDevice device) :
 
 TextureCube::~TextureCube()
 {
-    if (m_storage_image_view != VK_NULL_HANDLE)
-    {
-        vkDestroyImageView(m_device, m_storage_image_view, nullptr);
-        m_storage_image_view = VK_NULL_HANDLE;
-    }
+    TextureCube::destroy();
 }
 
 void TextureCube::setSize(uint32_t size)
@@ -35,19 +31,25 @@ bool TextureCube::create()
         return false;
     }
 
-    VkImageSubresourceRange subresource_range{};
-    subresource_range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    subresource_range.baseMipLevel = 0u;
-    subresource_range.levelCount = m_mip_levels;
-    subresource_range.baseArrayLayer = 0u;
-    subresource_range.layerCount = m_array_layers;
-
-    VulkanImageViewFactory view_factory{ m_device, m_image_resource.image, VK_IMAGE_VIEW_TYPE_2D_ARRAY, m_format, subresource_range };
-    m_storage_image_view = view_factory.create();
-
-    if (m_storage_image_view == VK_NULL_HANDLE)
+    // Create one storage image view per mip level.
+    // Vulkan requires storage image views to have levelCount = 1.
+    m_mip_storage_image_views.resize(m_mip_levels, VK_NULL_HANDLE);
+    for (uint32_t mip = 0u; mip < m_mip_levels; ++mip)
     {
-        return false;
+        VkImageSubresourceRange subresource_range{};
+        subresource_range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        subresource_range.baseMipLevel = mip;
+        subresource_range.levelCount = 1u;
+        subresource_range.baseArrayLayer = 0u;
+        subresource_range.layerCount = m_array_layers;
+
+        VulkanImageViewFactory view_factory{ m_device, m_image_resource.image, VK_IMAGE_VIEW_TYPE_2D_ARRAY, m_format, subresource_range };
+        m_mip_storage_image_views[mip] = view_factory.create();
+
+        if (m_mip_storage_image_views[mip] == VK_NULL_HANDLE)
+        {
+            return false;
+        }
     }
 
     return true;
@@ -55,16 +57,29 @@ bool TextureCube::create()
 
 VkImageView TextureCube::getStorageImageView() const
 {
-    return m_storage_image_view;
+    return getStorageImageViewForMip(0u);
+}
+
+VkImageView TextureCube::getStorageImageViewForMip(uint32_t mip) const
+{
+    if (mip >= m_mip_storage_image_views.size())
+    {
+        return VK_NULL_HANDLE;
+    }
+    return m_mip_storage_image_views[mip];
 }
 
 void TextureCube::destroy()
 {
-    if (m_storage_image_view != VK_NULL_HANDLE)
+    for (auto& view : m_mip_storage_image_views)
     {
-        vkDestroyImageView(m_device, m_storage_image_view, nullptr);
-        m_storage_image_view = VK_NULL_HANDLE;
+        if (view != VK_NULL_HANDLE)
+        {
+            vkDestroyImageView(m_device, view, nullptr);
+            view = VK_NULL_HANDLE;
+        }
     }
+    m_mip_storage_image_views.clear();
 
     Texture::destroy();
 }

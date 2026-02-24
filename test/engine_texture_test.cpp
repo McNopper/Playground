@@ -95,6 +95,79 @@ void terminateVulkan(VulkanHandles& handles)
 
 } // namespace
 
+TEST(TestTextureCube, CreateSingleMip)
+{
+    VulkanSetup vulkan_setup{};
+    ASSERT_TRUE(vulkan_setup.init());
+
+    VulkanHandles handles{};
+    ASSERT_TRUE(initVulkan(handles));
+
+    TextureCube cube(handles.physical_device, handles.device);
+    cube.setSize(64u);
+    cube.setFormat(VK_FORMAT_R32G32B32A32_SFLOAT);
+    cube.setUsage(VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
+
+    ASSERT_TRUE(cube.create());
+    EXPECT_TRUE(cube.isValid());
+    EXPECT_NE(cube.getImage(), VK_NULL_HANDLE);
+    EXPECT_NE(cube.getImageView(), VK_NULL_HANDLE);
+
+    // Single-mip: mip 0 storage view must be valid
+    EXPECT_NE(cube.getStorageImageView(), VK_NULL_HANDLE);
+    EXPECT_NE(cube.getStorageImageViewForMip(0u), VK_NULL_HANDLE);
+
+    // Convenience accessor must match mip 0
+    EXPECT_EQ(cube.getStorageImageView(), cube.getStorageImageViewForMip(0u));
+
+    // Out-of-bounds must return null
+    EXPECT_EQ(cube.getStorageImageViewForMip(1u), VK_NULL_HANDLE);
+
+    cube.destroy();
+    terminateVulkan(handles);
+    vulkan_setup.terminate();
+}
+
+TEST(TestTextureCube, CreateMultiMip)
+{
+    VulkanSetup vulkan_setup{};
+    ASSERT_TRUE(vulkan_setup.init());
+
+    VulkanHandles handles{};
+    ASSERT_TRUE(initVulkan(handles));
+
+    constexpr uint32_t MIP_LEVELS{ 5u };
+
+    TextureCube cube(handles.physical_device, handles.device);
+    cube.setSize(128u);
+    cube.setFormat(VK_FORMAT_R32G32B32A32_SFLOAT);
+    cube.setMipLevels(MIP_LEVELS);
+    cube.setUsage(VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
+
+    ASSERT_TRUE(cube.create());
+    EXPECT_TRUE(cube.isValid());
+    EXPECT_EQ(cube.getMipLevels(), MIP_LEVELS);
+
+    // Every mip level must have its own valid storage view
+    for (uint32_t mip = 0u; mip < MIP_LEVELS; ++mip)
+    {
+        EXPECT_NE(cube.getStorageImageViewForMip(mip), VK_NULL_HANDLE) << "Mip " << mip << " storage view is NULL";
+    }
+
+    // Each per-mip view must be distinct
+    for (uint32_t mip = 1u; mip < MIP_LEVELS; ++mip)
+    {
+        EXPECT_NE(cube.getStorageImageViewForMip(mip), cube.getStorageImageViewForMip(0u)) << "Mip " << mip << " shares view with mip 0";
+    }
+
+    // Out-of-bounds must return null
+    EXPECT_EQ(cube.getStorageImageViewForMip(MIP_LEVELS), VK_NULL_HANDLE);
+
+    cube.destroy();
+    terminateVulkan(handles);
+    vulkan_setup.terminate();
+}
+
 TEST(TestTexture2D, CreateOnly)
 {
     VulkanSetup vulkan_setup{};

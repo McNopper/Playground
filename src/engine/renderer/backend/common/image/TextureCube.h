@@ -16,7 +16,7 @@ class TextureCube : public Texture
 
 private:
 
-    VkImageView m_storage_image_view{ VK_NULL_HANDLE };
+    std::vector<VkImageView> m_mip_storage_image_views{};
 
 public:
 
@@ -34,6 +34,8 @@ public:
     bool create() override;
 
     VkImageView getStorageImageView() const;
+
+    VkImageView getStorageImageViewForMip(uint32_t mip) const;
 
     void destroy() override;
 
