@@ -1,5 +1,6 @@
 #include "frustum.h"
 
+#include <algorithm>
 #include <cstdint>
 
 namespace
@@ -40,26 +41,18 @@ void updateViewProjection(Frustum& frustum, const float4x4& view, const float4x4
 
 bool isVisible(const Frustum& frustum, const float3& point)
 {
-    for (const auto& plane : frustum.planes)
+    return std::ranges::all_of(frustum.planes, [&](const Plane& plane)
     {
-        if (signedDistance(plane, point) < 0.0f)
-        {
-            return false;
-        }
-    }
-    return true;
+        return signedDistance(plane, point) >= 0.0f;
+    });
 }
 
 bool isVisible(const Frustum& frustum, const Sphere& sphere)
 {
-    for (const auto& plane : frustum.planes)
+    return std::ranges::all_of(frustum.planes, [&](const Plane& plane)
     {
-        if (signedDistance(plane, sphere.center) + sphere.radius < 0.0f)
-        {
-            return false;
-        }
-    }
-    return true;
+        return signedDistance(plane, sphere.center) + sphere.radius >= 0.0f;
+    });
 }
 
 bool isVisible(const Frustum& frustum, const AABB& aabb)
