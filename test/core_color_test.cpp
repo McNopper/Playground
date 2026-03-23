@@ -4,7 +4,7 @@
 
 TEST(TestColor, BT709)
 {
-    auto m = toXYZ(COLOR_PRIMARY_BT709);
+    auto m = rgbToXYZ(COLOR_PRIMARY_BT709);
 
     EXPECT_NEAR(m[0].x, 0.412391f, 0.000001f);
     EXPECT_NEAR(m[0].y, 0.357584f, 0.000001f);
@@ -37,7 +37,7 @@ TEST(TestColor, BT709)
 
 TEST(TestColor, BT2020)
 {
-    auto m = toXYZ(COLOR_PRIMARY_BT2020);
+    auto m = rgbToXYZ(COLOR_PRIMARY_BT2020);
 
     EXPECT_NEAR(m[0].x, 0.636958f, 0.000001f);
     EXPECT_NEAR(m[0].y, 0.144617f, 0.000001f);

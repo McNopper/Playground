@@ -60,9 +60,9 @@ float4 fragmentMain(VertexVaryingData input) : SV_Target
     float4 color = u_texture.Sample(u_sampler, input.texcoord);
     
     // Apply output encoding based on target format
-    color.rgb = linearToSRGB(color.rgb);  // SDR: sRGB encoding
-    // color.rgb = linearToPQ(color.rgb);     // HDR: PQ encoding (HDR10)
-    // color.rgb = linearToHLG(color.rgb);    // HDR: HLG encoding
+    color.rgb = linear709ToSrgb(color.rgb);  // SDR: sRGB encoding
+    // color.rgb = linear2020ToPq(color.rgb);     // HDR: PQ encoding (HDR10)
+    // color.rgb = linear2020ToHlg(color.rgb);    // HDR: HLG encoding
     // color.rgb stays linear for FP16/scRGB render targets
     
     return color;

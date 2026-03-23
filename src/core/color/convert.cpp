@@ -4,7 +4,7 @@
 #include <cmath>
 #include <cstdint>
 
-float3x3 toXYZ(const ChromaticityCoordinates& c)
+float3x3 rgbToXYZ(const ChromaticityCoordinates& c)
 {
     const float counter_a = (((1.0f - c.W.x) / c.W.y) - ((1.0f - c.R.x) / c.R.y)) * (c.G.x / c.G.y - c.R.x / c.R.y);
     const float counter_b = (c.W.x / c.W.y - c.R.x / c.R.y) * (((1.0f - c.G.x) / c.G.y) - ((1.0f - c.R.x) / c.R.y));
@@ -24,7 +24,7 @@ float3x3 toXYZ(const ChromaticityCoordinates& c)
     };
 }
 
-float3 toLinearSRGB(const float3& color)
+float3 srgbToLinear709(const float3& color)
 {
     float3 result{};
 
@@ -43,7 +43,7 @@ float3 toLinearSRGB(const float3& color)
     return result;
 }
 
-float3 toNonLinearSRGB(const float3& color)
+float3 linear709ToSrgb(const float3& color)
 {
     float3 result{};
 
@@ -62,7 +62,7 @@ float3 toNonLinearSRGB(const float3& color)
     return result;
 }
 
-float3 toLinearSCRGB(const float3& color)
+float3 scrgbToLinear709(const float3& color)
 {
     float3 result{};
 
@@ -85,7 +85,7 @@ float3 toLinearSCRGB(const float3& color)
     return result;
 }
 
-float3 toNonLinearSCRGB(const float3& color)
+float3 linear709ToScrgb(const float3& color)
 {
     float3 result{};
 
@@ -108,7 +108,7 @@ float3 toNonLinearSCRGB(const float3& color)
     return result;
 }
 
-float3 toLinearBT706(const float3& color)
+float3 bt709ToLinear709(const float3& color)
 {
     const float alpha{ 1.099f };
     const float beta{ 0.018f };
@@ -132,7 +132,7 @@ float3 toLinearBT706(const float3& color)
     return result;
 }
 
-float3 toNonLinearBT706(const float3& color)
+float3 linear709ToBt709(const float3& color)
 {
     const float alpha{ 1.099f };
     const float beta{ 0.018f };
@@ -154,7 +154,7 @@ float3 toNonLinearBT706(const float3& color)
     return result;
 }
 
-float3 toLinearBT2020(const float3& color)
+float3 bt2020ToLinear2020(const float3& color)
 {
     const float alpha{ 1.0993f };
     const float beta{ 0.0181f };
@@ -178,7 +178,7 @@ float3 toLinearBT2020(const float3& color)
     return result;
 }
 
-float3 toNonLinearBT2020(const float3& color)
+float3 linear2020ToBt2020(const float3& color)
 {
     const float alpha{ 1.0993f };
     const float beta{ 0.0181f };
@@ -200,7 +200,7 @@ float3 toNonLinearBT2020(const float3& color)
     return result;
 }
 
-float3 toLinearPQ(const float3& color)
+float3 pqToLinear2020(const float3& color)
 {
     const float m1 = 2610.0f / 16384.0f;
     const float m2 = 2523.0f / 4096.0f * 128.0f;
@@ -222,7 +222,7 @@ float3 toLinearPQ(const float3& color)
     return result;
 }
 
-float3 toNonLinearPQ(const float3& color)
+float3 linear2020ToPq(const float3& color)
 {
     const float m1 = 2610.0f / 16384.0f;
     const float m2 = 2523.0f / 4096.0f * 128.0f;
@@ -243,7 +243,7 @@ float3 toNonLinearPQ(const float3& color)
     return result;
 }
 
-float3 toLinearHLG(const float3& color)
+float3 hlgToLinear2020(const float3& color)
 {
     const float a = 0.17883277f;
     const float b = 1.0f - 4.0f * a;
@@ -266,7 +266,7 @@ float3 toLinearHLG(const float3& color)
     return result;
 }
 
-float3 toNonLinearHLG(const float3& color)
+float3 linear2020ToHlg(const float3& color)
 {
     const float a = 0.17883277f;
     const float b = 1.0f - 4.0f * a;

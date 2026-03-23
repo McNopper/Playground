@@ -3,24 +3,24 @@
 
 #include "types.h"
 
-float3x3 toXYZ(const ChromaticityCoordinates& c);
+float3x3 rgbToXYZ(const ChromaticityCoordinates& c);
 
-float3 toLinearSRGB(const float3& color);
-float3 toNonLinearSRGB(const float3& color);
+float3 srgbToLinear709(const float3& color);
+float3 linear709ToSrgb(const float3& color);
 
-float3 toLinearSCRGB(const float3& color);
-float3 toNonLinearSCRGB(const float3& color);
+float3 scrgbToLinear709(const float3& color);
+float3 linear709ToScrgb(const float3& color);
 
-float3 toLinearBT706(const float3& color);
-float3 toNonLinearBT706(const float3& color);
+float3 bt709ToLinear709(const float3& color);
+float3 linear709ToBt709(const float3& color);
 
-float3 toLinearBT2020(const float3& color);
-float3 toNonLinearBT2020(const float3& color);
+float3 bt2020ToLinear2020(const float3& color);
+float3 linear2020ToBt2020(const float3& color);
 
-float3 toLinearPQ(const float3& color);
-float3 toNonLinearPQ(const float3& color);
+float3 pqToLinear2020(const float3& color);
+float3 linear2020ToPq(const float3& color);
 
-float3 toLinearHLG(const float3& color);
-float3 toNonLinearHLG(const float3& color);
+float3 hlgToLinear2020(const float3& color);
+float3 linear2020ToHlg(const float3& color);
 
 #endif /* CORE_COLOR_CONVERT_H_ */

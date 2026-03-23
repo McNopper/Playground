@@ -8,7 +8,7 @@ module colorspace;
 // ============================================================================
 
 // sRGB to Linear (decode)
-public float3 sRGBToLinear(float3 srgb)
+public float3 srgbToLinear709(float3 srgb)
 {
     float3 low = srgb / 12.92;
     float3 high = pow((srgb + 0.055) / 1.055, 2.4);
@@ -16,7 +16,7 @@ public float3 sRGBToLinear(float3 srgb)
 }
 
 // Linear to sRGB (encode)
-public float3 linearToSRGB(float3 linear)
+public float3 linear709ToSrgb(float3 linear)
 {
     float3 low = linear * 12.92;
     float3 high = 1.055 * pow(max(linear, 0.0), 1.0 / 2.4) - 0.055;
@@ -30,7 +30,7 @@ public float3 linearToSRGB(float3 linear)
 // PQ to Linear (decode)
 // Input: PQ-encoded in [0, 1]
 // Output: Linear light in [0, 10000] nits
-public float3 pqToLinear(float3 pq)
+public float3 pqToLinear2020(float3 pq)
 {
     const float m1 = 0.1593017578125;      // 2610 / 16384
     const float m2 = 78.84375;             // 2523 / 32
@@ -48,7 +48,7 @@ public float3 pqToLinear(float3 pq)
 // Linear to PQ (encode)
 // Input: Linear light in [0, 10000] nits
 // Output: PQ-encoded in [0, 1]
-public float3 linearToPQ(float3 linear)
+public float3 linear2020ToPq(float3 linear)
 {
     const float m1 = 0.1593017578125;
     const float m2 = 78.84375;
@@ -71,7 +71,7 @@ public float3 linearToPQ(float3 linear)
 // HLG to Linear (decode)
 // Input: HLG-encoded in [0, 1]
 // Output: Linear light, scene-referred
-public float3 hlgToLinear(float3 hlg)
+public float3 hlgToLinear2020(float3 hlg)
 {
     const float a = 0.17883277;
     const float b = 0.28466892;
@@ -86,7 +86,7 @@ public float3 hlgToLinear(float3 hlg)
 // Linear to HLG (encode)
 // Input: Linear light, scene-referred
 // Output: HLG-encoded in [0, 1]
-public float3 linearToHLG(float3 linear)
+public float3 linear2020ToHlg(float3 linear)
 {
     const float a = 0.17883277;
     const float b = 0.28466892;
@@ -102,15 +102,23 @@ public float3 linearToHLG(float3 linear)
 // HDR: scRGB (Extended Range Linear)
 // ============================================================================
 
-// scRGB is already linear - identity functions for API completeness
-public float3 scRGBToLinear(float3 scrgb)
+// scRGB is sRGB transfer function extended to negative values for HDR
+public float3 scrgbToLinear709(float3 scrgb)
 {
-    return scrgb;  // Already linear, extended range preserved
+    float3 absVal = abs(scrgb);
+    float3 sign = scrgb >= 0.0 ? 1.0 : -1.0;
+    float3 low = absVal / 12.92;
+    float3 high = pow((absVal + 0.055) / 1.055, 2.4);
+    return sign * (absVal <= 0.04045 ? low : high);
 }
 
-public float3 linearToScRGB(float3 linear)
+public float3 linear709ToScrgb(float3 linear)
 {
-    return linear;  // Already linear, extended range preserved
+    float3 absVal = abs(linear);
+    float3 sign = linear >= 0.0 ? 1.0 : -1.0;
+    float3 low = absVal * 12.92;
+    float3 high = 1.055 * pow(absVal, 1.0 / 2.4) - 0.055;
+    return sign * (absVal <= 0.0031308 ? low : high);
 }
 
 // ============================================================================
@@ -118,7 +126,7 @@ public float3 linearToScRGB(float3 linear)
 // ============================================================================
 
 // BT.709 to Linear (decode)
-public float3 bt709ToLinear(float3 bt709)
+public float3 bt709ToLinear709(float3 bt709)
 {
     const float alpha = 1.099;
     const float beta = 0.018;
@@ -131,7 +139,7 @@ public float3 bt709ToLinear(float3 bt709)
 }
 
 // Linear to BT.709 (encode)
-public float3 linearToBT709(float3 linear)
+public float3 linear709ToBt709(float3 linear)
 {
     const float alpha = 1.099;
     const float beta = 0.018;
@@ -147,7 +155,7 @@ public float3 linearToBT709(float3 linear)
 // ============================================================================
 
 // BT.2020 to Linear (decode)
-public float3 bt2020ToLinear(float3 bt2020)
+public float3 bt2020ToLinear2020(float3 bt2020)
 {
     const float alpha = 1.0993;
     const float beta = 0.0181;
@@ -160,7 +168,7 @@ public float3 bt2020ToLinear(float3 bt2020)
 }
 
 // Linear to BT.2020 (encode)
-public float3 linearToBT2020(float3 linear)
+public float3 linear2020ToBt2020(float3 linear)
 {
     const float alpha = 1.0993;
     const float beta = 0.0181;

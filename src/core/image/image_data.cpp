@@ -97,27 +97,36 @@ std::optional<ImageData> loadImageData(const char* filename)
         return {};
     }
 
-    if (color_space == "linear" || color_space == "lin_srgb")
+    if (color_space == "linear" || color_space == "lin_srgb" || color_space == "scene_linear")
     {
         image_data.color_space = ColorSpace::SRGB;
         image_data.linear = true;
     }
-    else if (color_space == "lin_rec709")
-    {
-        image_data.color_space = ColorSpace::BT709;
-        image_data.linear = true;
-    }
-    else if (color_space == "srgb")
+    else if (color_space == "srgb" || color_space == "srgb_rec709_scene")
     {
         image_data.color_space = ColorSpace::SRGB;
         image_data.linear = false;
     }
-    else if (color_space == "rec709")
+    else if (color_space == "scrgb")
+    {
+        image_data.color_space = ColorSpace::SCRGB;
+        image_data.linear = true;
+    }
+    else if (color_space == "lin_rec709" || color_space == "lin_rec709_scene")
+    {
+        image_data.color_space = ColorSpace::BT709;
+        image_data.linear = true;
+    }
+    else if (color_space == "rec709" || color_space == "g22_rec709_scene")
     {
         image_data.color_space = ColorSpace::BT709;
         image_data.linear = false;
     }
-    else
+    else if (color_space == "lin_rec2020" || color_space == "lin_rec2020_scene" || color_space == "rec2020")
+    {
+        image_data.color_space = ColorSpace::BT2020;
+        image_data.linear = true;
+    }else
     {
         return {};
     }
@@ -150,6 +159,29 @@ bool saveImageData(const char* filename, const ImageData& image_data)
     }
 
     OIIO::ImageSpec image_spec{ (int)image_data.width, (int)image_data.height, (int)image_data.channels, format };
+
+    std::string color_space{};
+    if (image_data.color_space == ColorSpace::SRGB)
+    {
+        color_space = image_data.linear ? "lin_srgb" : "sRGB";
+    }
+    else if (image_data.color_space == ColorSpace::SCRGB)
+    {
+        color_space = "scRGB";
+    }
+    else if (image_data.color_space == ColorSpace::BT709)
+    {
+        color_space = image_data.linear ? "lin_rec709" : "Rec709";
+    }
+    else if (image_data.color_space == ColorSpace::BT2020)
+    {
+        color_space = "lin_rec2020";
+    }
+
+    if (!color_space.empty())
+    {
+        image_spec.attribute("oiio:ColorSpace", color_space);
+    }
 
     // Note: Internal storage and file format both use top-left origin.
     // No flipping needed - write directly.
@@ -245,16 +277,16 @@ std::optional<ImageData> convertImageDataColorSpace(ColorSpace color_space, bool
     switch (image_data.color_space)
     {
         case ColorSpace::SRGB:
-            to_xyz = toXYZ(COLOR_PRIMARY_SRGB);
+            to_xyz = rgbToXYZ(COLOR_PRIMARY_SRGB);
             break;
         case ColorSpace::SCRGB:
-            to_xyz = toXYZ(COLOR_PRIMARY_SCRGB);
+            to_xyz = rgbToXYZ(COLOR_PRIMARY_SCRGB);
             break;
         case ColorSpace::BT709:
-            to_xyz = toXYZ(COLOR_PRIMARY_BT709);
+            to_xyz = rgbToXYZ(COLOR_PRIMARY_BT709);
             break;
         case ColorSpace::BT2020:
-            to_xyz = toXYZ(COLOR_PRIMARY_BT2020);
+            to_xyz = rgbToXYZ(COLOR_PRIMARY_BT2020);
             break;
         case ColorSpace::UNKNOWN:
         default:
@@ -265,16 +297,16 @@ std::optional<ImageData> convertImageDataColorSpace(ColorSpace color_space, bool
     switch (converted_image_data.color_space)
     {
         case ColorSpace::SRGB:
-            from_xyz = toXYZ(COLOR_PRIMARY_SRGB);
+            from_xyz = rgbToXYZ(COLOR_PRIMARY_SRGB);
             break;
         case ColorSpace::SCRGB:
-            from_xyz = toXYZ(COLOR_PRIMARY_SCRGB);
+            from_xyz = rgbToXYZ(COLOR_PRIMARY_SCRGB);
             break;
         case ColorSpace::BT709:
-            from_xyz = toXYZ(COLOR_PRIMARY_BT709);
+            from_xyz = rgbToXYZ(COLOR_PRIMARY_BT709);
             break;
         case ColorSpace::BT2020:
-            from_xyz = toXYZ(COLOR_PRIMARY_BT2020);
+            from_xyz = rgbToXYZ(COLOR_PRIMARY_BT2020);
             break;
         case ColorSpace::UNKNOWN:
         default:
@@ -303,16 +335,16 @@ std::optional<ImageData> convertImageDataColorSpace(ColorSpace color_space, bool
                 switch (image_data.color_space)
                 {
                     case ColorSpace::SRGB:
-                        output_colors = toLinearSRGB(output_colors);
+                        output_colors = srgbToLinear709(output_colors);
                         break;
                     case ColorSpace::SCRGB:
-                        output_colors = toLinearSCRGB(output_colors);
+                        output_colors = scrgbToLinear709(output_colors);
                         break;
                     case ColorSpace::BT709:
-                        output_colors = toLinearBT706(output_colors);
+                        output_colors = bt709ToLinear709(output_colors);
                         break;
                     case ColorSpace::BT2020:
-                        output_colors = toLinearBT2020(output_colors);
+                        output_colors = bt2020ToLinear2020(output_colors);
                         break;
                     case ColorSpace::UNKNOWN:
                     default:
@@ -329,16 +361,16 @@ std::optional<ImageData> convertImageDataColorSpace(ColorSpace color_space, bool
                 switch (converted_image_data.color_space)
                 {
                     case ColorSpace::SRGB:
-                        output_colors = toNonLinearSRGB(output_colors);
+                        output_colors = linear709ToSrgb(output_colors);
                         break;
                     case ColorSpace::SCRGB:
-                        output_colors = toNonLinearSCRGB(output_colors);
+                        output_colors = linear709ToScrgb(output_colors);
                         break;
                     case ColorSpace::BT709:
-                        output_colors = toNonLinearBT706(output_colors);
+                        output_colors = linear709ToBt709(output_colors);
                         break;
                     case ColorSpace::BT2020:
-                        output_colors = toNonLinearBT2020(output_colors);
+                        output_colors = linear2020ToBt2020(output_colors);
                         break;
                     case ColorSpace::UNKNOWN:
                     default:
