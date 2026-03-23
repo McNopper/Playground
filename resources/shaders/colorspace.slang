@@ -122,6 +122,40 @@ public float3 linear709ToScrgb(float3 linear)
 }
 
 // ============================================================================
+// Gamma Power Functions (pure power curves)
+// ============================================================================
+
+public float3 gamma18ToLinear709(float3 v)
+{
+    return pow(max(v, 0.0), 1.8);
+}
+
+public float3 linear709ToGamma18(float3 linear)
+{
+    return pow(max(linear, 0.0), 1.0 / 1.8);
+}
+
+public float3 gamma22ToLinear709(float3 v)
+{
+    return pow(max(v, 0.0), 2.2);
+}
+
+public float3 linear709ToGamma22(float3 linear)
+{
+    return pow(max(linear, 0.0), 1.0 / 2.2);
+}
+
+public float3 gamma24ToLinear709(float3 v)
+{
+    return pow(max(v, 0.0), 2.4);
+}
+
+public float3 linear709ToGamma24(float3 linear)
+{
+    return pow(max(linear, 0.0), 1.0 / 2.4);
+}
+
+// ============================================================================
 // BT.709 Transfer Function (ITU-R BT.709)
 // ============================================================================
 

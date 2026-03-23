@@ -8,7 +8,8 @@
 // https://registry.khronos.org/DataFormat/specs/1.3/dataformat.1.3.html
 // https://en.wikipedia.org/wiki/Perceptual_quantizer
 // https://en.wikipedia.org/wiki/Hybrid_log%E2%80%93gamma
-// https://github.com/AcademySoftwareFoundation/ColorInterop
+// https://github.com/AcademySoftwareFoundation/ColorInterop/blob/main/Recommendations/01_TextureAssetColorSpaces/TextureAssetColorSpaces.md
+// https://github.com/AcademySoftwareFoundation/ColorInterop/blob/main/Recommendations/02_DisplayColorSpaces/DisplayColorSpaces.md
 
 enum class ColorPrimaries
 {
@@ -22,9 +23,12 @@ enum class TransferFunction
     UNKNOWN,
     LINEAR,
     SRGB,       // IEC 61966-2-1 piecewise
-    EXTENDED_SRGB, // scRGB: sRGB extended to negative values
-    BT709,      // ITU-R BT.709 OETF (gamma ~1/0.45)
-    BT2020,     // ITU-R BT.2020 OETF (gamma ~1/0.45)
+    SRGBE, // scRGB: sRGB extended to negative values
+    GAMMA18,    // Pure power function x^1.8
+    GAMMA22,    // Pure power function x^2.2
+    GAMMA24,    // Pure power function x^2.4 (Rec.1886)
+    BT709,      // ITU-R BT.709 OETF (piecewise, ~1/0.45)
+    BT2020,     // ITU-R BT.2020 OETF (piecewise, ~1/0.45)
     ST2084_PQ,  // SMPTE ST 2084 / ITU-R BT.2100 PQ
     HLG         // ITU-R BT.2100 Hybrid Log-Gamma
 };
@@ -61,3 +65,4 @@ const ChromaticityCoordinates COLOR_PRIMARY_REC2020{
 };
 
 #endif /* CORE_COLOR_TYPES_H_ */
+

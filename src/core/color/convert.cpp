@@ -108,6 +108,66 @@ float3 linear709ToScrgb(const float3& color)
     return result;
 }
 
+float3 gamma18ToLinear709(const float3& color)
+{
+    float3 result{};
+    for (uint32_t i = 0u; i < 3u; i++)
+    {
+        result[i] = std::pow(std::max(color[i], 0.0f), 1.8f);
+    }
+    return result;
+}
+
+float3 linear709ToGamma18(const float3& color)
+{
+    float3 result{};
+    for (uint32_t i = 0u; i < 3u; i++)
+    {
+        result[i] = std::pow(std::max(color[i], 0.0f), 1.0f / 1.8f);
+    }
+    return result;
+}
+
+float3 gamma22ToLinear709(const float3& color)
+{
+    float3 result{};
+    for (uint32_t i = 0u; i < 3u; i++)
+    {
+        result[i] = std::pow(std::max(color[i], 0.0f), 2.2f);
+    }
+    return result;
+}
+
+float3 linear709ToGamma22(const float3& color)
+{
+    float3 result{};
+    for (uint32_t i = 0u; i < 3u; i++)
+    {
+        result[i] = std::pow(std::max(color[i], 0.0f), 1.0f / 2.2f);
+    }
+    return result;
+}
+
+float3 gamma24ToLinear709(const float3& color)
+{
+    float3 result{};
+    for (uint32_t i = 0u; i < 3u; i++)
+    {
+        result[i] = std::pow(std::max(color[i], 0.0f), 2.4f);
+    }
+    return result;
+}
+
+float3 linear709ToGamma24(const float3& color)
+{
+    float3 result{};
+    for (uint32_t i = 0u; i < 3u; i++)
+    {
+        result[i] = std::pow(std::max(color[i], 0.0f), 1.0f / 2.4f);
+    }
+    return result;
+}
+
 float3 bt709ToLinear709(const float3& color)
 {
     const float alpha{ 1.099f };

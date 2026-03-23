@@ -11,6 +11,10 @@
 #include "core/color/convert.h"
 #include "core/math/matrix.h"
 
+// Color space string conventions follow the ASWF Color Interop Forum recommendations:
+// https://github.com/AcademySoftwareFoundation/ColorInterop/blob/main/Recommendations/01_TextureAssetColorSpaces/TextureAssetColorSpaces.md
+// https://github.com/AcademySoftwareFoundation/ColorInterop/blob/main/Recommendations/02_DisplayColorSpaces/DisplayColorSpaces.md
+
 ChannelFormat getChannelFormat(OIIO::TypeDesc format)
 {
     if (format == OIIO::TypeDesc::UINT8)
@@ -113,13 +117,19 @@ std::optional<ImageData> loadImageData(const char* filename)
     else if (color_space == "scrgb")
     {
         image_data.primaries = ColorPrimaries::REC709;
-        image_data.transfer = TransferFunction::EXTENDED_SRGB;
+        image_data.transfer = TransferFunction::SRGBE;
         image_data.image_state = ImageState::DISPLAY;
     }
     else if (color_space == "rec709" || color_space == "g22_rec709_scene")
     {
         image_data.primaries = ColorPrimaries::REC709;
-        image_data.transfer = TransferFunction::BT709;
+        image_data.transfer = TransferFunction::GAMMA22;
+        image_data.image_state = ImageState::SCENE;
+    }
+    else if (color_space == "g18_rec709_scene")
+    {
+        image_data.primaries = ColorPrimaries::REC709;
+        image_data.transfer = TransferFunction::GAMMA18;
         image_data.image_state = ImageState::SCENE;
     }
     else if (color_space == "lin_rec2020" || color_space == "lin_rec2020_scene" || color_space == "rec2020")
@@ -149,7 +159,13 @@ std::optional<ImageData> loadImageData(const char* filename)
     else if (color_space == "g24_rec709_display")
     {
         image_data.primaries = ColorPrimaries::REC709;
-        image_data.transfer = TransferFunction::BT709;
+        image_data.transfer = TransferFunction::GAMMA24;
+        image_data.image_state = ImageState::DISPLAY;
+    }
+    else if (color_space == "g22_rec709_display")
+    {
+        image_data.primaries = ColorPrimaries::REC709;
+        image_data.transfer = TransferFunction::GAMMA22;
         image_data.image_state = ImageState::DISPLAY;
     }
     else if (color_space == "lin_rec709_display")
@@ -217,15 +233,23 @@ bool saveImageData(const char* filename, const ImageData& image_data)
         {
             color_space = "srgb_rec709_display";
         }
-        else if (image_data.transfer == TransferFunction::BT709 && image_data.image_state == ImageState::SCENE)
+        else if (image_data.transfer == TransferFunction::GAMMA18 && image_data.image_state == ImageState::SCENE)
+        {
+            color_space = "g18_rec709_scene";
+        }
+        else if (image_data.transfer == TransferFunction::GAMMA22 && image_data.image_state == ImageState::SCENE)
         {
             color_space = "g22_rec709_scene";
         }
-        else if (image_data.transfer == TransferFunction::BT709 && image_data.image_state == ImageState::DISPLAY)
+        else if (image_data.transfer == TransferFunction::GAMMA22 && image_data.image_state == ImageState::DISPLAY)
+        {
+            color_space = "g22_rec709_display";
+        }
+        else if (image_data.transfer == TransferFunction::GAMMA24 && image_data.image_state == ImageState::DISPLAY)
         {
             color_space = "g24_rec709_display";
         }
-        else if (image_data.transfer == TransferFunction::EXTENDED_SRGB)
+        else if (image_data.transfer == TransferFunction::SRGBE)
         {
             color_space = "scRGB";
         }
@@ -400,8 +424,17 @@ std::optional<ImageData> convertImageDataColorSpace(ColorPrimaries primaries, Tr
                     case TransferFunction::SRGB:
                         output_colors = srgbToLinear709(output_colors);
                         break;
-                    case TransferFunction::EXTENDED_SRGB:
+                    case TransferFunction::SRGBE:
                         output_colors = scrgbToLinear709(output_colors);
+                        break;
+                    case TransferFunction::GAMMA18:
+                        output_colors = gamma18ToLinear709(output_colors);
+                        break;
+                    case TransferFunction::GAMMA22:
+                        output_colors = gamma22ToLinear709(output_colors);
+                        break;
+                    case TransferFunction::GAMMA24:
+                        output_colors = gamma24ToLinear709(output_colors);
                         break;
                     case TransferFunction::BT709:
                         output_colors = bt709ToLinear709(output_colors);
@@ -433,8 +466,17 @@ std::optional<ImageData> convertImageDataColorSpace(ColorPrimaries primaries, Tr
                     case TransferFunction::SRGB:
                         output_colors = linear709ToSrgb(output_colors);
                         break;
-                    case TransferFunction::EXTENDED_SRGB:
+                    case TransferFunction::SRGBE:
                         output_colors = linear709ToScrgb(output_colors);
+                        break;
+                    case TransferFunction::GAMMA18:
+                        output_colors = linear709ToGamma18(output_colors);
+                        break;
+                    case TransferFunction::GAMMA22:
+                        output_colors = linear709ToGamma22(output_colors);
+                        break;
+                    case TransferFunction::GAMMA24:
+                        output_colors = linear709ToGamma24(output_colors);
                         break;
                     case TransferFunction::BT709:
                         output_colors = linear709ToBt709(output_colors);
@@ -514,3 +556,4 @@ std::vector<ImageData> generateMipMaps(const ImageData& image_data)
 
     return mip_levels;
 }
+

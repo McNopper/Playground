@@ -262,7 +262,7 @@ TransferFunction getTransferFunction(VkColorSpaceKHR color_space)
             return TransferFunction::SRGB;
 
         case VK_COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT:
-            return TransferFunction::EXTENDED_SRGB;
+            return TransferFunction::SRGBE;
 
         case VK_COLOR_SPACE_BT709_NONLINEAR_EXT:
             return TransferFunction::BT709;
@@ -293,3 +293,5 @@ TransferFunction getTransferFunction(VkSurfaceFormatKHR surface_format)
 
     return transfer_function;
 }
+
+
