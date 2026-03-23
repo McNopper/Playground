@@ -6,7 +6,7 @@ VkFormat getVulkanFormat(const ImageData& image_data)
 {
     if (image_data.channel_format == ChannelFormat::UNORM)
     {
-        bool use_srgb = !image_data.linear && image_data.color_space == ColorSpace::SRGB;
+        bool use_srgb = image_data.transfer == TransferFunction::SRGB;
         switch (image_data.channels)
         {
             case 1: return use_srgb ? VK_FORMAT_R8_SRGB : VK_FORMAT_R8_UNORM;
@@ -225,32 +225,28 @@ bool isColorSpaceLinear(VkColorSpaceKHR color_space)
     return false;
 }
 
-ColorSpace getColorSpace(VkColorSpaceKHR color_space)
+ColorPrimaries getColorPrimaries(VkColorSpaceKHR color_space)
 {
     switch (color_space)
     {
         case VK_COLOR_SPACE_SRGB_NONLINEAR_KHR:
-            return ColorSpace::SRGB;
-
         case VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT:
         case VK_COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT:
-            return ColorSpace::SCRGB;
-
         case VK_COLOR_SPACE_BT709_LINEAR_EXT:
         case VK_COLOR_SPACE_BT709_NONLINEAR_EXT:
-            return ColorSpace::BT709;
+            return ColorPrimaries::REC709;
 
         case VK_COLOR_SPACE_BT2020_LINEAR_EXT:
         case VK_COLOR_SPACE_HDR10_ST2084_EXT:
         case VK_COLOR_SPACE_HDR10_HLG_EXT:
-            return ColorSpace::BT2020;
+            return ColorPrimaries::REC2020;
 
         default:
             break;
     }
 
     // Rest is not implemented.
-    return ColorSpace::UNKNOWN;
+    return ColorPrimaries::UNKNOWN;
 }
 
 TransferFunction getTransferFunction(VkColorSpaceKHR color_space)
@@ -266,7 +262,7 @@ TransferFunction getTransferFunction(VkColorSpaceKHR color_space)
             return TransferFunction::SRGB;
 
         case VK_COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT:
-            return TransferFunction::SCRGB;
+            return TransferFunction::EXTENDED_SRGB;
 
         case VK_COLOR_SPACE_BT709_NONLINEAR_EXT:
             return TransferFunction::BT709;

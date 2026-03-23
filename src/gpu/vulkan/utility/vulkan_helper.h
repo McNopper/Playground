@@ -25,7 +25,7 @@ bool isFormatSRGB(VkFormat format);
 
 bool isColorSpaceLinear(VkColorSpaceKHR color_space);
 
-ColorSpace getColorSpace(VkColorSpaceKHR color_space);
+ColorPrimaries getColorPrimaries(VkColorSpaceKHR color_space);
 
 TransferFunction getTransferFunction(VkColorSpaceKHR color_space);
 

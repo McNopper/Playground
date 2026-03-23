@@ -30,8 +30,9 @@ struct ImageData
     uint32_t channels{ 0u };
     ChannelFormat channel_format{ ChannelFormat::UNDEFINED };
 
-    ColorSpace color_space{ ColorSpace::UNKNOWN };
-    bool linear{ false };
+    ColorPrimaries primaries{ ColorPrimaries::UNKNOWN };
+    TransferFunction transfer{ TransferFunction::UNKNOWN };
+    ImageState image_state{ ImageState::UNKNOWN };
 
     std::vector<uint8_t> pixels{};
 };
@@ -44,7 +45,7 @@ bool saveImageData(const char* filename, const ImageData& image_data);
 
 std::optional<ImageData> convertImageDataChannels(uint32_t channels, const ImageData& image_data);
 
-std::optional<ImageData> convertImageDataColorSpace(ColorSpace color_space, bool linear, const ImageData& image_data);
+std::optional<ImageData> convertImageDataColorSpace(ColorPrimaries primaries, TransferFunction transfer, ImageState image_state, const ImageData& image_data);
 
 std::vector<ImageData> generateMipMaps(const ImageData& image_data);
 

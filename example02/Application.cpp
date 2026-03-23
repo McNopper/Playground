@@ -217,8 +217,9 @@ bool Application::update(double delta_time, VkCommandBuffer command_buffer)
     image_data.height = c_dimension;
     image_data.channels = 1u;
     image_data.channel_format = ChannelFormat::SFLOAT;
-    image_data.color_space = ColorSpace::SRGB;
-    image_data.linear = true;
+    image_data.primaries = ColorPrimaries::REC709;
+    image_data.transfer = TransferFunction::LINEAR;
+    image_data.image_state = ImageState::SCENE;
     image_data.pixels = std::move(content);
 
     return saveImageData("../bin/example02_grey_square.exr", image_data);

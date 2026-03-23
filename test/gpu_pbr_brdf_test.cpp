@@ -296,8 +296,9 @@ TEST(TestBRDF, GenerateLUT)
     image_data.height = LUT_SIZE;
     image_data.channels = 4;
     image_data.channel_format = ChannelFormat::SFLOAT;
-    image_data.color_space = ColorSpace::SRGB;
-    image_data.linear = true;
+    image_data.primaries = ColorPrimaries::REC709;
+    image_data.transfer = TransferFunction::LINEAR;
+    image_data.image_state = ImageState::SCENE;
     image_data.pixels.resize(LUT_SIZE * LUT_SIZE * 4 * sizeof(float));
     memcpy(image_data.pixels.data(), data, image_data.pixels.size());
 

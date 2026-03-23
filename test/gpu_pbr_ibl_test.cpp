@@ -381,8 +381,9 @@ TEST(TestIBL, GenerateDiffuseIrradiance)
     out_image.height = CUBE_SIZE;
     out_image.channels = 4u;
     out_image.channel_format = ChannelFormat::SFLOAT;
-    out_image.color_space = ColorSpace::SRGB;
-    out_image.linear = true;
+    out_image.primaries = ColorPrimaries::REC709;
+    out_image.transfer = TransferFunction::LINEAR;
+    out_image.image_state = ImageState::SCENE;
     out_image.pixels.resize(face_bytes);
     std::memcpy(out_image.pixels.data(), data, face_bytes);
     vkUnmapMemory(handles.device, staging.device_memory);
@@ -605,8 +606,9 @@ TEST(TestIBL, GenerateSpecularPrefilter)
     out_image.height = CUBE_SIZE;
     out_image.channels = 4u;
     out_image.channel_format = ChannelFormat::SFLOAT;
-    out_image.color_space = ColorSpace::SRGB;
-    out_image.linear = true;
+    out_image.primaries = ColorPrimaries::REC709;
+    out_image.transfer = TransferFunction::LINEAR;
+    out_image.image_state = ImageState::SCENE;
     out_image.pixels.resize(face_bytes);
     std::memcpy(out_image.pixels.data(), data, face_bytes);
     vkUnmapMemory(handles.device, staging.device_memory);

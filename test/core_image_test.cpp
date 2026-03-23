@@ -59,7 +59,7 @@ TEST(TestImage, ConvertColorSpaceToLinear)
 
     if (image_data.has_value())
     {
-        auto converted_image_data = convertImageDataColorSpace(ColorSpace::SRGB, true, *image_data);
+        auto converted_image_data = convertImageDataColorSpace(ColorPrimaries::REC709, TransferFunction::LINEAR, ImageState::SCENE, *image_data);
 
         EXPECT_TRUE(converted_image_data.has_value());
 
@@ -80,8 +80,9 @@ TEST(TestImage, GenerateMipMapsCount)
     image_data.height = 256u;
     image_data.channels = 4u;
     image_data.channel_format = ChannelFormat::UNORM;
-    image_data.color_space = ColorSpace::SRGB;
-    image_data.linear = true;
+    image_data.primaries = ColorPrimaries::REC709;
+    image_data.transfer = TransferFunction::LINEAR;
+    image_data.image_state = ImageState::SCENE;
     image_data.pixels.resize(256u * 256u * 4u, 128u);
 
     auto mip_levels = generateMipMaps(image_data);
@@ -96,8 +97,9 @@ TEST(TestImage, GenerateMipMapsDimensions)
     image_data.height = 128u;
     image_data.channels = 4u;
     image_data.channel_format = ChannelFormat::UNORM;
-    image_data.color_space = ColorSpace::SRGB;
-    image_data.linear = true;
+    image_data.primaries = ColorPrimaries::REC709;
+    image_data.transfer = TransferFunction::LINEAR;
+    image_data.image_state = ImageState::SCENE;
     image_data.pixels.resize(256u * 128u * 4u, 200u);
 
     auto mip_levels = generateMipMaps(image_data);
@@ -123,8 +125,9 @@ TEST(TestImage, GenerateMipMapsPreservesMetadata)
     image_data.height = 64u;
     image_data.channels = 3u;
     image_data.channel_format = ChannelFormat::SFLOAT;
-    image_data.color_space = ColorSpace::BT709;
-    image_data.linear = true;
+    image_data.primaries = ColorPrimaries::REC709;
+    image_data.transfer = TransferFunction::LINEAR;
+    image_data.image_state = ImageState::SCENE;
     image_data.pixels.resize(64u * 64u * 3u * 4u, 0u); // 4 bytes per SFLOAT channel
 
     auto mip_levels = generateMipMaps(image_data);
@@ -133,8 +136,9 @@ TEST(TestImage, GenerateMipMapsPreservesMetadata)
     {
         EXPECT_EQ(mip.channels, 3u);
         EXPECT_EQ(mip.channel_format, ChannelFormat::SFLOAT);
-        EXPECT_EQ(mip.color_space, ColorSpace::BT709);
-        EXPECT_TRUE(mip.linear);
+        EXPECT_EQ(mip.primaries, ColorPrimaries::REC709);
+        EXPECT_EQ(mip.transfer, TransferFunction::LINEAR);
+        EXPECT_EQ(mip.image_state, ImageState::SCENE);
     }
 }
 
@@ -145,8 +149,9 @@ TEST(TestImage, GenerateMipMapsPixelBufferSize)
     image_data.height = 64u;
     image_data.channels = 4u;
     image_data.channel_format = ChannelFormat::UNORM;
-    image_data.color_space = ColorSpace::SRGB;
-    image_data.linear = true;
+    image_data.primaries = ColorPrimaries::REC709;
+    image_data.transfer = TransferFunction::LINEAR;
+    image_data.image_state = ImageState::SCENE;
     image_data.pixels.resize(64u * 64u * 4u, 255u);
 
     auto mip_levels = generateMipMaps(image_data);

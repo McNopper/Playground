@@ -97,36 +97,74 @@ std::optional<ImageData> loadImageData(const char* filename)
         return {};
     }
 
-    if (color_space == "linear" || color_space == "lin_srgb" || color_space == "scene_linear")
+    if (color_space == "linear" || color_space == "lin_srgb" || color_space == "scene_linear" ||
+        color_space == "lin_rec709" || color_space == "lin_rec709_scene")
     {
-        image_data.color_space = ColorSpace::SRGB;
-        image_data.linear = true;
+        image_data.primaries = ColorPrimaries::REC709;
+        image_data.transfer = TransferFunction::LINEAR;
+        image_data.image_state = ImageState::SCENE;
     }
     else if (color_space == "srgb" || color_space == "srgb_rec709_scene")
     {
-        image_data.color_space = ColorSpace::SRGB;
-        image_data.linear = false;
+        image_data.primaries = ColorPrimaries::REC709;
+        image_data.transfer = TransferFunction::SRGB;
+        image_data.image_state = ImageState::SCENE;
     }
     else if (color_space == "scrgb")
     {
-        image_data.color_space = ColorSpace::SCRGB;
-        image_data.linear = true;
-    }
-    else if (color_space == "lin_rec709" || color_space == "lin_rec709_scene")
-    {
-        image_data.color_space = ColorSpace::BT709;
-        image_data.linear = true;
+        image_data.primaries = ColorPrimaries::REC709;
+        image_data.transfer = TransferFunction::EXTENDED_SRGB;
+        image_data.image_state = ImageState::DISPLAY;
     }
     else if (color_space == "rec709" || color_space == "g22_rec709_scene")
     {
-        image_data.color_space = ColorSpace::BT709;
-        image_data.linear = false;
+        image_data.primaries = ColorPrimaries::REC709;
+        image_data.transfer = TransferFunction::BT709;
+        image_data.image_state = ImageState::SCENE;
     }
     else if (color_space == "lin_rec2020" || color_space == "lin_rec2020_scene" || color_space == "rec2020")
     {
-        image_data.color_space = ColorSpace::BT2020;
-        image_data.linear = true;
-    }else
+        image_data.primaries = ColorPrimaries::REC2020;
+        image_data.transfer = TransferFunction::LINEAR;
+        image_data.image_state = ImageState::SCENE;
+    }
+    else if (color_space == "pq_rec2020_display")
+    {
+        image_data.primaries = ColorPrimaries::REC2020;
+        image_data.transfer = TransferFunction::ST2084_PQ;
+        image_data.image_state = ImageState::DISPLAY;
+    }
+    else if (color_space == "hlg_rec2020_display")
+    {
+        image_data.primaries = ColorPrimaries::REC2020;
+        image_data.transfer = TransferFunction::HLG;
+        image_data.image_state = ImageState::DISPLAY;
+    }
+    else if (color_space == "srgb_rec709_display")
+    {
+        image_data.primaries = ColorPrimaries::REC709;
+        image_data.transfer = TransferFunction::SRGB;
+        image_data.image_state = ImageState::DISPLAY;
+    }
+    else if (color_space == "g24_rec709_display")
+    {
+        image_data.primaries = ColorPrimaries::REC709;
+        image_data.transfer = TransferFunction::BT709;
+        image_data.image_state = ImageState::DISPLAY;
+    }
+    else if (color_space == "lin_rec709_display")
+    {
+        image_data.primaries = ColorPrimaries::REC709;
+        image_data.transfer = TransferFunction::LINEAR;
+        image_data.image_state = ImageState::DISPLAY;
+    }
+    else if (color_space == "lin_rec2020_display")
+    {
+        image_data.primaries = ColorPrimaries::REC2020;
+        image_data.transfer = TransferFunction::LINEAR;
+        image_data.image_state = ImageState::DISPLAY;
+    }
+    else
     {
         return {};
     }
@@ -161,21 +199,55 @@ bool saveImageData(const char* filename, const ImageData& image_data)
     OIIO::ImageSpec image_spec{ (int)image_data.width, (int)image_data.height, (int)image_data.channels, format };
 
     std::string color_space{};
-    if (image_data.color_space == ColorSpace::SRGB)
+    if (image_data.primaries == ColorPrimaries::REC709)
     {
-        color_space = image_data.linear ? "lin_srgb" : "sRGB";
+        if (image_data.transfer == TransferFunction::LINEAR && image_data.image_state == ImageState::SCENE)
+        {
+            color_space = "lin_rec709_scene";
+        }
+        else if (image_data.transfer == TransferFunction::LINEAR && image_data.image_state == ImageState::DISPLAY)
+        {
+            color_space = "lin_rec709_display";
+        }
+        else if (image_data.transfer == TransferFunction::SRGB && image_data.image_state == ImageState::SCENE)
+        {
+            color_space = "srgb_rec709_scene";
+        }
+        else if (image_data.transfer == TransferFunction::SRGB && image_data.image_state == ImageState::DISPLAY)
+        {
+            color_space = "srgb_rec709_display";
+        }
+        else if (image_data.transfer == TransferFunction::BT709 && image_data.image_state == ImageState::SCENE)
+        {
+            color_space = "g22_rec709_scene";
+        }
+        else if (image_data.transfer == TransferFunction::BT709 && image_data.image_state == ImageState::DISPLAY)
+        {
+            color_space = "g24_rec709_display";
+        }
+        else if (image_data.transfer == TransferFunction::EXTENDED_SRGB)
+        {
+            color_space = "scRGB";
+        }
     }
-    else if (image_data.color_space == ColorSpace::SCRGB)
+    else if (image_data.primaries == ColorPrimaries::REC2020)
     {
-        color_space = "scRGB";
-    }
-    else if (image_data.color_space == ColorSpace::BT709)
-    {
-        color_space = image_data.linear ? "lin_rec709" : "Rec709";
-    }
-    else if (image_data.color_space == ColorSpace::BT2020)
-    {
-        color_space = "lin_rec2020";
+        if (image_data.transfer == TransferFunction::LINEAR && image_data.image_state == ImageState::SCENE)
+        {
+            color_space = "lin_rec2020_scene";
+        }
+        else if (image_data.transfer == TransferFunction::LINEAR && image_data.image_state == ImageState::DISPLAY)
+        {
+            color_space = "lin_rec2020_display";
+        }
+        else if (image_data.transfer == TransferFunction::ST2084_PQ)
+        {
+            color_space = "pq_rec2020_display";
+        }
+        else if (image_data.transfer == TransferFunction::HLG)
+        {
+            color_space = "hlg_rec2020_display";
+        }
     }
 
     if (!color_space.empty())
@@ -220,8 +292,9 @@ std::optional<ImageData> convertImageDataChannels(uint32_t channels, const Image
     converted_image_data.height = image_data.height;
     converted_image_data.channels = channels;
     converted_image_data.channel_format = image_data.channel_format;
-    converted_image_data.color_space = image_data.color_space;
-    converted_image_data.linear = image_data.linear;
+    converted_image_data.primaries = image_data.primaries;
+    converted_image_data.transfer = image_data.transfer;
+    converted_image_data.image_state = image_data.image_state;
     converted_image_data.pixels.resize(converted_image_data.width * converted_image_data.height * converted_image_data.channels * channel_size);
 
     OIIO::ImageSpec converted_image_spec{ (int)converted_image_data.width, (int)converted_image_data.height, (int)converted_image_data.channels, format };
@@ -247,7 +320,7 @@ std::optional<ImageData> convertImageDataChannels(uint32_t channels, const Image
     return converted_image_data;
 }
 
-std::optional<ImageData> convertImageDataColorSpace(ColorSpace color_space, bool linear, const ImageData& image_data)
+std::optional<ImageData> convertImageDataColorSpace(ColorPrimaries primaries, TransferFunction transfer, ImageState image_state, const ImageData& image_data)
 {
     OIIO::TypeDesc format = getChannelFormat(image_data.channel_format);
     if (format == OIIO::TypeDesc::UNKNOWN)
@@ -264,8 +337,9 @@ std::optional<ImageData> convertImageDataColorSpace(ColorSpace color_space, bool
     converted_image_data.height = image_data.height;
     converted_image_data.channels = image_data.channels;
     converted_image_data.channel_format = image_data.channel_format;
-    converted_image_data.color_space = color_space;
-    converted_image_data.linear = linear;
+    converted_image_data.primaries = primaries;
+    converted_image_data.transfer = transfer;
+    converted_image_data.image_state = image_state;
     converted_image_data.pixels.resize(converted_image_data.width * converted_image_data.height * converted_image_data.channels * channel_size);
 
     OIIO::ImageSpec converted_image_spec{ (int)converted_image_data.width, (int)converted_image_data.height, (int)converted_image_data.channels, format };
@@ -274,45 +348,34 @@ std::optional<ImageData> convertImageDataColorSpace(ColorSpace color_space, bool
     //
 
     float3x3 to_xyz{};
-    switch (image_data.color_space)
+    switch (image_data.primaries)
     {
-        case ColorSpace::SRGB:
-            to_xyz = rgbToXYZ(COLOR_PRIMARY_SRGB);
+        case ColorPrimaries::REC709:
+            to_xyz = rgbToXYZ(COLOR_PRIMARY_REC709);
             break;
-        case ColorSpace::SCRGB:
-            to_xyz = rgbToXYZ(COLOR_PRIMARY_SCRGB);
+        case ColorPrimaries::REC2020:
+            to_xyz = rgbToXYZ(COLOR_PRIMARY_REC2020);
             break;
-        case ColorSpace::BT709:
-            to_xyz = rgbToXYZ(COLOR_PRIMARY_BT709);
-            break;
-        case ColorSpace::BT2020:
-            to_xyz = rgbToXYZ(COLOR_PRIMARY_BT2020);
-            break;
-        case ColorSpace::UNKNOWN:
+        case ColorPrimaries::UNKNOWN:
         default:
             return {};
     }
 
     float3x3 from_xyz{};
-    switch (converted_image_data.color_space)
+    switch (converted_image_data.primaries)
     {
-        case ColorSpace::SRGB:
-            from_xyz = rgbToXYZ(COLOR_PRIMARY_SRGB);
+        case ColorPrimaries::REC709:
+            from_xyz = inverse(rgbToXYZ(COLOR_PRIMARY_REC709));
             break;
-        case ColorSpace::SCRGB:
-            from_xyz = rgbToXYZ(COLOR_PRIMARY_SCRGB);
+        case ColorPrimaries::REC2020:
+            from_xyz = inverse(rgbToXYZ(COLOR_PRIMARY_REC2020));
             break;
-        case ColorSpace::BT709:
-            from_xyz = rgbToXYZ(COLOR_PRIMARY_BT709);
-            break;
-        case ColorSpace::BT2020:
-            from_xyz = rgbToXYZ(COLOR_PRIMARY_BT2020);
-            break;
-        case ColorSpace::UNKNOWN:
+        case ColorPrimaries::UNKNOWN:
         default:
             return {};
     }
-    from_xyz = inverse(from_xyz);
+
+    const float3x3 conversion = from_xyz * to_xyz;
 
     std::vector<float> colors{ 0.0f, 0.0f, 0.0f, 1.0f };
     for (uint32_t y = 0u; y < converted_image_data.height; y++)
@@ -330,49 +393,63 @@ std::optional<ImageData> convertImageDataColorSpace(ColorSpace color_space, bool
             float3 output_colors{ colors[0], colors[1], colors[2] };
 
             // Non-linear to linear if required
-            if (!image_data.linear)
+            if (image_data.transfer != TransferFunction::LINEAR)
             {
-                switch (image_data.color_space)
+                switch (image_data.transfer)
                 {
-                    case ColorSpace::SRGB:
+                    case TransferFunction::SRGB:
                         output_colors = srgbToLinear709(output_colors);
                         break;
-                    case ColorSpace::SCRGB:
+                    case TransferFunction::EXTENDED_SRGB:
                         output_colors = scrgbToLinear709(output_colors);
                         break;
-                    case ColorSpace::BT709:
+                    case TransferFunction::BT709:
                         output_colors = bt709ToLinear709(output_colors);
                         break;
-                    case ColorSpace::BT2020:
+                    case TransferFunction::BT2020:
                         output_colors = bt2020ToLinear2020(output_colors);
                         break;
-                    case ColorSpace::UNKNOWN:
+                    case TransferFunction::ST2084_PQ:
+                        output_colors = pqToLinear2020(output_colors);
+                        break;
+                    case TransferFunction::HLG:
+                        output_colors = hlgToLinear2020(output_colors);
+                        break;
+                    case TransferFunction::LINEAR:
+                    case TransferFunction::UNKNOWN:
                     default:
                         return {};
                 }
             }
 
-            // Old color space -> XYZ color space -> new color space
-            output_colors = from_xyz * to_xyz * output_colors;
+            // Source primaries -> XYZ -> target primaries
+            output_colors = conversion * output_colors;
 
             // Linear to non-linear if required
-            if (!converted_image_data.linear)
+            if (converted_image_data.transfer != TransferFunction::LINEAR)
             {
-                switch (converted_image_data.color_space)
+                switch (converted_image_data.transfer)
                 {
-                    case ColorSpace::SRGB:
+                    case TransferFunction::SRGB:
                         output_colors = linear709ToSrgb(output_colors);
                         break;
-                    case ColorSpace::SCRGB:
+                    case TransferFunction::EXTENDED_SRGB:
                         output_colors = linear709ToScrgb(output_colors);
                         break;
-                    case ColorSpace::BT709:
+                    case TransferFunction::BT709:
                         output_colors = linear709ToBt709(output_colors);
                         break;
-                    case ColorSpace::BT2020:
+                    case TransferFunction::BT2020:
                         output_colors = linear2020ToBt2020(output_colors);
                         break;
-                    case ColorSpace::UNKNOWN:
+                    case TransferFunction::ST2084_PQ:
+                        output_colors = linear2020ToPq(output_colors);
+                        break;
+                    case TransferFunction::HLG:
+                        output_colors = linear2020ToHlg(output_colors);
+                        break;
+                    case TransferFunction::LINEAR:
+                    case TransferFunction::UNKNOWN:
                     default:
                         return {};
                 }
@@ -422,8 +499,9 @@ std::vector<ImageData> generateMipMaps(const ImageData& image_data)
         mip_data.height = mip_height;
         mip_data.channels = image_data.channels;
         mip_data.channel_format = image_data.channel_format;
-        mip_data.color_space = image_data.color_space;
-        mip_data.linear = image_data.linear;
+        mip_data.primaries = image_data.primaries;
+        mip_data.transfer = image_data.transfer;
+        mip_data.image_state = image_data.image_state;
         mip_data.pixels.resize(mip_width * mip_height * image_data.channels * channel_size);
 
         dst_buf.get_pixels(OIIO::ROI::All(), format, mip_data.pixels.data());

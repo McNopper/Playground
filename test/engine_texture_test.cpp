@@ -245,8 +245,9 @@ TEST(TestTexture2D, UploadImageData)
     image_data.height = height;
     image_data.channels = 4u;
     image_data.channel_format = ChannelFormat::UNORM;
-    image_data.color_space = ColorSpace::SRGB;
-    image_data.linear = false;
+    image_data.primaries = ColorPrimaries::REC709;
+    image_data.transfer = TransferFunction::SRGB;
+    image_data.image_state = ImageState::DISPLAY;
 
     // Create test pattern
     image_data.pixels.resize(width * height * 4u);
